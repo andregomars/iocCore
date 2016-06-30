@@ -6,7 +6,7 @@ namespace iocCoreApi.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class core_role
+    public partial class Core_Role
     {
         public int ID { get; set; }
 

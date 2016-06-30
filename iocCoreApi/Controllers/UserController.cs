@@ -17,16 +17,16 @@ namespace iocCoreApi.Controllers
         private CoreDBModelsContext db = new CoreDBModelsContext();
 
         // GET: api/User
-        public IQueryable<core_user> Getcore_user()
+        public IQueryable<Core_User> Getcore_user()
         {
             return db.core_user;
         }
 
         // GET: api/User/5
-        [ResponseType(typeof(core_user))]
+        [ResponseType(typeof(Core_User))]
         public IHttpActionResult Getcore_user(int id)
         {
-            core_user core_user = db.core_user.Find(id);
+            Core_User core_user = db.core_user.Find(id);
             if (core_user == null)
             {
                 return NotFound();
@@ -37,7 +37,7 @@ namespace iocCoreApi.Controllers
 
         // PUT: api/User/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult Putcore_user(int id, core_user core_user)
+        public IHttpActionResult Putcore_user(int id, Core_User core_user)
         {
             if (!ModelState.IsValid)
             {
@@ -71,8 +71,8 @@ namespace iocCoreApi.Controllers
         }
 
         // POST: api/User
-        [ResponseType(typeof(core_user))]
-        public IHttpActionResult Postcore_user(core_user core_user)
+        [ResponseType(typeof(Core_User))]
+        public IHttpActionResult Postcore_user(Core_User core_user)
         {
             if (!ModelState.IsValid)
             {
@@ -86,10 +86,10 @@ namespace iocCoreApi.Controllers
         }
 
         // DELETE: api/User/5
-        [ResponseType(typeof(core_user))]
+        [ResponseType(typeof(Core_User))]
         public IHttpActionResult Deletecore_user(int id)
         {
-            core_user core_user = db.core_user.Find(id);
+            Core_User core_user = db.core_user.Find(id);
             if (core_user == null)
             {
                 return NotFound();

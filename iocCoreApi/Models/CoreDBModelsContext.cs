@@ -12,85 +12,85 @@ namespace iocCoreApi.Models
         {
         }
 
-        public virtual DbSet<core_role> core_role { get; set; }
-        public virtual DbSet<core_user> core_user { get; set; }
-        public virtual DbSet<core_UserRole> core_UserRole { get; set; }
+        public virtual DbSet<Core_Role> core_role { get; set; }
+        public virtual DbSet<Core_User> core_user { get; set; }
+        public virtual DbSet<Core_UserRole> core_UserRole { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<core_role>()
+            modelBuilder.Entity<Core_Role>()
                 .Property(e => e.RoleName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_role>()
+            modelBuilder.Entity<Core_Role>()
                 .Property(e => e.RoleType)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_role>()
+            modelBuilder.Entity<Core_Role>()
                 .Property(e => e.RoleDescription)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_role>()
+            modelBuilder.Entity<Core_Role>()
                 .Property(e => e.InUser)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_role>()
+            modelBuilder.Entity<Core_Role>()
                 .Property(e => e.EditUser)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_role>()
+            modelBuilder.Entity<Core_Role>()
                 .Property(e => e.Status)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.LoginName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.UserType)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.Password)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.CellPhone)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.WorkPhone)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.Email)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.HeadImage)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.InUser)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.EditUser)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_user>()
+            modelBuilder.Entity<Core_User>()
                 .Property(e => e.Status)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_UserRole>()
+            modelBuilder.Entity<Core_UserRole>()
                 .Property(e => e.InUser)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<core_UserRole>()
+            modelBuilder.Entity<Core_UserRole>()
                 .Property(e => e.EditUser)
                 .IsUnicode(false);
         }
