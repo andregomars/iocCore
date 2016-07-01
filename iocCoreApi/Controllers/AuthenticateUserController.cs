@@ -9,7 +9,7 @@ using System.Web.Http.Description;
 
 namespace iocCoreApi.Controllers
 {
-    public class AuthenticateController : ApiController
+    public class AuthenticateUserController : ApiController
     {
         private CoreDBModelsContext db = new CoreDBModelsContext();
 
@@ -20,7 +20,6 @@ namespace iocCoreApi.Controllers
             if (String.IsNullOrEmpty(loginName) || String.IsNullOrEmpty(password))
                 return false;
 
-            //Core_User core_user = db.core_user.Find(id);
             var users = from user in db.core_user
                         where user.LoginName == loginName && user.Password == password
                         select user;
