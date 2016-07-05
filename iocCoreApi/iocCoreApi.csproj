@@ -210,6 +210,7 @@
     <Compile Include="Controllers\AuthenticateUserController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IOCUserController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -223,6 +224,7 @@
     <Compile Include="Models\Core_User.cs" />
     <Compile Include="Models\Core_UserRole.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\IOC_User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
