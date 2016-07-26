@@ -20,18 +20,17 @@ namespace iocCoreApi.Controllers
 
             var query = from role in db.core_role
                        //select role.RoleName;
-                        select new
+                        select new IOC_Role
                         {
                             name = role.RoleName,
                             capabilities = ""
                         };
 
-
-            //foreach (var role in query)
-            //{
-            //    ioc_roles.Add(
-            //        new IOC_Role{ name= role.name, capabilities = role.capabilities});
-            //}
+            IEnumerable<IOC_Role> roles = query.ToList<IOC_Role>();
+            foreach (var role in roles)
+            {
+                ioc_roles.Roles.Add(role);
+            }
 
             if (ioc_roles == null)
             {

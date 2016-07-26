@@ -6,24 +6,30 @@ using System.Web;
 
 namespace iocCoreApi.Models
 {
-    public class IOC_Roles : IEnumerable<IOC_Role>
+    //public class IOC_Roles : IEnumerable<IOC_Role>
+    public class IOC_Roles
     {
-        List<IOC_Role> roles = new List<IOC_Role>();
+        public List<IOC_Role> Roles { get; set; }
 
-        public IOC_Role this[int index]
+        public IOC_Roles()
         {
-            get { return roles[index]; }
-            set { roles.Insert(index, value); }
+            Roles = new List<IOC_Role>();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return roles.GetEnumerator();
-        }
+        //public IOC_Role this[int index]
+        //{
+        //    get { return Roles[index]; }
+        //    set { Roles.Insert(index, value); }
+        //}
 
-        IEnumerator<IOC_Role> IEnumerable<IOC_Role>.GetEnumerator()
-        {
-            return roles.GetEnumerator();
-        }
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //    return Roles.GetEnumerator();
+        //}
+
+        //IEnumerator<IOC_Role> IEnumerable<IOC_Role>.GetEnumerator()
+        //{
+        //    return Roles.GetEnumerator();
+        //}
     }
 }
