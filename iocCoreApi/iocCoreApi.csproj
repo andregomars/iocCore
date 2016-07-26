@@ -210,6 +210,7 @@
     <Compile Include="Controllers\AuthenticateUserController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IOCRolesAllController.cs" />
     <Compile Include="Controllers\IOCRolesController.cs" />
     <Compile Include="Controllers\IOCUserController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
@@ -222,6 +223,8 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\CoreDBModelsContext.cs" />
+    <Compile Include="Models\Core_Function.cs" />
+    <Compile Include="Models\Core_Permission.cs" />
     <Compile Include="Models\Core_Role.cs" />
     <Compile Include="Models\Core_User.cs" />
     <Compile Include="Models\Core_UserRole.cs" />

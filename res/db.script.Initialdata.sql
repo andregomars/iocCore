@@ -43,60 +43,6 @@ UNION ALL
 select 'Subscriber','internal','Subscriber',getdate(),'andre','Active'
 
 
-
---Core_Function
-insert into Core_Function
-(MenuID
-,FunctionName
-,FunctionDescription
-,FunctionType
-,Priority
-,InDate
-,InUser)
-select 0,'manage_options','manage_options','WebFront',0,getdate(),'andre'
-UNION ALL
-select 0,'edit_users','edit_users','WebFront',0,getdate(),'andre'
-UNION ALL
-select 0,'edit_posts','edit_posts','WebFront',0,getdate(),'andre'
-UNION ALL
-select 0,'read','read','WebFront',0,getdate(),'andre'
-
---Core_Permission
-insert into Core_Permission
-(RoleID
-,FunctionID
-,InDate
-,InUser)
---administrator
-select 1,1,getdate(),'andre'
-UNION ALL
-select 1,2,getdate(),'andre'
-UNION ALL
-select 1,3,getdate(),'andre'
-UNION ALL
-select 1,4,getdate(),'andre'
---editor
-UNION ALL
-select 2,2,getdate(),'andre'
-UNION ALL
-select 2,3,getdate(),'andre'
-UNION ALL
-select 2,4,getdate(),'andre'
---author
-UNION ALL
-select 3,3,getdate(),'andre'
-UNION ALL
-select 3,4,getdate(),'andre'
---contributor
-UNION ALL
-select 4,3,getdate(),'andre'
-UNION ALL
-select 4,4,getdate(),'andre'
---subscriber
-UNION ALL
-select 5,4,getdate(),'andre'
-
-
 --Core_UserRole
 insert into Core_UserRole
 (UserID
@@ -105,3 +51,11 @@ insert into Core_UserRole
 ,InUser)
 --administrator
 select 3,1,getdate(),'andre'
+
+--Core_Function
+--** refer to db.script.Initialdata.Core_Function.sql
+
+--Core_Permission
+--** refer to db.script.Initialdata.Core_Permission.sql
+
+

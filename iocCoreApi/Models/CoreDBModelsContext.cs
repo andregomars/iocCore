@@ -15,6 +15,8 @@ namespace iocCoreApi.Models
         public virtual DbSet<Core_Role> core_role { get; set; }
         public virtual DbSet<Core_User> core_user { get; set; }
         public virtual DbSet<Core_UserRole> core_UserRole { get; set; }
+        public virtual DbSet<Core_Permission> core_Permission { get; set; }
+        public virtual DbSet<Core_Function> core_Function { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -91,6 +93,34 @@ namespace iocCoreApi.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Core_UserRole>()
+                .Property(e => e.EditUser)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Core_Permission>()
+                .Property(e => e.InUser)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Core_Permission>()
+                .Property(e => e.EditUser)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Core_Function>()
+                .Property(e => e.FunctionName)
+                .IsUnicode(true);
+
+            modelBuilder.Entity<Core_Function>()
+                .Property(e => e.FunctionDescription)
+                .IsUnicode(true);
+
+            modelBuilder.Entity<Core_Function>()
+                .Property(e => e.FunctionType)
+                .IsUnicode(true);
+
+            modelBuilder.Entity<Core_Function>()
+                .Property(e => e.InUser)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Core_Function>()
                 .Property(e => e.EditUser)
                 .IsUnicode(false);
         }
