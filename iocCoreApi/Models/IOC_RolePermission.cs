@@ -6,9 +6,9 @@ using System.Web;
 
 namespace iocCoreApi.Models
 {
-    public class IOC_Role
+    public class IOC_RolePermission
     {
         public string name { get; set; }
-        public List<String> capabilities { get; set; }
+        public List<IOC_Capability> capabilities { get; set; }
     }
 }

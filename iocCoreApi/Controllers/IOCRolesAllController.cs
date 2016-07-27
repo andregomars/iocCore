@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -14,50 +15,58 @@ namespace iocCoreApi.Controllers
         private CoreDBModelsContext db = new CoreDBModelsContext();
 
         [ResponseType(typeof(Dictionary<String, JsonRole>))]
-        public IHttpActionResult GetIOC_Roles()
+        public IHttpActionResult GetIOC_RolesAll()
         {
-            IOC_Roles ioc_roles = new IOC_Roles();
-
-            var query = from role in db.core_role
-                        select new IOC_Role
+            var roles = (from role in db.core_role
+                        select new IOC_RolePermission
                         {
                             name = role.RoleName,
                             capabilities = (from func in db.core_Function
                                             join perm in db.core_Permission
                                             on func.ID equals perm.FunctionID
                                             where perm.RoleID == role.ID
-                                            select func.FunctionName).ToList<String>()
-                        };
+                                            select new IOC_Capability
+                                            {
+                                                Name = func.FunctionName.ToLower(),
+                                                Enabled = true
+                                            }
+                                            ).ToList<IOC_Capability>()
+                        }).ToList<IOC_RolePermission>();
 
-            IEnumerable<IOC_Role> roles = query.ToList<IOC_Role>();
-
-            Dictionary<String, JsonRole> jsonRoles = new Dictionary<String, JsonRole>();
-            foreach (var role in roles)
+            //convert c# obj to json associate arrays
+            Dictionary<String, JsonRole> allRolesInJson = new Dictionary<String, JsonRole>();
+            foreach (IOC_RolePermission role in roles)
             {
-                JsonRole jsonRole = new JsonRole();
-                jsonRole.name = role.name;
-                jsonRole.capabilities = new Dictionary<string, bool>();
-                foreach (String cap in role.capabilities)
+                JsonRole roleInJson = new JsonRole();
+                roleInJson.name = role.name;
+                roleInJson.capabilities = new Dictionary<string, bool>();
+                foreach (IOC_Capability cap in role.capabilities)
                 {
-                    jsonRole.capabilities.Add(cap.ToLower(), true);
+                    roleInJson.capabilities.Add(cap.Name.ToLower(), cap.Enabled);
                 }
-                jsonRoles.Add(role.name.ToLower(), jsonRole);
+                allRolesInJson.Add(role.name.ToLower(), roleInJson);
             }
 
-            if (jsonRoles == null)
+            if (allRolesInJson == null)
             {
                 return NotFound();
             }
 
-            return Ok(jsonRoles);
+            return Ok(allRolesInJson);
+        }
+
+        [DataContract]
+        class JsonRole
+        {
+            [DataMember]
+            public string name { get; set; }
+
+            [DataMember]
+            public Dictionary<String, Boolean> capabilities { get; set; }
         }
     }
 
 
-    public class JsonRole
-    {
-        public string name { get; set; }
-        public Dictionary<String, Boolean> capabilities { get; set; }
-    }
+
 
 }
