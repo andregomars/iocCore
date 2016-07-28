@@ -8,107 +8,54 @@ namespace iocCoreApi.Models
     public class IOC_User
     {
         public int ID { get; set; }
-        public Allcaps allcaps { get; set; }
-        public string cap_key { get; set; }
-        public Caps caps { get; set; }
-        public Data data { get; set; }
-        public object filter { get; set; }
-        public List<string> roles { get; set; }
-    }
-
-    public class Allcaps
-    {
-        public bool activate_plugins { get; set; }
-        public bool add_users { get; set; }
-        public bool administrator { get; set; }
-        public bool create_users { get; set; }
-        public bool delete_others_pages { get; set; }
-        public bool delete_others_posts { get; set; }
-        public bool delete_pages { get; set; }
-        public bool delete_plugins { get; set; }
-        public bool delete_posts { get; set; }
-        public bool delete_private_pages { get; set; }
-        public bool delete_private_posts { get; set; }
-        public bool delete_published_pages { get; set; }
-        public bool delete_published_posts { get; set; }
-        public bool delete_themes { get; set; }
-        public bool delete_users { get; set; }
-        public bool edit_dashboard { get; set; }
-        public bool edit_files { get; set; }
-        public bool edit_others_pages { get; set; }
-        public bool edit_others_posts { get; set; }
-        public bool edit_pages { get; set; }
-        public bool edit_plugins { get; set; }
-        public bool edit_posts { get; set; }
-        public bool edit_private_pages { get; set; }
-        public bool edit_private_posts { get; set; }
-        public bool edit_published_pages { get; set; }
-        public bool edit_published_posts { get; set; }
-        public bool edit_theme_options { get; set; }
-        public bool edit_themes { get; set; }
-        public bool edit_users { get; set; }
-        public bool export { get; set; }
-        public bool import { get; set; }
-        public bool install_plugins { get; set; }
-        public bool install_themes { get; set; }
-        public bool level_0 { get; set; }
-        public bool level_1 { get; set; }
-        public bool level_10 { get; set; }
-        public bool level_2 { get; set; }
-        public bool level_3 { get; set; }
-        public bool level_4 { get; set; }
-        public bool level_5 { get; set; }
-        public bool level_6 { get; set; }
-        public bool level_7 { get; set; }
-        public bool level_8 { get; set; }
-        public bool level_9 { get; set; }
-        public bool list_users { get; set; }
-        public bool manage_categories { get; set; }
-        public bool manage_links { get; set; }
-        public bool manage_options { get; set; }
-        public bool moderate_comments { get; set; }
-        public bool promote_users { get; set; }
-        public bool publish_pages { get; set; }
-        public bool publish_posts { get; set; }
-        public bool read { get; set; }
-        public bool read_private_pages { get; set; }
-        public bool read_private_posts { get; set; }
-        public bool remove_users { get; set; }
-        public bool switch_themes { get; set; }
-        public bool unfiltered_html { get; set; }
-        public bool unfiltered_upload { get; set; }
-        public bool update_core { get; set; }
-        public bool update_plugins { get; set; }
-        public bool update_themes { get; set; }
-        public bool upload_files { get; set; }
-    }
-
-    public class Caps
-    {
-        public bool administrator { get; set; }
-
-        public static implicit operator Caps(Allcaps v)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class Data
-    {
-        public int ID { get; set; }
-        public int deleted { get; set; }
+        public bool deleted { get; set; }
         public string display_name { get; set; }
-        public int spam { get; set; }
+        public bool spam { get; set; }
         public string user_activation_key { get; set; }
         public string user_email { get; set; }
         public string user_login { get; set; }
         public string user_nicename { get; set; }
         public string user_pass { get; set; }
-        public string user_registered { get; set; }
-        public int user_status { get; set; }
+        public DateTime user_registered { get; set; }
+        public bool user_status { get; set; }
         public string user_url { get; set; }
+
+        public IOC_User()
+        { }
+
+        public IOC_User(int id, string display_name, string user_email, string user_login,
+            string user_nicename, string user_pass, DateTime? user_registered, string user_status)
+        {
+            this.ID = id;
+            this.deleted = false;
+            this.display_name = display_name;
+            this.spam = false;
+            this.user_activation_key = "";
+            this.user_email = user_email;
+            this.user_login = user_login;
+            this.user_nicename = user_nicename;
+            this.user_pass = user_pass;
+            this.user_registered = user_registered == null ? DateTime.Now : user_registered.Value;
+            this.user_status = user_status.Equals("Active");
+            this.user_url = "";
+        }
     }
 
-
-
+    /*
+    {
+        "ID": 5,
+        "deleted": 0,
+        "display_name": "iocdbo",
+        "spam": 0,
+        "user_activation_key": "",
+        "user_email": "andregomars@gmail.com",
+        "user_login": "iocdbo",
+        "user_nicename": "iocdbo",
+        "user_pass": "8be4177df4ec5dee8c8bc4f3b49d7a2d",
+        "user_registered": "2016-06-05 00:16:33",
+        "user_status": 0,
+        "user_url": ""
+    }
+     */
 }
+ 

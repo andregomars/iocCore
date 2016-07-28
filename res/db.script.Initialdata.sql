@@ -51,6 +51,7 @@ insert into Core_UserRole
 ,InUser)
 --administrator
 select 3,1,getdate(),'andre'
+select 1,1,getdate(),'andre'
 
 --Core_Function
 --** refer to db.script.Initialdata.Core_Function.sql

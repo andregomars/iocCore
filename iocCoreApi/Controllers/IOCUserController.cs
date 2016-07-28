@@ -11,43 +11,46 @@ namespace iocCoreApi.Controllers
 {
     public class IOCUserController : ApiController
     {
-        //[Route("api/AuthenticateUser")]
-        //[ResponseType(typeof(Boolean))]
-        //public bool Get(string loginName, string password)
+        private CoreDBModelsContext db = new CoreDBModelsContext();
 
+        // api/IOCUser?loginName={loginName}
         [ResponseType(typeof(IOC_User))]
-        public IHttpActionResult GetIOC_User(string loginName, string password)
+        public IHttpActionResult GetIOC_User(string loginName)
         {
-            IOC_User user = new IOC_User();
-            user.ID = 2;
-            user.allcaps = new Allcaps() { administrator = true };
-            user.cap_key = "ioc_capabilities";
-            user.caps = new Caps() { administrator = true };
-            user.data = new Data
-            {
-                ID = user.ID,
-                deleted = 0,
-                display_name = "carol liu",
-                spam = 0,
-                user_activation_key = "",
-                user_email = "carol@gmail.com",
-                user_login = "carol",
-                user_nicename = "carol liu",
-                //user_pass = "$P$BBh7gQRP.U9J3HOc03.hd4K0KFuShq0",
-                user_pass = "1234",
-                user_registered = "2016-06-05 00:16:33",
-                user_status = 0,
-                user_url = ""
-            };
-            user.filter = null;
-            user.roles = new List<string>() { "administrator" };
+            if (String.IsNullOrWhiteSpace(loginName)) return NotFound();
 
-            if (user.data.user_login == loginName && user.data.user_pass == password)
+            List<Core_User> users = (from user in db.core_user
+                                     where user.LoginName == loginName
+                                     select user).ToList<Core_User>();
+            
+            if (users == null || users.Count < 1)
             {
-                return Ok(user);
+                return NotFound();
             }
 
-            return NotFound();
+            IOC_User iocUser = new IOC_User(users[0].ID, users[0].Name, users[0].Email,
+                users[0].LoginName, users[0].Name, users[0].Password, users[0].InDate, users[0].Status);
+
+            return Ok(iocUser);
+        }
+
+        [ResponseType(typeof(IOC_User))]
+        [Route("api/IOCUser/{id}")]
+        public IHttpActionResult GetIOC_User(int id)
+        {
+            if (id < 0) return NotFound();
+
+            Core_User user = db.core_user.Find(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IOC_User iocUser = new IOC_User(user.ID, user.Name, user.Email,
+                user.LoginName, user.Name, user.Password, user.InDate, user.Status);
+
+            return Ok(iocUser);
         }
     }
 }
