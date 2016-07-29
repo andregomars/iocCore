@@ -2,8 +2,11 @@ use core
 go
 
 --Core_User
+set identity_insert dbo.core_user on
+
 insert into core_user(
-Name
+ID
+,Name
 ,LoginName
 ,UserType
 ,CompanyID
@@ -17,11 +20,15 @@ Name
 ,InUser
 ,Status
 )
-select 'andre shen','andre','internal','0',1,'1234','626-111-1111',null,'andregomars@gmail.com',null,getdate(),'andre','Active'
+select 3,'iocro','iocro','internal','0',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-111-1111',null,'iocro@ioc.com',null,getdate(),'andre','Active'
 UNION ALL
-select 'carol liu','carol','byd','29051',1,'1234','909-111-1111',null,'carol@gmail.com',null,getdate(),'andre','Active'
+select 4,'iotest','iotest','byd','29051',0,'8be4177df4ec5dee8c8bc4f3b49d7a2d','909-111-1111',null,'iotest@ioc.com',null,getdate(),'andre','Active'
 UNION ALL
-select 'iocdbo','ioc dbo','internal','0',1,'1234','626-222-2222',null,'iocdbo@gmail.com',null,getdate(),'andre','Active'
+select 5,'ioc dbo','iocdbo','internal','0',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'iocdbo@ioc.com',null,getdate(),'andre','Active'
+UNION ALL
+select 6,'robin','robin','internal','0',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'robin@ioc.com',null,getdate(),'andre','Active'
+
+set identity_insert dbo.core_user off
 
 
 --Core_Role
@@ -51,7 +58,12 @@ insert into Core_UserRole
 ,InUser)
 --administrator
 select 3,1,getdate(),'andre'
-select 1,1,getdate(),'andre'
+UNION ALL
+select 4,1,getdate(),'andre'
+UNION ALL
+select 5,1,getdate(),'andre'
+UNION ALL
+select 6,1,getdate(),'andre'
 
 --Core_Function
 --** refer to db.script.Initialdata.Core_Function.sql
