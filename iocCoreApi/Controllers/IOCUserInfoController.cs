@@ -20,20 +20,19 @@ namespace iocCoreApi.Controllers
             Dictionary<string, bool> allCaps = new Dictionary<string, bool>();
             Dictionary<string, bool> caps = new Dictionary<string, bool>();
             List<string> roles;
-            IOC_User iocUser;
 
             //get user data
-            List<Core_User> users = (from iocuser in db.core_user
-                                     where iocuser.LoginName == loginName
-                                     select iocuser).ToList<Core_User>();
+            Core_User coreUser = (from user in db.core_user
+                                     where user.LoginName == loginName
+                                     select user).SingleOrDefault<Core_User>();
 
-            if (users == null || users.Count < 1)
+            if (coreUser == null)
             {
                 return NotFound();
             }
 
-            iocUser = new IOC_User(users[0].ID, users[0].Name, users[0].Email,
-                users[0].LoginName, users[0].Name, users[0].Password, users[0].InDate, users[0].Status);
+            IOC_User iocUser = new IOC_User(coreUser.ID, coreUser.Name, coreUser.Email,
+                coreUser.LoginName, coreUser.Name, coreUser.Password, coreUser.InDate, coreUser.Status);
 
             //get allCaps array
             var funcs = from func in db.core_Function
@@ -41,9 +40,9 @@ namespace iocCoreApi.Controllers
                             on func.ID equals perm.FunctionID
                         join userRole in db.core_UserRole
                             on perm.RoleID equals userRole.RoleID
-                        join user2 in db.core_user
-                            on userRole.UserID equals user2.ID
-                        where user2.LoginName == loginName
+                        join user in db.core_user
+                            on userRole.UserID equals user.ID
+                        where user.LoginName == loginName
                         select func.FunctionName;
 
             foreach (string func in funcs.Distinct().ToList<string>())
@@ -52,12 +51,12 @@ namespace iocCoreApi.Controllers
             }
 
             //get caps and roles array
-            var coreRoles = from user3 in db.core_user
+            var coreRoles = from user in db.core_user
                         join userRole in db.core_UserRole
-                            on user3.ID equals userRole.UserID
+                            on user.ID equals userRole.UserID
                         join role in db.core_role
                             on userRole.RoleID equals role.ID
-                        where user3.LoginName == loginName
+                        where user.LoginName == loginName
                         select role.RoleName.ToLower();
 
             roles = coreRoles.ToList<string>();
@@ -76,6 +75,71 @@ namespace iocCoreApi.Controllers
             return NotFound();
 
         }
+
+
+        [ResponseType(typeof(IOC_UserInfo))]
+        [Route("api/IOCUserInfo/{id}")]
+        public IHttpActionResult GetIOC_UserInfo(int id)
+        {
+            if (id < 0) return NotFound();
+
+            Dictionary<string, bool> allCaps = new Dictionary<string, bool>();
+            Dictionary<string, bool> caps = new Dictionary<string, bool>();
+            List<string> roles;
+
+            //get user data
+            Core_User coreUser = db.core_user.Find(id);
+
+            if (coreUser == null)
+            {
+                return NotFound();
+            }
+
+            IOC_User iocUser = new IOC_User(coreUser.ID, coreUser.Name, coreUser.Email,
+                coreUser.LoginName, coreUser.Name, coreUser.Password, coreUser.InDate, coreUser.Status);
+
+            //get allCaps array
+            var funcs = from func in db.core_Function
+                        join perm in db.core_Permission
+                            on func.ID equals perm.FunctionID
+                        join userRole in db.core_UserRole
+                            on perm.RoleID equals userRole.RoleID
+                        join user in db.core_user
+                            on userRole.UserID equals user.ID
+                        where user.ID == id
+                        select func.FunctionName;
+
+            foreach (string func in funcs.Distinct().ToList<string>())
+            {
+                allCaps.Add(func, true);
+            }
+
+            //get caps and roles array
+            var coreRoles = from user in db.core_user
+                            join userRole in db.core_UserRole
+                                on user.ID equals userRole.UserID
+                            join role in db.core_role
+                                on userRole.RoleID equals role.ID
+                            where user.ID == id
+                            select role.RoleName.ToLower();
+
+            roles = coreRoles.ToList<string>();
+            foreach (string role in roles)
+            {
+                caps.Add(role.ToLower(), true);
+            }
+
+            IOC_UserInfo userInfo = new IOC_UserInfo(iocUser.ID, allCaps, caps, iocUser, roles);
+
+            if (userInfo != null)
+            {
+                return Ok(userInfo);
+            }
+
+            return NotFound();
+
+        }
+
 
     }
 
