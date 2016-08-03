@@ -35,6 +35,19 @@ namespace iocCoreApi.Controllers
             return Ok(core_user);
         }
 
+        // GET: api/User?loginName={loginName}
+        [ResponseType(typeof(Core_User))]
+        public IHttpActionResult Getcore_user(string loginName)
+        {
+            Core_User core_user = db.core_user.Where<Core_User>(u=>u.LoginName == loginName).SingleOrDefault<Core_User>();
+            if (core_user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(core_user);
+        }
+
         // PUT: api/User/5
         [ResponseType(typeof(void))]
         public IHttpActionResult Putcore_user(int id, Core_User core_user)
