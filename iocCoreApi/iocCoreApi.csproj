@@ -209,11 +209,13 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AuthenticateUserController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\FunctionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IOCRolesAllController.cs" />
     <Compile Include="Controllers\IOCRolesController.cs" />
     <Compile Include="Controllers\IOCUserController.cs" />
     <Compile Include="Controllers\IOCUserInfoController.cs" />
+    <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />

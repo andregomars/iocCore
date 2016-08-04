@@ -104,6 +104,10 @@ namespace iocCoreApi.Models
                 .Property(e => e.EditUser)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<Core_Permission>()
+                .Property(e => e.Status)
+                .IsUnicode(false);
+
             modelBuilder.Entity<Core_Function>()
                 .Property(e => e.FunctionName)
                 .IsUnicode(true);
