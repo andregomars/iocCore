@@ -1,0 +1,20 @@
+{
+    "manager": {
+        "capabilities": {
+            "delete_posts": true,
+            "edit_dashboard": true,
+            "edit_posts": true,
+            "level_0": true,
+            "level_1": true,
+            "read": true
+        },
+        "name": "manager"
+    },
+    "worker": {
+        "capabilities": {
+            "level_0": true,
+            "read": true
+        },
+        "name": "worker"
+    }
+}
