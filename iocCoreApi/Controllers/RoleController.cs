@@ -85,6 +85,24 @@ namespace iocCoreApi.Controllers
             return CreatedAtRoute("DefaultApi", new { id = core_Role.ID }, core_Role);
         }
 
+        // POST: api/Role/Batch
+        [ResponseType(typeof(List<Core_Role>))]
+        [Route("api/Role/Batch")]
+        public IHttpActionResult PostCore_Roles(List<Core_Role> core_Roles)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+
+            db.core_role.AddRange(core_Roles);
+            db.SaveChanges();
+
+            return Ok(db.core_role);
+        }
+
         // DELETE: api/Role/5
         [ResponseType(typeof(Core_Role))]
         public IHttpActionResult DeleteCore_Role(int id)
