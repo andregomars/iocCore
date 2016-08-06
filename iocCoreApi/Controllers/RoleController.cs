@@ -95,9 +95,35 @@ namespace iocCoreApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            List<Core_Role> masterRoles = db.core_role.ToList<Core_Role>();
 
+            //find out roles to update, and mark them in db model to modified
+            List<Core_Role> rolesToUpdate =
+                masterRoles.Where<Core_Role>(m => core_Roles.Any<Core_Role>(r => m.RoleName.Equals(r.RoleName)))
+                .ToList<Core_Role>();
+            rolesToUpdate.ForEach(m =>
+                { Core_Role row = core_Roles.Find(r => m.RoleName.Equals(r.RoleName));
+                    m.RoleType = row.RoleType;
+                    m.RoleDescription = row.RoleDescription;
+                    m.EditDate = DateTime.Now;
+                    m.EditUser = row.EditUser;
+                    m.Status = row.Status;
+                });
+            rolesToUpdate.ForEach(m => db.Entry(m).State = EntityState.Modified );
 
-            db.core_role.AddRange(core_Roles);
+            //find out roles to insert, and insert them into db model
+            List<Core_Role> rolesToInsert =
+                core_Roles.Where<Core_Role>(r => !masterRoles.Any<Core_Role>(m => m.RoleName.Equals(r.RoleName)))
+                .ToList<Core_Role>();
+            db.core_role.AddRange(rolesToInsert);
+
+            //find out roles to delete, and remove them from db model
+            List<Core_Role> rolesToDelete =
+                masterRoles.Where<Core_Role>(m => !core_Roles.Any<Core_Role>(r => m.RoleName.Equals(r.RoleName)))
+                .ToList<Core_Role>();
+            db.core_role.RemoveRange(rolesToDelete);
+
+            //commit db model changes and do the action in db
             db.SaveChanges();
 
             return Ok(db.core_role);

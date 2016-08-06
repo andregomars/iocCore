@@ -1,3 +1,51 @@
+[
+  {
+    "ID": 0,
+    "RoleName": "manager",
+    "RoleType": "internal",
+    "RoleDescription": "Manager",
+    "InDate": "2016-08-05T16:17:10.3269369-07:00",
+    "InUser": "andre",
+    "EditDate": null,
+    "EditUser": null,
+    "Status": "Active"
+  },
+  {
+    "ID": 0,
+    "RoleName": "worker",
+    "RoleType": "internal",
+    "RoleDescription": "Worker",
+    "InDate": "2016-08-05T16:17:10.3269369-07:00",
+    "InUser": "andre",
+    "EditDate": null,
+    "EditUser": null,
+    "Status": "Active"
+  },
+  {
+    "ID": 0,
+    "RoleName": "administrator",
+    "RoleType": "internal",
+    "RoleDescription": "Administrator",
+    "InDate": "2016-08-05T16:17:10.3269369-07:00",
+    "InUser": "andre",
+    "EditDate": "2016-08-05T16:17:10.3269369-07:00",
+    "EditUser": "andre",
+    "Status": "Active"
+  },
+  {
+    "ID": 0,
+    "RoleName": "editor",
+    "RoleType": "vendor",
+    "RoleDescription": "Vendor Editor",
+    "InDate": "2016-08-05T16:17:10.3269369-07:00",
+    "InUser": "andre",
+    "EditDate": null,
+    "EditUser": null,
+    "Status": "Active"
+  }
+]
+
+/*
 {
     "manager": {
         "capabilities": {
@@ -18,3 +66,4 @@
         "name": "worker"
     }
 }
+*/

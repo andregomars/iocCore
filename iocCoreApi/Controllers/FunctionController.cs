@@ -86,36 +86,49 @@ namespace iocCoreApi.Controllers
         }
 
         // POST: api/Function/Batch
-        [ResponseType(typeof(Core_Function[]))]
+        [ResponseType(typeof(List<Core_Function>))]
         [Route("api/Function/Batch")]
-        public IHttpActionResult PostCore_Functions([FromBody] Core_Function[] core_Functions)
+        public IHttpActionResult PostCore_Roles(List<Core_Function> core_Functions)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.core_Function.AddRange(core_Functions);
-            db.SaveChanges();
+            List<Core_Function> masterFunctions = db.core_Function.ToList<Core_Function>();
             
+            //find out functions to update, and mark them in db model to modified
+            List<Core_Function> functionsToUpdate =
+                masterFunctions.Where<Core_Function>(m => core_Functions.Any<Core_Function>(r => m.FunctionName.Equals(r.FunctionName)))
+                .ToList<Core_Function>();
+            functionsToUpdate.ForEach(m =>
+            {
+                Core_Function row = core_Functions.Find(r => m.FunctionName.Equals(r.FunctionName));
+                m.FunctionType = row.FunctionType;
+                m.FunctionDescription = row.FunctionDescription;
+                m.EditDate = DateTime.Now;
+                m.EditUser = row.EditUser;
+            });
+            functionsToUpdate.ForEach(m => db.Entry(m).State = EntityState.Modified);
+
+            //find out functions to insert, and insert them into db model
+            List<Core_Function> functionsToInsert =
+                core_Functions.Where<Core_Function>(r => !masterFunctions.Any<Core_Function>(m => m.FunctionName.Equals(r.FunctionName)))
+                .ToList<Core_Function>();
+            db.core_Function.AddRange(functionsToInsert);
+
+            //find out functions to delete, and remove them from db model
+            List<Core_Function> functionsToDelete =
+                masterFunctions.Where<Core_Function>(m => !core_Functions.Any<Core_Function>(r => m.FunctionName.Equals(r.FunctionName)))
+                .ToList<Core_Function>();
+            db.core_Function.RemoveRange(functionsToDelete);
+
+            //commit db model changes and do the action in db
+            db.SaveChanges();
+
             return Ok(db.core_Function);
         }
 
-        // DELETE: api/Function/5
-        [ResponseType(typeof(Core_Function))]
-        public IHttpActionResult DeleteCore_Function(int id)
-        {
-            Core_Function core_Function = db.core_Function.Find(id);
-            if (core_Function == null)
-            {
-                return NotFound();
-            }
-
-            db.core_Function.Remove(core_Function);
-            db.SaveChanges();
-
-            return Ok(core_Function);
-        }
 
         // DELETE: api/Function/Batch
         [ResponseType(typeof(void))]
@@ -150,5 +163,40 @@ namespace iocCoreApi.Controllers
         {
             return db.core_Function.Count(e => e.ID == id) > 0;
         }
+
+
+        /*
+                // POST: api/Function/Batch
+                [ResponseType(typeof(Core_Function[]))]
+                [Route("api/Function/Batch")]
+                public IHttpActionResult PostCore_Functions([FromBody] Core_Function[] core_Functions)
+                {
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    db.core_Function.AddRange(core_Functions);
+                    db.SaveChanges();
+
+                    return Ok(db.core_Function);
+                }
+
+                // DELETE: api/Function/5
+                [ResponseType(typeof(Core_Function))]
+                public IHttpActionResult DeleteCore_Function(int id)
+                {
+                    Core_Function core_Function = db.core_Function.Find(id);
+                    if (core_Function == null)
+                    {
+                        return NotFound();
+                    }
+
+                    db.core_Function.Remove(core_Function);
+                    db.SaveChanges();
+
+                    return Ok(core_Function);
+                }
+        */
     }
 }

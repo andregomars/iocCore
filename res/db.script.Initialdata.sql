@@ -49,6 +49,32 @@ select 'Contributor','internal','Contributor',getdate(),'andre','Active'
 UNION ALL
 select 'Subscriber','internal','Subscriber',getdate(),'andre','Active'
 
+/* copy from Core_Role_Bak
+
+set identity_insert dbo.Core_Role on
+
+insert into Core_Role
+(ID
+,RoleName
+,RoleType
+,RoleDescription
+,InDate
+,InUser
+,Status
+)
+select 
+ID
+,RoleName
+,RoleType
+,RoleDescription
+,InDate
+,InUser
+,Status
+from Core_Role_Bak
+
+set identity_insert dbo.Core_Role off
+
+*/
 
 --Core_UserRole
 insert into Core_UserRole
