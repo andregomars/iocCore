@@ -85,6 +85,7 @@ namespace iocCoreApi.Controllers
             return CreatedAtRoute("DefaultApi", new { id = core_Permission.ID }, core_Permission);
         }
 
+
         // POST: api/Permission/Batch
         [ResponseType(typeof(Core_Permission[]))]
         [Route("api/Permission/Batch")]
@@ -95,6 +96,7 @@ namespace iocCoreApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            db.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.Core_Permission");
             db.core_Permission.AddRange(core_Permissions);
             db.SaveChanges();
 
@@ -150,5 +152,25 @@ namespace iocCoreApi.Controllers
         {
             return db.core_Permission.Count(e => e.ID == id) > 0;
         }
+
+
+        /*
+        // POST: api/Permission/Batch
+        [ResponseType(typeof(Core_Permission[]))]
+        [Route("api/Permission/Batch")]
+        public IHttpActionResult PostCore_Permissions([FromBody] Core_Permission[] core_Permissions)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            db.core_Permission.AddRange(core_Permissions);
+            db.SaveChanges();
+
+            return Ok(db.core_Permission);
+        }
+        */
+
     }
 }

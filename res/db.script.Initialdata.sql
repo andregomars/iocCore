@@ -32,27 +32,32 @@ set identity_insert dbo.core_user off
 
 
 --Core_Role
+set identity_insert dbo.Core_Role on
+
 insert into Core_Role
-(RoleName
+(ID
+,RoleName
 ,RoleType
 ,RoleDescription
 ,InDate
 ,InUser
 ,Status)
-select 'Administrator','internal','Administrator',getdate(),'andre','Active'
+select 1,'administrator','internal','Administrator',getdate(),'andre','Active'
 UNION ALL
-select 'Editor','internal','Editor',getdate(),'andre','Active'
+select 2,'editor','internal','Editor',getdate(),'andre','Active'
 UNION ALL
-select 'Author','internal','Author',getdate(),'andre','Active'
+select 3,'author','internal','Author',getdate(),'andre','Active'
 UNION ALL
-select 'Contributor','internal','Contributor',getdate(),'andre','Active'
+select 4,'contributor','internal','Contributor',getdate(),'andre','Active'
 UNION ALL
-select 'Subscriber','internal','Subscriber',getdate(),'andre','Active'
+select 5,'subscriber','internal','Subscriber',getdate(),'andre','Active'
+
+set identity_insert dbo.Core_Role off
 
 /* copy from Core_Role_Bak
 
 set identity_insert dbo.Core_Role on
-
+truncate table Core_Role
 insert into Core_Role
 (ID
 ,RoleName

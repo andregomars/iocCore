@@ -1,0 +1,50 @@
+[
+  {
+    "ID": 0,
+    "MenuID": 0,
+    "FunctionName": "edit_dashboard",
+    "FunctionDescription": "edit_dashboard",
+    "FunctionType": "WebFront",
+    "Priority": 0,
+    "InDate": "2016-08-05T20:01:51.9578629-07:00",
+    "InUser": "andre",
+    "EditDate": "2016-08-05T20:01:51.9578629-07:00",
+    "EditUser": "andre"
+  },
+  {
+    "ID": 0,
+    "MenuID": 0,
+    "FunctionName": "read",
+    "FunctionDescription": "Read it only",
+    "FunctionType": "WebFront",
+    "Priority": 0,
+    "InDate": "2016-08-05T20:01:51.9578629-07:00",
+    "InUser": "andre",
+    "EditDate": "2016-08-05T20:01:51.9578629-07:00",
+    "EditUser": "andre"
+  },
+  {
+    "ID": 0,
+    "MenuID": 0,
+    "FunctionName": "testFunc",
+    "FunctionDescription": "test this function",
+    "FunctionType": "WebFront",
+    "Priority": 0,
+    "InDate": "2016-08-05T20:01:51.9578629-07:00",
+    "InUser": "andre",
+    "EditDate": "2016-08-05T20:01:51.9578629-07:00",
+    "EditUser": "andre"
+  },
+  {
+    "ID": 0,
+    "MenuID": 0,
+    "FunctionName": "testFunc2",
+    "FunctionDescription": "test this function no. 2",
+    "FunctionType": "WebFront",
+    "Priority": 0,
+    "InDate": "2016-08-05T20:01:51.9578629-07:00",
+    "InUser": "andre",
+    "EditDate": "2016-08-05T20:01:51.9578629-07:00",
+    "EditUser": "andre"
+  }
+]

@@ -1,4 +1,33 @@
 --Core_Permission
+
+--copy from Core_Permission_bak
+
+set identity_insert dbo.Core_Permission on
+truncate table Core_Permission
+insert into Core_Permission
+(ID
+,RoleID
+,FunctionID
+,InDate
+,InUser
+,EditDate
+,EditUser
+,Status
+)
+select 
+ID
+,RoleID
+,FunctionID
+,InDate
+,InUser
+,EditDate
+,EditUser
+,Status
+from Core_Permission_Bak
+
+set identity_insert dbo.Core_Permission off
+
+/*
 insert into Core_Permission
 (RoleID
 ,FunctionID
@@ -148,3 +177,4 @@ select 4,4,getdate(),'andre'
 --subscriber
 UNION ALL
 select 5,4,getdate(),'andre'
+*/

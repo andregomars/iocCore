@@ -1,4 +1,38 @@
 --Core_Function
+
+--copy from Core_Function_Bak
+
+set identity_insert dbo.Core_Function on
+truncate table Core_Function
+insert into Core_Function
+(ID
+,MenuID
+,FunctionName
+,FunctionDescription
+,FunctionType
+,Priority
+,InDate
+,InUser
+,EditDate
+,EditUser
+)
+select 
+ID
+,MenuID
+,FunctionName
+,FunctionDescription
+,FunctionType
+,Priority
+,InDate
+,InUser
+,EditDate
+,EditUser
+from Core_Function_Bak
+
+set identity_insert dbo.Core_Function off
+
+
+/*
 insert into Core_Function
 (MenuID
 ,FunctionName
@@ -130,3 +164,4 @@ UNION ALL
 select 0,'delete_themes','delete_themes','WebFront',0,getdate(),'andre'
 UNION ALL
 select 0,'export','export','WebFront',0,getdate(),'andre'
+*/
