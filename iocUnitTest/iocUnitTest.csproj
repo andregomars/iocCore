@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ContactControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\UtilityTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\iocCoreApi\iocCoreApi.csproj">

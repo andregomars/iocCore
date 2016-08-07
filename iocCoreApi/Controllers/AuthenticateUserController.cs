@@ -1,4 +1,5 @@
 ﻿using iocCoreApi.Models;
+using iocCoreApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,29 @@ namespace iocCoreApi.Controllers
 
         [Route("api/AuthenticateUser")]
         [ResponseType(typeof(Boolean))]
-        public bool Get(string loginName, string password)
+        public IHttpActionResult Get(string loginName, string password)
         {
             if (String.IsNullOrEmpty(loginName) || String.IsNullOrEmpty(password))
-                return false;
+                return BadRequest("loginName and password are both required.");
 
-            var users = from user in db.core_user
-                        where user.LoginName == loginName && user.Password == password
-                        select user;
+            Core_User coreUser = (from user in db.core_user
+                              where user.LoginName == loginName
+                              select user).SingleOrDefault<Core_User>();
+            if (coreUser == null)
+            {
+                return NotFound();
+            }
 
-            return users.Any();
+            bool isValidUser = Utility.VerifyTripleMd5Hash(password, coreUser.Password);
+
+            if (isValidUser)
+            {
+                return Ok(coreUser);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
