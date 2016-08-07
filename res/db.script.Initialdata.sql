@@ -20,13 +20,13 @@ ID
 ,InUser
 ,Status
 )
-select 3,'iocro','iocro','internal','1',2,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-111-1111',null,'iocro@ioc.com',null,getdate(),'andre','Active'
+select 3,'iocro','iocro','internal','2',0,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-111-1111',null,'iocro@ioc.com',null,getdate(),'andre','Active'
 UNION ALL
-select 4,'iotest','iotest','byd','29051',3,'8be4177df4ec5dee8c8bc4f3b49d7a2d','909-111-1111',null,'iotest@ioc.com',null,getdate(),'andre','Active'
+select 4,'iotest','iotest','byd','3',0,'8be4177df4ec5dee8c8bc4f3b49d7a2d','909-111-1111',null,'iotest@ioc.com',null,getdate(),'andre','Active'
 UNION ALL
-select 5,'ioc dbo','iocdbo','internal','0',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'iocdbo@ioc.com',null,getdate(),'andre','Active'
+select 5,'ioc dbo','iocdbo','internal','1',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'iocdbo@ioc.com',null,getdate(),'andre','Active'
 UNION ALL
-select 6,'robin','robin','internal','0',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'robin@ioc.com',null,getdate(),'andre','Active'
+select 6,'robin','robin','internal','1',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'robin@ioc.com',null,getdate(),'andre','Active'
 
 set identity_insert dbo.core_user off
 
