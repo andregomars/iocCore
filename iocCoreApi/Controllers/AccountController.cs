@@ -19,6 +19,7 @@ using iocCoreApi.Results;
 
 namespace iocCoreApi.Controllers
 {
+    /*
     [Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
@@ -491,4 +492,5 @@ namespace iocCoreApi.Controllers
 
         #endregion
     }
+    */
 }

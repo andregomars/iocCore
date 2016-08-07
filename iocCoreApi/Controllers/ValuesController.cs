@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace iocCoreApi.Controllers
 {
+    /*
     [Authorize]
     public class ValuesController : ApiController
     {
@@ -37,4 +38,5 @@ namespace iocCoreApi.Controllers
         {
         }
     }
+    */
 }
