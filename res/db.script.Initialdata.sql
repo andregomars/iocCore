@@ -20,9 +20,9 @@ ID
 ,InUser
 ,Status
 )
-select 3,'iocro','iocro','internal','0',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-111-1111',null,'iocro@ioc.com',null,getdate(),'andre','Active'
+select 3,'iocro','iocro','internal','1',2,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-111-1111',null,'iocro@ioc.com',null,getdate(),'andre','Active'
 UNION ALL
-select 4,'iotest','iotest','byd','29051',0,'8be4177df4ec5dee8c8bc4f3b49d7a2d','909-111-1111',null,'iotest@ioc.com',null,getdate(),'andre','Active'
+select 4,'iotest','iotest','byd','29051',3,'8be4177df4ec5dee8c8bc4f3b49d7a2d','909-111-1111',null,'iotest@ioc.com',null,getdate(),'andre','Active'
 UNION ALL
 select 5,'ioc dbo','iocdbo','internal','0',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'iocdbo@ioc.com',null,getdate(),'andre','Active'
 UNION ALL
@@ -95,6 +95,20 @@ UNION ALL
 select 5,1,getdate(),'andre'
 UNION ALL
 select 6,1,getdate(),'andre'
+
+--Core_UserCompany
+insert into Core_Company
+(Name
+,CompanyType
+,InDate
+,InUser
+,Status)
+Select 'I/O Controls Corporation','Owned',getdate(),'iocdbo','Active'
+UNION
+Select 'LBT','Partner',getdate(),'iocdbo','Active'
+UNION
+Select 'BYD','Manufacturer',getdate(),'iocdbo','Active'
+
 
 --Core_Function
 --** refer to db.script.Initialdata.Core_Function.sql

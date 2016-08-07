@@ -89,3 +89,24 @@ CREATE TABLE [dbo].[Core_Permission](
 )
 ) ON [PRIMARY]
 
+
+CREATE TABLE [dbo].[Core_Company](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) not NULL,
+	[CompanyType] [varchar] (20) null,
+	[Address] [varchar](100) NULL,
+	[State] [varchar](50) NULL,
+	[City] [varchar](50) NULL,
+	[Fax] [varchar](50) NULL,
+	[CellPhone] [varchar](20) NULL,
+	[WorkPhone] [varchar](20) NULL,
+	[InDate] [datetime] NULL DEFAULT (getdate()),
+	[InUser] [varchar](30) NULL,
+	[EditDate] [datetime] NULL,
+	[EditUser] [varchar](30) NULL,
+	[Status] [varchar](20) NULL,
+ CONSTRAINT [Core_Company_PK] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)
+) ON [PRIMARY]
