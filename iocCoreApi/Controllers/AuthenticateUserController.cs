@@ -21,8 +21,8 @@ namespace iocCoreApi.Controllers
             if (String.IsNullOrEmpty(loginName) || String.IsNullOrEmpty(password))
                 return BadRequest("loginName and password are both required.");
 
-            Core_User coreUser = (from user in db.core_user
-                              where user.LoginName == loginName
+            Core_User coreUser = (from user in db.Core_User
+                                  where user.LoginName == loginName
                               select user).SingleOrDefault<Core_User>();
             if (coreUser == null)
             {

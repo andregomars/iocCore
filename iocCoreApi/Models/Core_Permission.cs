@@ -24,7 +24,6 @@ namespace iocCoreApi.Models
         [StringLength(30)]
         public string EditUser { get; set; }
 
-        [StringLength(20)]
-        public string Status { get; set; }
+        public int? IsEnabled { get; set; }
     }
 }

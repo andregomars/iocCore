@@ -17,39 +17,39 @@ namespace iocCoreApi.Controllers
         private CoreDBModelsContext db = new CoreDBModelsContext();
 
         // GET: api/Permission
-        public IQueryable<Core_Permission> Getcore_Permission()
+        public IQueryable<Core_Permission> GetCore_Permission()
         {
-            return db.core_Permission;
+            return db.Core_Permission;
         }
 
         // GET: api/Permission/5
         [ResponseType(typeof(Core_Permission))]
         public IHttpActionResult GetCore_Permission(int id)
         {
-            Core_Permission core_Permission = db.core_Permission.Find(id);
-            if (core_Permission == null)
+            Core_Permission Core_Permission = db.Core_Permission.Find(id);
+            if (Core_Permission == null)
             {
                 return NotFound();
             }
 
-            return Ok(core_Permission);
+            return Ok(Core_Permission);
         }
 
         // PUT: api/Permission/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutCore_Permission(int id, Core_Permission core_Permission)
+        public IHttpActionResult PutCore_Permission(int id, Core_Permission Core_Permission)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != core_Permission.ID)
+            if (id != Core_Permission.ID)
             {
                 return BadRequest();
             }
 
-            db.Entry(core_Permission).State = EntityState.Modified;
+            db.Entry(Core_Permission).State = EntityState.Modified;
 
             try
             {
@@ -72,24 +72,24 @@ namespace iocCoreApi.Controllers
 
         // POST: api/Permission
         [ResponseType(typeof(Core_Permission))]
-        public IHttpActionResult PostCore_Permission(Core_Permission core_Permission)
+        public IHttpActionResult PostCore_Permission(Core_Permission Core_Permission)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.core_Permission.Add(core_Permission);
+            db.Core_Permission.Add(Core_Permission);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = core_Permission.ID }, core_Permission);
+            return CreatedAtRoute("DefaultApi", new { id = Core_Permission.ID }, Core_Permission);
         }
 
 
         // POST: api/Permission/Batch
         [ResponseType(typeof(Core_Permission[]))]
         [Route("api/Permission/Batch")]
-        public IHttpActionResult PostCore_Permissions([FromBody] Core_Permission[] core_Permissions)
+        public IHttpActionResult PostCore_Permissions([FromBody] Core_Permission[] Core_Permissions)
         {
             if (!ModelState.IsValid)
             {
@@ -97,26 +97,26 @@ namespace iocCoreApi.Controllers
             }
 
             db.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.Core_Permission");
-            db.core_Permission.AddRange(core_Permissions);
+            db.Core_Permission.AddRange(Core_Permissions);
             db.SaveChanges();
 
-            return Ok(db.core_Permission);
+            return Ok(db.Core_Permission);
         }
 
         // DELETE: api/Permission/5
         [ResponseType(typeof(Core_Permission))]
         public IHttpActionResult DeleteCore_Permission(int id)
         {
-            Core_Permission core_Permission = db.core_Permission.Find(id);
-            if (core_Permission == null)
+            Core_Permission Core_Permission = db.Core_Permission.Find(id);
+            if (Core_Permission == null)
             {
                 return NotFound();
             }
 
-            db.core_Permission.Remove(core_Permission);
+            db.Core_Permission.Remove(Core_Permission);
             db.SaveChanges();
 
-            return Ok(core_Permission);
+            return Ok(Core_Permission);
         }
 
         // DELETE: api/Permission/Batch
@@ -124,16 +124,16 @@ namespace iocCoreApi.Controllers
         [Route("api/Permission/Batch")]
         public IHttpActionResult DeleteCore_Permissions(int[] ids)
         {
-            Core_Permission[] core_Permissions = db.core_Permission
+            Core_Permission[] Core_Permissions = db.Core_Permission
                 .Where<Core_Permission>(r => ids.Contains<int>(r.ID))
                 .ToArray<Core_Permission>();
 
-            if (core_Permissions == null || core_Permissions.Length == 0)
+            if (Core_Permissions == null || Core_Permissions.Length == 0)
             {
                 return NotFound();
             }
 
-            db.core_Permission.RemoveRange(core_Permissions);
+            db.Core_Permission.RemoveRange(Core_Permissions);
             db.SaveChanges();
 
             return Ok();
@@ -150,7 +150,7 @@ namespace iocCoreApi.Controllers
 
         private bool Core_PermissionExists(int id)
         {
-            return db.core_Permission.Count(e => e.ID == id) > 0;
+            return db.Core_Permission.Count(e => e.ID == id) > 0;
         }
 
 
@@ -158,17 +158,17 @@ namespace iocCoreApi.Controllers
         // POST: api/Permission/Batch
         [ResponseType(typeof(Core_Permission[]))]
         [Route("api/Permission/Batch")]
-        public IHttpActionResult PostCore_Permissions([FromBody] Core_Permission[] core_Permissions)
+        public IHttpActionResult PostCore_Permissions([FromBody] Core_Permission[] Core_Permissions)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.core_Permission.AddRange(core_Permissions);
+            db.Core_Permission.AddRange(Core_Permissions);
             db.SaveChanges();
 
-            return Ok(db.core_Permission);
+            return Ok(db.Core_Permission);
         }
         */
 

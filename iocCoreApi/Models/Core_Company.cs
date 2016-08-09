@@ -6,25 +6,28 @@ namespace iocCoreApi.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Core_User
+    public partial class Core_Company
     {
         public int ID { get; set; }
 
-        [StringLength(30)]
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; }
 
-        [Required]
-        [StringLength(30)]
-        public string LoginName { get; set; }
-
-        public int? UserType { get; set; }
-
-        public int CompanyID { get; set; }
-
-        public int? Gender { get; set; }
+        [StringLength(20)]
+        public string CompanyType { get; set; }
 
         [StringLength(100)]
-        public string Password { get; set; }
+        public string Address { get; set; }
+
+        [StringLength(50)]
+        public string State { get; set; }
+
+        [StringLength(50)]
+        public string City { get; set; }
+
+        [StringLength(50)]
+        public string Fax { get; set; }
 
         [StringLength(20)]
         public string Tel { get; set; }
@@ -32,15 +35,13 @@ namespace iocCoreApi.Models
         [StringLength(20)]
         public string Mobile { get; set; }
 
-        [StringLength(60)]
-        public string Email { get; set; }
+        [StringLength(50)]
+        public string Relation { get; set; }
 
         [StringLength(500)]
-        public string HeadImage { get; set; }
+        public string Description { get; set; }
 
-        public DateTime? ValidDate { get; set; }
-
-        public int? IsActive { get; set; }
+        public int? IsStop { get; set; }
 
         public DateTime? InDate { get; set; }
 

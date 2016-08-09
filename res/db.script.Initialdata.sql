@@ -10,23 +10,25 @@ ID
 ,LoginName
 ,UserType
 ,CompanyID
-,IsAdmin
+,Gender
 ,Password
-,CellPhone
-,WorkPhone
+,Tel
+,Mobile
 ,Email
 ,HeadImage
+,ValidDate
+,IsActive
 ,InDate
 ,InUser
 ,Status
 )
-select 3,'iocro','iocro','internal','2',0,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-111-1111',null,'iocro@ioc.com',null,getdate(),'andre','Active'
+select 3,'iocro','iocro',4,21,0,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-111-1111',null,'iocro@ioc.com','01',getdate(),1,getdate(),'andre',0
 UNION ALL
-select 4,'iotest','iotest','byd','3',0,'8be4177df4ec5dee8c8bc4f3b49d7a2d','909-111-1111',null,'iotest@ioc.com',null,getdate(),'andre','Active'
+select 4,'iotest','iotest',4,21,0,'8be4177df4ec5dee8c8bc4f3b49d7a2d','909-111-1111',null,'iotest@ioc.com','01',getdate(),1,getdate(),'andre',0
 UNION ALL
-select 5,'ioc dbo','iocdbo','internal','1',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'iocdbo@ioc.com',null,getdate(),'andre','Active'
+select 5,'ioc dbo','iocdbo',4,21,1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'iocdbo@ioc.com','01',getdate(),1,getdate(),'andre',0
 UNION ALL
-select 6,'robin','robin','internal','1',1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'robin@ioc.com',null,getdate(),'andre','Active'
+select 6,'robin','robin',4,21,1,'8be4177df4ec5dee8c8bc4f3b49d7a2d','626-222-2222',null,'robin@ioc.com','01',getdate(),1,getdate(),'andre',0
 
 set identity_insert dbo.core_user off
 
@@ -40,46 +42,19 @@ insert into Core_Role
 ,RoleType
 ,RoleDescription
 ,InDate
-,InUser
-,Status)
-select 1,'administrator','internal','Administrator',getdate(),'andre','Active'
+,InUser)
+select 1,'administrator','internal','Administrator',getdate(),'andre'
 UNION ALL
-select 2,'editor','internal','Editor',getdate(),'andre','Active'
+select 2,'editor','internal','Editor',getdate(),'andre'
 UNION ALL
-select 3,'author','internal','Author',getdate(),'andre','Active'
+select 3,'author','internal','Author',getdate(),'andre'
 UNION ALL
-select 4,'contributor','internal','Contributor',getdate(),'andre','Active'
+select 4,'contributor','internal','Contributor',getdate(),'andre'
 UNION ALL
-select 5,'subscriber','internal','Subscriber',getdate(),'andre','Active'
+select 5,'subscriber','internal','Subscriber',getdate(),'andre'
 
 set identity_insert dbo.Core_Role off
 
-/* copy from Core_Role_Bak
-
-set identity_insert dbo.Core_Role on
-truncate table Core_Role
-insert into Core_Role
-(ID
-,RoleName
-,RoleType
-,RoleDescription
-,InDate
-,InUser
-,Status
-)
-select 
-ID
-,RoleName
-,RoleType
-,RoleDescription
-,InDate
-,InUser
-,Status
-from Core_Role_Bak
-
-set identity_insert dbo.Core_Role off
-
-*/
 
 --Core_UserRole
 insert into Core_UserRole
@@ -100,14 +75,14 @@ select 6,1,getdate(),'andre'
 insert into Core_Company
 (Name
 ,CompanyType
+,IsStop
 ,InDate
-,InUser
-,Status)
-Select 'I/O Controls Corporation','Owned',getdate(),'iocdbo','Active'
+,InUser)
+Select 'I/O Controls Corporation',2,0,getdate(),'iocdbo'
 UNION
-Select 'LBT','Partner',getdate(),'iocdbo','Active'
+Select 'LBT',4,0,getdate(),'iocdbo'
 UNION
-Select 'BYD','Manufacturer',getdate(),'iocdbo','Active'
+Select 'BYD',6,0,getdate(),'iocdbo'
 
 
 --Core_Function

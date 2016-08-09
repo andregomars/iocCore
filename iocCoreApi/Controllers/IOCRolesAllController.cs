@@ -17,12 +17,12 @@ namespace iocCoreApi.Controllers
         [ResponseType(typeof(Dictionary<String, JsonRole>))]
         public IHttpActionResult GetIOC_RolesAll()
         {
-            var roles = (from role in db.core_role
+            var roles = (from role in db.Core_Role
                         select new IOC_RolePermission
                         {
                             name = role.RoleName,
-                            capabilities = (from func in db.core_Function
-                                            join perm in db.core_Permission
+                            capabilities = (from func in db.Core_Function
+                                            join perm in db.Core_Permission
                                             on func.ID equals perm.FunctionID
                                             where perm.RoleID == role.ID
                                             select new IOC_Capability

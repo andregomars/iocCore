@@ -12,44 +12,44 @@ using iocCoreApi.Models;
 
 namespace iocCoreApi.Controllers
 {
-    public class UserRoleController : ApiController
+    public class CompanyController : ApiController
     {
         private CoreDBModelsContext db = new CoreDBModelsContext();
 
-        // GET: api/UserRole
-        public IQueryable<Core_UserRole> GetCore_UserRole()
+        // GET: api/Company
+        public IQueryable<Core_Company> GetCore_Company()
         {
-            return db.Core_UserRole;
+            return db.Core_Company;
         }
 
-        // GET: api/UserRole/5
-        [ResponseType(typeof(Core_UserRole))]
-        public IHttpActionResult GetCore_UserRole(int id)
+        // GET: api/Company/5
+        [ResponseType(typeof(Core_Company))]
+        public IHttpActionResult GetCore_Company(int id)
         {
-            Core_UserRole Core_UserRole = db.Core_UserRole.Find(id);
-            if (Core_UserRole == null)
+            Core_Company core_Company = db.Core_Company.Find(id);
+            if (core_Company == null)
             {
                 return NotFound();
             }
 
-            return Ok(Core_UserRole);
+            return Ok(core_Company);
         }
 
-        // PUT: api/UserRole/5
+        // PUT: api/Company/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutCore_UserRole(int id, Core_UserRole Core_UserRole)
+        public IHttpActionResult PutCore_Company(int id, Core_Company core_Company)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != Core_UserRole.ID)
+            if (id != core_Company.ID)
             {
                 return BadRequest();
             }
 
-            db.Entry(Core_UserRole).State = EntityState.Modified;
+            db.Entry(core_Company).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace iocCoreApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Core_UserRoleExists(id))
+                if (!Core_CompanyExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace iocCoreApi.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/UserRole
-        [ResponseType(typeof(Core_UserRole))]
-        public IHttpActionResult PostCore_UserRole(Core_UserRole Core_UserRole)
+        // POST: api/Company
+        [ResponseType(typeof(Core_Company))]
+        public IHttpActionResult PostCore_Company(Core_Company core_Company)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Core_UserRole.Add(Core_UserRole);
+            db.Core_Company.Add(core_Company);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = Core_UserRole.ID }, Core_UserRole);
+            return CreatedAtRoute("DefaultApi", new { id = core_Company.ID }, core_Company);
         }
 
-        // DELETE: api/UserRole/5
-        [ResponseType(typeof(Core_UserRole))]
-        public IHttpActionResult DeleteCore_UserRole(int id)
+        // DELETE: api/Company/5
+        [ResponseType(typeof(Core_Company))]
+        public IHttpActionResult DeleteCore_Company(int id)
         {
-            Core_UserRole Core_UserRole = db.Core_UserRole.Find(id);
-            if (Core_UserRole == null)
+            Core_Company core_Company = db.Core_Company.Find(id);
+            if (core_Company == null)
             {
                 return NotFound();
             }
 
-            db.Core_UserRole.Remove(Core_UserRole);
+            db.Core_Company.Remove(core_Company);
             db.SaveChanges();
 
-            return Ok(Core_UserRole);
+            return Ok(core_Company);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace iocCoreApi.Controllers
             base.Dispose(disposing);
         }
 
-        private bool Core_UserRoleExists(int id)
+        private bool Core_CompanyExists(int id)
         {
-            return db.Core_UserRole.Count(e => e.ID == id) > 0;
+            return db.Core_Company.Count(e => e.ID == id) > 0;
         }
     }
 }

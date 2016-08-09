@@ -24,7 +24,7 @@ namespace iocCoreApi.Models
         { }
 
         public IOC_User(int id, string display_name, string user_email, string user_login,
-            string user_nicename, string user_pass, DateTime? user_registered, string user_status)
+            string user_nicename, string user_pass, DateTime? user_registered, int? user_status)
         {
             this.ID = id;
             this.deleted = false;
@@ -36,7 +36,7 @@ namespace iocCoreApi.Models
             this.user_nicename = user_nicename;
             this.user_pass = user_pass;
             this.user_registered = user_registered == null ? DateTime.Now : user_registered.Value;
-            this.user_status = user_status.Equals("Active");
+            this.user_status = user_status != 0;
             this.user_url = "";
         }
     }

@@ -22,7 +22,7 @@ namespace iocCoreApi.Controllers
             List<string> roles;
 
             //get user data
-            Core_User coreUser = (from user in db.core_user
+            Core_User coreUser = (from user in db.Core_User
                                      where user.LoginName == loginName
                                      select user).SingleOrDefault<Core_User>();
 
@@ -35,12 +35,12 @@ namespace iocCoreApi.Controllers
                 coreUser.LoginName, coreUser.Name, coreUser.Password, coreUser.InDate, coreUser.Status);
 
             //get allCaps array
-            var funcs = from func in db.core_Function
-                        join perm in db.core_Permission
+            var funcs = from func in db.Core_Function
+                        join perm in db.Core_Permission
                             on func.ID equals perm.FunctionID
-                        join userRole in db.core_UserRole
+                        join userRole in db.Core_UserRole
                             on perm.RoleID equals userRole.RoleID
-                        join user in db.core_user
+                        join user in db.Core_User
                             on userRole.UserID equals user.ID
                         where user.LoginName == loginName
                         select func.FunctionName;
@@ -51,10 +51,10 @@ namespace iocCoreApi.Controllers
             }
 
             //get caps and roles array
-            var coreRoles = from user in db.core_user
-                        join userRole in db.core_UserRole
+            var coreRoles = from user in db.Core_User
+                        join userRole in db.Core_UserRole
                             on user.ID equals userRole.UserID
-                        join role in db.core_role
+                        join role in db.Core_Role
                             on userRole.RoleID equals role.ID
                         where user.LoginName == loginName
                         select role.RoleName.ToLower();
@@ -88,7 +88,7 @@ namespace iocCoreApi.Controllers
             List<string> roles;
 
             //get user data
-            Core_User coreUser = db.core_user.Find(id);
+            Core_User coreUser = db.Core_User.Find(id);
 
             if (coreUser == null)
             {
@@ -99,12 +99,12 @@ namespace iocCoreApi.Controllers
                 coreUser.LoginName, coreUser.Name, coreUser.Password, coreUser.InDate, coreUser.Status);
 
             //get allCaps array
-            var funcs = from func in db.core_Function
-                        join perm in db.core_Permission
+            var funcs = from func in db.Core_Function
+                        join perm in db.Core_Permission
                             on func.ID equals perm.FunctionID
-                        join userRole in db.core_UserRole
+                        join userRole in db.Core_UserRole
                             on perm.RoleID equals userRole.RoleID
-                        join user in db.core_user
+                        join user in db.Core_User
                             on userRole.UserID equals user.ID
                         where user.ID == id
                         select func.FunctionName;
@@ -115,10 +115,10 @@ namespace iocCoreApi.Controllers
             }
 
             //get caps and roles array
-            var coreRoles = from user in db.core_user
-                            join userRole in db.core_UserRole
+            var coreRoles = from user in db.Core_User
+                            join userRole in db.Core_UserRole
                                 on user.ID equals userRole.UserID
-                            join role in db.core_role
+                            join role in db.Core_Role
                                 on userRole.RoleID equals role.ID
                             where user.ID == id
                             select role.RoleName.ToLower();

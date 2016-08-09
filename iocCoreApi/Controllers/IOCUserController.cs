@@ -19,7 +19,7 @@ namespace iocCoreApi.Controllers
         {
             if (String.IsNullOrWhiteSpace(loginName)) return NotFound();
 
-            List<Core_User> users = (from user in db.core_user
+            List<Core_User> users = (from user in db.Core_User
                                      where user.LoginName == loginName
                                      select user).ToList<Core_User>();
             
@@ -40,7 +40,7 @@ namespace iocCoreApi.Controllers
         {
             if (id < 0) return NotFound();
 
-            Core_User user = db.core_user.Find(id);
+            Core_User user = db.Core_User.Find(id);
 
             if (user == null)
             {

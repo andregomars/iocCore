@@ -19,14 +19,14 @@ namespace iocCoreApi.Controllers
         // GET: api/Function
         public IQueryable<Core_Function> Getcore_Function()
         {
-            return db.core_Function;
+            return db.Core_Function;
         }
 
         // GET: api/Function/5
         [ResponseType(typeof(Core_Function))]
         public IHttpActionResult GetCore_Function(int id)
         {
-            Core_Function core_Function = db.core_Function.Find(id);
+            Core_Function core_Function = db.Core_Function.Find(id);
             if (core_Function == null)
             {
                 return NotFound();
@@ -79,7 +79,7 @@ namespace iocCoreApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.core_Function.Add(core_Function);
+            db.Core_Function.Add(core_Function);
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = core_Function.ID }, core_Function);
@@ -95,7 +95,7 @@ namespace iocCoreApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            List<Core_Function> masterFunctions = db.core_Function.ToList<Core_Function>();
+            List<Core_Function> masterFunctions = db.Core_Function.ToList<Core_Function>();
             
             //find out functions to update, and mark them in db model to modified
             List<Core_Function> functionsToUpdate =
@@ -115,18 +115,18 @@ namespace iocCoreApi.Controllers
             List<Core_Function> functionsToInsert =
                 core_Functions.Where<Core_Function>(r => !masterFunctions.Any<Core_Function>(m => m.FunctionName.Equals(r.FunctionName)))
                 .ToList<Core_Function>();
-            db.core_Function.AddRange(functionsToInsert);
+            db.Core_Function.AddRange(functionsToInsert);
 
             //find out functions to delete, and remove them from db model
             List<Core_Function> functionsToDelete =
                 masterFunctions.Where<Core_Function>(m => !core_Functions.Any<Core_Function>(r => m.FunctionName.Equals(r.FunctionName)))
                 .ToList<Core_Function>();
-            db.core_Function.RemoveRange(functionsToDelete);
+            db.Core_Function.RemoveRange(functionsToDelete);
 
             //commit db model changes and do the action in db
             db.SaveChanges();
 
-            return Ok(db.core_Function);
+            return Ok(db.Core_Function);
         }
 
 
@@ -135,7 +135,7 @@ namespace iocCoreApi.Controllers
         [Route("api/Function/Batch")]
         public IHttpActionResult DeleteCore_Functions([FromBody] int[] ids)
         {
-            Core_Function[] core_Functions = db.core_Function
+            Core_Function[] core_Functions = db.Core_Function
                 .Where<Core_Function>(r=>ids.Contains<int>( r.ID ))
                 .ToArray<Core_Function>();
 
@@ -144,7 +144,7 @@ namespace iocCoreApi.Controllers
                 return NotFound();
             }
 
-            db.core_Function.RemoveRange(core_Functions);
+            db.Core_Function.RemoveRange(core_Functions);
             db.SaveChanges();
 
             return Ok();
@@ -161,7 +161,7 @@ namespace iocCoreApi.Controllers
 
         private bool Core_FunctionExists(int id)
         {
-            return db.core_Function.Count(e => e.ID == id) > 0;
+            return db.Core_Function.Count(e => e.ID == id) > 0;
         }
 
 
