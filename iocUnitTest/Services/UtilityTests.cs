@@ -57,5 +57,14 @@ namespace iocCoreApi.Services.Tests
             string output = Utility.DecryptID(input);
             Console.WriteLine("{0} is decrypted to {1}", input, output);
         }
+
+        [TestMethod()]
+        public void HashPasswordTest()
+        {
+            string password = "1111";
+            //output: tzxnvxlqr1gzhkl3zndoug==
+            string hasedPass = Utility.HashPassword(password);
+            Console.WriteLine("Password {0} is hashed to {1}", password, hasedPass);
+        }
     }
 }

@@ -10,30 +10,27 @@ namespace iocCoreApi.Controllers
 {
     public class CipherController : ApiController
     {
-        [Route("api/Cipher/User")]
-        public IHttpActionResult Get(string UserID)
+        [Route("api/Cipher/EncryptedUserID/{userID}")]
+        public IHttpActionResult GetEncryptedUserID(int userID)
         {
-            if (String.IsNullOrEmpty(UserID) || String.IsNullOrEmpty(password))
-                return BadRequest("loginName and password are both required.");
+            string cipher = Utility.EncryptID(userID);
+            return Ok(cipher);
+        }
 
-            Core_User coreUser = (from user in db.Core_User
-                                  where user.LoginName == loginName
-                                  select user).SingleOrDefault<Core_User>();
-            if (coreUser == null)
+        [Route("api/Cipher/DecryptedUserID/{cipher}")]
+        public IHttpActionResult GetDecryptedUserID(string cipher)
+        {
+            string userID = "";
+            try
             {
-                return NotFound();
+                userID = Utility.DecryptID(cipher);
+            }
+            catch
+            {
+                userID = "-1";
             }
 
-            bool isValidUser = Utility.VerifyTripleMd5Hash(password, coreUser.Password);
-
-            if (isValidUser)
-            {
-                return Ok(coreUser);
-            }
-            else
-            {
-                return NotFound();
-            }
+            return Ok(userID);
         }
     }
 }
