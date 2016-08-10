@@ -39,5 +39,23 @@ namespace iocCoreApi.Services.Tests
             string hash = "8be4177df4ec5dee8c8bc4f3b49d7a2d";
             Assert.IsTrue(Utility.VerifyTripleMd5Hash(input, "8be4177df4ec5dee8c8bc4f3b49d7a2d"));
         }
+
+        [TestMethod()]
+        public void EncryptIDTest()
+        {
+            string input = "23";
+            //output: e557a0d782f945acb1d3625b64d5c5d2225cdd130eafabe7r4d5n2ae564133
+            string output = Utility.EncryptID(input);
+            Console.WriteLine("{0} is encrypted to {1}", input, output);
+        }
+
+        [TestMethod()]
+        public void DecryptIDTest()
+        {
+            string input = "80a58e02bfcc4e2889a9304b2fabc8b57f4cc3f3124f940";
+            //output: 23
+            string output = Utility.DecryptID(input);
+            Console.WriteLine("{0} is decrypted to {1}", input, output);
+        }
     }
 }
