@@ -61,10 +61,11 @@ namespace iocCoreApi.Services.Tests
         [TestMethod()]
         public void HashPasswordTest()
         {
-            string password = "1111";
+            string password = "123";
             //output: tzxnvxlqr1gzhkl3zndoug==
             string hasedPass = Utility.HashPassword(password);
             Console.WriteLine("Password {0} is hashed to {1}", password, hasedPass);
+            Assert.AreEqual("icy5yqxzb1uwswcvlsnlca==", hasedPass);
         }
     }
 }
