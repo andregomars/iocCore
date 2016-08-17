@@ -10,6 +10,7 @@ namespace iocCoreApi.Models
         public CoreDBModelsContext()
             : base("name=CoreDBConn")
         {
+            Database.SetInitializer<CoreDBModelsContext>(null);
         }
 
         public virtual DbSet<Core_Company> Core_Company { get; set; }

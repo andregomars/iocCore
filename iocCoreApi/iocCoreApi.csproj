@@ -216,6 +216,7 @@
     <Compile Include="Controllers\IOCRolesController.cs" />
     <Compile Include="Controllers\IOCUserController.cs" />
     <Compile Include="Controllers\IOCUserInfoController.cs" />
+    <Compile Include="Controllers\IO_UsersController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -240,6 +241,8 @@
     <Compile Include="Models\IOC_Capability.cs" />
     <Compile Include="Models\IOC_User.cs" />
     <Compile Include="Models\IOC_UserInfo.cs" />
+    <Compile Include="Models\IO_OnlineDBModelsContext.cs" />
+    <Compile Include="Models\IO_Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
