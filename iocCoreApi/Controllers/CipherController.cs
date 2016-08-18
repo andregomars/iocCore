@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using iocCoreApi.Services;
+using System.Web.Http.Description;
 
 namespace iocCoreApi.Controllers
 {
@@ -31,6 +32,17 @@ namespace iocCoreApi.Controllers
             }
 
             return Ok(userID);
+        }
+
+        [Route("api/Cipher/HashPassword/{password}")]
+        [ResponseType(typeof(String))]
+        public IHttpActionResult GetHashedPassword(string password)
+        {
+            if (String.IsNullOrEmpty(password))
+            {
+                return BadRequest();
+            }
+            return Ok(Utility.HashPassword(password));
         }
     }
 }

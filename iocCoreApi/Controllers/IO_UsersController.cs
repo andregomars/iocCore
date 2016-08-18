@@ -35,8 +35,8 @@ namespace iocCoreApi.Controllers
             return Ok(iO_Users);
         }
 
-        // GET: api/User?loginName={loginName}
-        [ResponseType(typeof(Core_User))]
+        // GET: api/IO_Users?loginName={loginName}
+        [ResponseType(typeof(IO_Users))]
         public IHttpActionResult GetIO_Users(string loginName)
         {
             IO_Users iO_Users = db.IO_Users.Where<IO_Users>(u => u.LogName == loginName).SingleOrDefault<IO_Users>();

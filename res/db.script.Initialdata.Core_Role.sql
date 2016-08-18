@@ -7,16 +7,15 @@ insert into Core_Role
 ,RoleDescription
 ,InDate
 ,InUser
-,Status
 )
-select 1,'administrator', 'internal', 'Administrator', getdate(), 'andre','Active'
+select 1,'administrator', 'internal', 'Administrator', getdate(), 'andre'
 UNION
-select 2,'editor', 'internal', 'Editor', getdate(), 'andre','Active'
+select 2,'editor', 'internal', 'Editor', getdate(), 'andre'
 UNION
-select 3,'author', 'internal', 'Author', getdate(), 'andre','Active'
+select 3,'author', 'internal', 'Author', getdate(), 'andre'
 UNION
-select 4,'contributor', 'internal', 'Contributor', getdate(), 'andre','Active'
+select 4,'contributor', 'internal', 'Contributor', getdate(), 'andre'
 UNION
-select 5,'subscriber', 'internal', 'Subscriber', getdate(), 'andre','Active'
+select 5,'subscriber', 'internal', 'Subscriber', getdate(), 'andre'
 
 set identity_insert dbo.core_Role off

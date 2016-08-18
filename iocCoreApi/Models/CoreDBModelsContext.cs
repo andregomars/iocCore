@@ -8,7 +8,7 @@ namespace iocCoreApi.Models
     public partial class CoreDBModelsContext : DbContext
     {
         public CoreDBModelsContext()
-            : base("name=CoreDBConn")
+            : base("name=IO_OnlineDBConn")
         {
             Database.SetInitializer<CoreDBModelsContext>(null);
         }

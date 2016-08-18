@@ -20,7 +20,7 @@ public partial class IOForm : System.Web.UI.Page
 {
     #region 公共操作类定义
     public const string ExpireDate = "9999-12-31 23:59:59.997";
-    const string IOC_LOGGED_IN_COOKIE = "ioc_looggedin";
+    const string IOC_LOGGED_IN_COOKIE = "ioc_loggedin";
     const string Base_API_URI = "http://localhost:8005/";
 
     /// <summary>
@@ -100,11 +100,11 @@ public partial class IOForm : System.Web.UI.Page
         //Control WebHead = this.FindControl("WebHead");
 
         //add by andre
-        HttpCookie cookieloggedIn = Request.Cookies["ioc_looggedin"];
+        HttpCookie cookieloggedIn = Request.Cookies["ioc_loggedin"];
         if (cookieloggedIn != null)
         {
             string username = cookieloggedIn.Value;
-            string url_userinfo = Base_API_URI + "api/User?loginName=" + username;
+            string url_userinfo = Base_API_URI + "api/IO_Users?loginName=" + username;
 
             try
             {
@@ -124,9 +124,9 @@ public partial class IOForm : System.Web.UI.Page
                 {
                     Dictionary<string, string> dict =
                         JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonStr);
-                    if (dict["ID"] != null)
+                    if (dict["UserId"] != null)
                     {
-                        int uid = Int32.Parse(dict["ID"]);
+                        int uid = Int32.Parse(dict["UserId"]);
                         WebUser user = new WebUser(uid);
                         user.GetCompanyInformation();
                         Session["User"] = user;
@@ -150,6 +150,7 @@ public partial class IOForm : System.Web.UI.Page
         {
             this.Overtime = true;
             Response.Redirect("../Default.aspx");
+            //Response.Redirect("http://localhost/ioc");
             Response.End();
         }
 
