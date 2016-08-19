@@ -209,17 +209,12 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AuthenticateUserController.cs" />
     <Compile Include="Controllers\CipherController.cs" />
-    <None Include="Controllers\CompanyController.cs.bak" />
     <Compile Include="Controllers\FunctionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <None Include="Controllers\IOCRolesAllController.cs.bak" />
-    <None Include="Controllers\IOCRolesController.cs.bak" />
-    <None Include="Controllers\IOCUserController.cs.bak" />
-    <None Include="Controllers\IOCUserInfoController.cs.bak" />
+    <Compile Include="Controllers\IO_CompanyController.cs" />
     <Compile Include="Controllers\IO_UsersController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
-    <None Include="Controllers\UserController.cs.bak" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -241,6 +236,7 @@
     <Compile Include="Models\IOC_Capability.cs" />
     <Compile Include="Models\IOC_User.cs" />
     <Compile Include="Models\IOC_UserInfo.cs" />
+    <Compile Include="Models\IO_Company.cs" />
     <Compile Include="Models\IO_OnlineDBModelsContext.cs" />
     <Compile Include="Models\IO_Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
