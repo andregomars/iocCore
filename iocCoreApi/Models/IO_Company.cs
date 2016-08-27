@@ -24,6 +24,9 @@ namespace iocCoreApi.Models
         public string City { get; set; }
 
         [StringLength(50)]
+        public string ZipCode { get; set; }
+
+        [StringLength(50)]
         public string Fax { get; set; }
 
         [StringLength(50)]

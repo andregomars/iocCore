@@ -116,3 +116,11 @@ CREATE TABLE [dbo].[Core_Permission](
 	[ID] ASC
 )
 ) ON [PRIMARY]
+
+
+--io_online database
+use io_online
+GO
+
+alter table io_company
+add ZipCode varchar(50) null
