@@ -50,15 +50,15 @@ public partial class IOForm : System.Web.UI.Page
         set { _User = value; }
     }
 
-    internal object _FirstId = null, _OtherIndex = null, _BackIndex = null, _BackPage = null;
+    internal object _DataIndex = null, _OtherIndex = null, _BackIndex = null, _LastId = null, _BackPage = null;
 
     /// <summary>
     /// 数据索引值-1
     /// </summary>
     public object DataIndex
     {
-        get { return _FirstId; }
-        set { _FirstId = value; }
+        get { return _DataIndex; }
+        set { _DataIndex = value; }
     }
 
     /// <summary>
@@ -78,6 +78,16 @@ public partial class IOForm : System.Web.UI.Page
         get { return _BackIndex; }
         set { _BackIndex = value; }
     }
+
+    /// <summary>
+    /// 最后数据索引值-4（一般不使用它，因为前面三个已经够用了）
+    /// </summary>
+    public object LastId
+    {
+        get { return _LastId; }
+        set { _LastId = value; }
+    }
+
 
     /// <summary>
     /// 执行成功后，返回页面名称
@@ -103,8 +113,7 @@ public partial class IOForm : System.Web.UI.Page
 
         //查找页头控件，依据登陆状态，并向其传递参数
         //Control WebHead = this.FindControl("WebHead");
-
-
+        
         //add by andre @ 08/22/16
         HttpCookie cookieloggedIn = Request.Cookies["ioc_loggedin"];
         if (cookieloggedIn != null)
@@ -146,7 +155,6 @@ public partial class IOForm : System.Web.UI.Page
         }
         //add by andre end
 
-
         //获取当前登陆的用户信息
         if (Session["User"] != null) { this.Overtime = false; this.CurrentUser = (WebUser)Session["User"]; } else { this.Overtime = true; Response.Redirect("../Default.aspx"); Response.End(); }
 
@@ -164,6 +172,12 @@ public partial class IOForm : System.Web.UI.Page
         this.BackIndex = this.Form.Attributes["Back"];
         //如果长度大于10位，说明这个数据没有解密取回
         if (this.BackIndex != null && this.BackIndex.ToString().Length > 10) this.BackIndex = Common.DecryptID(this.BackIndex); else this.BackIndex = null;
+
+        //最后索引值
+        this.LastId = this.Form.Attributes["Last"];
+        //如果长度大于10位，说明这个数据没有解密取回
+        if (this.LastId != null && this.LastId.ToString().Length > 10) this.LastId = Common.DecryptID(this.LastId); else this.LastId = null;
+
 
         OutputSettings();
     }
@@ -216,6 +230,8 @@ public partial class IOForm : System.Web.UI.Page
         Session["User"] = this.CurrentUser;
     }
 
+    #region 数据接收并保存 
+
     /// <summary>
     /// 存储数据索引值
     /// </summary>
@@ -253,6 +269,8 @@ public partial class IOForm : System.Web.UI.Page
     /// 存储混淆过数据索引值
     /// </summary>
     /// <param name="index"></param>
+    /// <param name="other"></param>
+    /// <param name="back"></param>
     public void SaveEncryptIndex(object index, object other, object back)
     {
         if (index != null)
@@ -279,6 +297,50 @@ public partial class IOForm : System.Web.UI.Page
             this.Form.Attributes.Add("Back", back.ToString());
         }
     }
+
+    /// <summary>
+    /// 存储混淆过数据索引值
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="other"></param>
+    /// <param name="back"></param>
+    /// <param name="last"></param>
+    public void SaveEncryptIndex(object index, object other, object back, object last)
+    {
+        if (index != null)
+        {
+            //取得正确索引值
+            this.DataIndex = Common.DecryptID(index);
+            //直接保存,因为接收到数据就是混淆过的
+            this.Form.Attributes.Add("Data", index.ToString());
+        }
+
+        if (other != null)
+        {
+            //取得正确索引值
+            this.OtherIndex = Common.DecryptID(other);
+            //直接保存,因为接收到数据就是混淆过的
+            this.Form.Attributes.Add("Other", other.ToString());
+        }
+
+        if (back != null)
+        {
+            //取得正确索引值
+            this.BackIndex = Common.DecryptID(back);
+            //直接保存,因为接收到数据就是混淆过的
+            this.Form.Attributes.Add("Back", back.ToString());
+        }
+
+        if (last != null)
+        {
+            //取得正确索引值
+            this.LastId = Common.DecryptID(last);
+            //直接保存,因为接收到数据就是混淆过的
+            this.Form.Attributes.Add("Last", last.ToString());
+        }
+    }
+
+    #endregion
 
     /// <summary>
     /// 显示无数据提示面板
