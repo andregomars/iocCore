@@ -15,7 +15,7 @@ namespace iocCoreApi
         {
             //ConfigureAuth(app);
             GlobalConfiguration.Configuration
-                .UseSqlServerStorage("Server=localhost;Database=IO_Online;User Id=iocdbo;Password=iocdbo123!@#;");
+                .UseSqlServerStorage("IO_OnlineDBConn");
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();
