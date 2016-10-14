@@ -10,46 +10,16 @@ namespace iocCoreApi.Models
         public CoreDBModelsContext()
             : base("name=IO_OnlineDBConn")
         {
-            Database.SetInitializer<CoreDBModelsContext>(null);
         }
 
-        public virtual DbSet<Core_Company> Core_Company { get; set; }
         public virtual DbSet<Core_Function> Core_Function { get; set; }
         public virtual DbSet<Core_Permission> Core_Permission { get; set; }
         public virtual DbSet<Core_Role> Core_Role { get; set; }
-        public virtual DbSet<Core_User> Core_User { get; set; }
+        public virtual DbSet<Core_SMS> Core_SMS { get; set; }
         public virtual DbSet<Core_UserRole> Core_UserRole { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Core_Company>()
-                .Property(e => e.CompanyType)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Core_Company>()
-                .Property(e => e.Fax)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Core_Company>()
-                .Property(e => e.Tel)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Core_Company>()
-                .Property(e => e.Mobile)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Core_Company>()
-                .Property(e => e.Relation)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Core_Company>()
-                .Property(e => e.InUser)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Core_Company>()
-                .Property(e => e.EditUser)
-                .IsUnicode(false);
-
             modelBuilder.Entity<Core_Function>()
                 .Property(e => e.InUser)
                 .IsUnicode(false);
@@ -86,36 +56,30 @@ namespace iocCoreApi.Models
                 .Property(e => e.EditUser)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Core_User>()
-                .Property(e => e.LoginName)
+            modelBuilder.Entity<Core_SMS>()
+                .Property(e => e.MessageID)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Core_User>()
-                .Property(e => e.Password)
+            modelBuilder.Entity<Core_SMS>()
+                .Property(e => e.SubMessageID)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Core_User>()
-                .Property(e => e.Tel)
+            modelBuilder.Entity<Core_SMS>()
+                .Property(e => e.SMSType)
+                .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Core_User>()
-                .Property(e => e.Mobile)
+            modelBuilder.Entity<Core_SMS>()
+                .Property(e => e.SenderCode)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Core_User>()
-                .Property(e => e.Email)
+            modelBuilder.Entity<Core_SMS>()
+                .Property(e => e.RecieverCode)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Core_User>()
-                .Property(e => e.HeadImage)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Core_User>()
-                .Property(e => e.InUser)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Core_User>()
-                .Property(e => e.EditUser)
+            modelBuilder.Entity<Core_SMS>()
+                .Property(e => e.Status)
+                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<Core_UserRole>()

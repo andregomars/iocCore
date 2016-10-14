@@ -215,7 +215,6 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AuthenticateUserController.cs" />
     <Compile Include="Controllers\CipherController.cs" />
     <Compile Include="Controllers\FunctionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -223,6 +222,7 @@
     <Compile Include="Controllers\IO_UsersController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\SMSController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -232,11 +232,10 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\CoreDBModelsContext.cs" />
-    <Compile Include="Models\Core_Company.cs" />
     <Compile Include="Models\Core_Function.cs" />
     <Compile Include="Models\Core_Permission.cs" />
     <Compile Include="Models\Core_Role.cs" />
-    <Compile Include="Models\Core_User.cs" />
+    <Compile Include="Models\Core_SMS.cs" />
     <Compile Include="Models\Core_UserRole.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IOC_RolePermission.cs" />

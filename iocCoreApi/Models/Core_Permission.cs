@@ -14,6 +14,8 @@ namespace iocCoreApi.Models
 
         public int FunctionID { get; set; }
 
+        public int? IsEnabled { get; set; }
+
         public DateTime? InDate { get; set; }
 
         [StringLength(30)]
@@ -23,7 +25,5 @@ namespace iocCoreApi.Models
 
         [StringLength(30)]
         public string EditUser { get; set; }
-
-        public int? IsEnabled { get; set; }
     }
 }
