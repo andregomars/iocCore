@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using iocCoreApi.Models;
+using System.Text.RegularExpressions;
 
 namespace iocCoreApi.Controllers
 {
@@ -20,6 +21,17 @@ namespace iocCoreApi.Controllers
         public IQueryable<Core_SMS> GetCore_SMS()
         {
             return db.Core_SMS;
+        }
+
+        // GET: api/SMS?status={status}
+        public IQueryable<Core_SMS> GetCore_SMS(string status)
+        {
+            if (string.IsNullOrEmpty(status) || !Regex.Match(status, "^(0|1|2)$").Success)
+            {
+                return db.Core_SMS;
+            }
+
+            return db.Core_SMS.Where<Core_SMS>(r => r.Status == status);
         }
 
         // GET: api/SMS/5
@@ -34,7 +46,7 @@ namespace iocCoreApi.Controllers
 
             return Ok(core_SMS);
         }
-
+        
         // PUT: api/SMS/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutCore_SMS(int id, Core_SMS core_SMS)
