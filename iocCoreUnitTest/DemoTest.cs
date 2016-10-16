@@ -10,11 +10,11 @@ namespace iocCoreUnitTest
             Assert.Equal(4, Add(2, 2));
         }
 
-        [Fact]
-        public void FailingTest()
-        {
-            Assert.Equal(17, Add(8, 9));
-        }
+        //[Fact]
+        //public void FailingTest()
+        //{
+        //    Assert.Equal(17, Add(8, 9));
+        //}
 
         int Add(int x, int y)
         {
