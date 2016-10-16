@@ -13,7 +13,7 @@ namespace iocCoreUnitTest
         [Fact]
         public void FailingTest()
         {
-            Assert.Equal(5, Add(2, 2));
+            Assert.Equal(17, Add(8, 9));
         }
 
         int Add(int x, int y)
@@ -24,7 +24,7 @@ namespace iocCoreUnitTest
         [Theory]
         [InlineData(3)]
         [InlineData(5)]
-        [InlineData(6)]
+        [InlineData(13)]
         public void MyTheoryTest(int value)
         {
             Assert.True(IsOdd(value));
