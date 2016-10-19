@@ -5,19 +5,22 @@ namespace iocCoreSMS.Services
 {
     public class MessageBox
     {
-        private string sourceUrl = "http://www.mocky.io/v2/58046a0b240000d829135c85?status=0";
+        private string urlGetMessage = "http://www.mocky.io/v2/580472bb240000db2a135c91?status=0";
+        private string urlPutMessage = "http://www.mocky.io/v2/580472bb240000db2a135c91?status=0";
 
-        // public MessageBox(string sourceUrl)
-        // {
-        //     this.sourceUrl = sourceUrl;
-        // }
-        
-        public MessageBox()
+       public MessageBox()
         {}
 
         public List<SMSMessage> GetMessages()
         {
-            return RestfulHelper.GetSMSMessageAsync(sourceUrl).GetAwaiter().GetResult();
+            return new RestfulHelper().GetSMSMessageAsync(this.urlGetMessage).GetAwaiter().GetResult();
         }
+
+        public bool UpdateMessage(SMSMessage msg)
+        {
+            return new RestfulHelper().UpdateSMSMessageAsync(this.urlPutMessage, msg).GetAwaiter().GetResult();
+        }
+
+       
     }
 }

@@ -4,13 +4,20 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text;
 
 namespace iocCoreSMS.Services
 {
-    public static class RestfulHelper
+    public class RestfulHelper
     {
-        private static HttpClient client = new HttpClient();
-        public static async Task<List<SMSMessage>> GetSMSMessageAsync(string url)
+        private HttpClient client;
+
+        public RestfulHelper()
+        {
+            this.client = new HttpClient();
+        }
+
+        public async Task<List<SMSMessage>> GetSMSMessageAsync(string url)
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -20,8 +27,30 @@ namespace iocCoreSMS.Services
             
             return inboxResponse;
         }
+       public async Task<bool> UpdateSMSMessageAsync(string url, SMSMessage msg)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string payload = JsonConvert.SerializeObject(msg);
+            return await PutMethodAsync(url, payload);
+        }
+ 
         
-        private static async Task<string> GetMethodAsync(string url)
+        public async Task<OutboundSMSResponseWrapper> SendSMSAsync(string url, OutboundSMSRequestWrapper obSMSReqWrapper)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer BF-ACSI~5~20161019040217~HDujbVO0IvN05jKCkKbpdKadyL3FCBws");
+
+            string payload = JsonConvert.SerializeObject(obSMSReqWrapper);
+            string responseString = await PostMethodAsync(url, payload);
+            var response = JsonConvert.DeserializeObject<OutboundSMSResponseWrapper>(responseString);
+            
+            return response;
+        }
+        
+        private async Task<string> GetMethodAsync(string url)
         {
             string responseString = null;
             HttpResponseMessage response = await client.GetAsync(url);
@@ -31,5 +60,25 @@ namespace iocCoreSMS.Services
             }
             return responseString; 
         }
+        private async Task<string> PostMethodAsync(string url, string payload)
+        {
+            string responseString = null;
+            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(url, content);
+            if (response.IsSuccessStatusCode)
+            {
+                responseString = await response.Content.ReadAsStringAsync();
+            }
+            return responseString; 
+        }
+        private async Task<bool> PutMethodAsync(string url, string payload)
+        {
+            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PutAsync(url, content);
+            return response.IsSuccessStatusCode;
+        }
+
+
+
     }
 }
