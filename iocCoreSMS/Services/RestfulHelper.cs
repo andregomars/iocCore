@@ -35,6 +35,17 @@ namespace iocCoreSMS.Services
             string payload = JsonConvert.SerializeObject(msg);
             return await PutMethodAsync(url, payload);
         }
+        public async Task<SMSMessage> AddSMSMessageAsync(string url, SMSMessage msg)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string payload = JsonConvert.SerializeObject(msg);
+            string responseString = await PostMethodAsync(url, payload);
+            var response = JsonConvert.DeserializeObject<SMSMessage>(responseString);
+            
+            return response;
+        }
  
         
         public async Task<OutboundSMSResponseWrapper> SendSMSAsync(string url, OutboundSMSRequestWrapper obSMSReqWrapper)
@@ -49,7 +60,19 @@ namespace iocCoreSMS.Services
             
             return response;
         }
+        public async Task<InboundSmsMessageListWrapper> ReceiveSMSAsync(string url)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer BF-ACSI~5~20161019040217~HDujbVO0IvN05jKCkKbpdKadyL3FCBws");
+
+            string responseString = await GetMethodAsync(url);
+            var response = JsonConvert.DeserializeObject<InboundSmsMessageListWrapper>(responseString);
+            
+            return response;
+        }
         
+        //general helpers
         private async Task<string> GetMethodAsync(string url)
         {
             string responseString = null;
@@ -60,6 +83,7 @@ namespace iocCoreSMS.Services
             }
             return responseString; 
         }
+        
         private async Task<string> PostMethodAsync(string url, string payload)
         {
             string responseString = null;

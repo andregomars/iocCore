@@ -45,6 +45,27 @@ namespace iocCoreUnitTest
             Assert.True(isUpdate, "update message successfully"); 
         }
 
+        [Fact]
+        public void MessageBoxPostTest()
+        {
+            MessageBox msgBox = new MessageBox();
+            SMSMessage message = new SMSMessage {
+                ID = 0,
+                MessageID = "SMSe76f8786d04ac205",
+                SubMessageID = null,
+                SMSType = "1",
+                SenderCode = "48507075",
+                ReceiverCode = "tel:+16262521073",
+                Status = "1",
+                CreateTime = DateTime.Parse("2016-10-14T21:55:33.2"),
+                SendTime = DateTime.Now,
+                Message = "test message"
+            }; 
+            SMSMessage msg = msgBox.PostMessage(message);
+            Assert.NotNull(msg);
+            Assert.Equal(1, msg.ID);
+        }
+
 
         [Fact]
         public void SMSSendTest()
@@ -53,6 +74,15 @@ namespace iocCoreUnitTest
             manager.Send();
 
             Assert.True(true, "sms grabbed from db and sent through api");
+        }
+
+        [Fact]
+        public void SMSReceiveTest()
+        {
+            SMSManager manager = new SMSManager();
+            int msgReceived = manager.Receive();
+
+            Assert.Equal(0, msgReceived);
         }
 
     }

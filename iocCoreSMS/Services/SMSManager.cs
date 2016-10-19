@@ -7,6 +7,7 @@ namespace iocCoreSMS.Services
     public class SMSManager
     {
         private string urlSendSMS = "https://api.att.com/sms/v3/messaging/outbox";
+        private string urlReceiveSMS = "https://api.att.com/sms/v3/messaging/inbox/48507075";
         private bool verifyMessageDeliveryStatus = false;
 
         public SMSManager()
@@ -46,8 +47,35 @@ namespace iocCoreSMS.Services
                     msgBox.UpdateMessage(msg);
                 }
             }
+        }
+        
+        //return how many messages are received
+        public int Receive()
+        {
+            InboundSmsMessageListWrapper wrapper = 
+                new RestfulHelper().ReceiveSMSAsync(this.urlReceiveSMS).GetAwaiter().GetResult();
+            MessageBox msgBox = new MessageBox();
+            
+            foreach (var sms in wrapper.InboundSmsMessageList.InboundSmsMessage)
+            {
+                SMSMessage msg = new SMSMessage();
+                msg.ID = 0;
+                msg.MessageID = sms.MessageId;
+                msg.SubMessageID = null;
+                msg.SMSType = "1";
+                msg.SenderCode = sms.SenderAddress;
+                msg.ReceiverCode = sms.DestinationAddress;
+                msg.Status = "2";   //0: wait to send, 1: sent, 2: received
+                msg.CreateTime = DateTime.Now;
+                msg.SendTime = null;
+                msg.Message = sms.Message;
 
+                msgBox.PostMessage(msg);
+            }
 
+            int smsCount = 0;
+            Int32.TryParse(wrapper.InboundSmsMessageList.NumberOfMessagesInThisBatch, out smsCount);
+            return smsCount;
         }
 
         

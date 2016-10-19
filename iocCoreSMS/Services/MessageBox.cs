@@ -6,7 +6,8 @@ namespace iocCoreSMS.Services
     public class MessageBox
     {
         private string urlGetMessage = "http://www.mocky.io/v2/580472bb240000db2a135c91?status=0";
-        private string urlPutMessage = "http://www.mocky.io/v2/580472bb240000db2a135c91?status=0";
+        private string urlPutMessage = "http://www.mocky.io/v2/580472bb240000db2a135c91";
+        private string urlPostMessage = "http://www.mocky.io/v2/580730951000009226f187f2";
 
        public MessageBox()
         {}
@@ -20,6 +21,11 @@ namespace iocCoreSMS.Services
         {
             return new RestfulHelper().UpdateSMSMessageAsync(this.urlPutMessage, msg).GetAwaiter().GetResult();
         }
+        public SMSMessage PostMessage(SMSMessage msg)
+        {
+            return new RestfulHelper().AddSMSMessageAsync(this.urlPostMessage, msg).GetAwaiter().GetResult();
+        }
+
 
        
     }
