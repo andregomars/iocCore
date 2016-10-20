@@ -81,5 +81,12 @@ namespace iocCoreUnitTest
             Assert.Equal(0, msgReceived);
         }
 
+        [Fact]
+        public void RetrieveTokenTest()
+        {
+            SMSManager.Instance.RetrieveAccessToken();
+            Assert.NotNull(SMSManager.Instance.AccessToken);
+            Assert.True(SMSManager.Instance.TokenExpiresDate > DateTime.Now.AddDays(1));
+        }
     }
 }

@@ -9,13 +9,27 @@ namespace iocCoreSMS.Services
 
         private string urlSendSMS = "https://api.att.com/sms/v3/messaging/outbox";
         private string urlReceiveSMS = "https://api.att.com/sms/v3/messaging/inbox/48507075";
+        private string urlGetAccessToken = "https://api.att.com/oauth/v4/token";
         private bool verifyMessageDeliveryStatus = false;
+        private string appScope = "SMS";
+        private string appKey = "yeiejevxcufieanzutyglrw6kqi3nimc";
+        private string appSecret = "rsclv88oignborxi7vdgco81lhdqgdk5";
+
+        public string AppScope { get; set; }
+        public string AppKey { get; set; }
+        public string AppSecret { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTime TokenExpiresDate { get; set; }
 
         static SMSManager()
         {
         }
         private SMSManager()
         {
+            AppScope = this.appScope;
+            AppKey = this.appKey;
+            AppSecret = this.appSecret;
         }
 
         public static SMSManager Instance
@@ -41,7 +55,7 @@ namespace iocCoreSMS.Services
                     }
                 };
 
-                var res = new RestfulHelper().SendSMSAsync(this.urlSendSMS, reqWrapper).GetAwaiter().GetResult();
+                var res = new RestfulHelper().SendSMSAsync(this.urlSendSMS, AccessToken, reqWrapper).GetAwaiter().GetResult();
                 msg.MessageID = res.outboundSMSResponse.messageId;
 
                 //if there is no need to check sms delivery status, then update status as "sent"
@@ -66,7 +80,7 @@ namespace iocCoreSMS.Services
         public int Receive()
         {
             InboundSmsMessageListWrapper wrapper = 
-                new RestfulHelper().ReceiveSMSAsync(this.urlReceiveSMS).GetAwaiter().GetResult();
+                new RestfulHelper().ReceiveSMSAsync(this.urlReceiveSMS, AccessToken).GetAwaiter().GetResult();
             MessageBox msgBox = new MessageBox();
             
             foreach (var sms in wrapper.InboundSmsMessageList.InboundSmsMessage)
@@ -91,6 +105,24 @@ namespace iocCoreSMS.Services
             return smsCount;
         }
 
-        
+        public void RetrieveAccessToken()
+        {
+            AccessTokenResponse response;
+            if (String.IsNullOrEmpty(AccessToken))
+            {
+                response = new RestfulHelper()
+                        .GetNewSMSClientToken(this.urlGetAccessToken, AppKey, AppSecret, AppScope)
+                        .GetAwaiter()
+                        .GetResult();
+                
+                if (response != null && !String.IsNullOrEmpty(response.access_token))
+                {
+                    AccessToken = response.token_type + " " + response.access_token;
+                    RefreshToken = response.refresh_token;
+                    TokenExpiresDate = DateTime.Now.AddSeconds(response.expires_in);
+                }
+            }
+
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace iocCoreSMS.Services
 {
     public class RestfulHelper
     {
+        public const string CONTENTTYPE_JSON = "application/json";
+        public const string CONTENTTYPE_FORM = "application/x-www-form-urlencoded";
         private HttpClient client;
 
         public RestfulHelper()
@@ -33,7 +35,7 @@ namespace iocCoreSMS.Services
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             string payload = JsonConvert.SerializeObject(msg);
-            return await PutMethodAsync(url, payload);
+            return await PutMethodAsync(url, payload, CONTENTTYPE_JSON);
         }
         public async Task<SMSMessage> AddSMSMessageAsync(string url, SMSMessage msg)
         {
@@ -41,30 +43,33 @@ namespace iocCoreSMS.Services
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             string payload = JsonConvert.SerializeObject(msg);
-            string responseString = await PostMethodAsync(url, payload);
+            string responseString = await PostMethodAsync(url, payload, CONTENTTYPE_JSON);
             var response = JsonConvert.DeserializeObject<SMSMessage>(responseString);
             
             return response;
         }
  
         
-        public async Task<OutboundSMSResponseWrapper> SendSMSAsync(string url, OutboundSMSRequestWrapper obSMSReqWrapper)
+        public async Task<OutboundSMSResponseWrapper> SendSMSAsync(string url, string accessToken, 
+             OutboundSMSRequestWrapper obSMSReqWrapper)
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer BF-ACSI~5~20161019040217~HDujbVO0IvN05jKCkKbpdKadyL3FCBws");
+            // client.DefaultRequestHeaders.Add("Authorization", "Bearer BF-ACSI~5~20161019040217~HDujbVO0IvN05jKCkKbpdKadyL3FCBws");
+            client.DefaultRequestHeaders.Add("Authorization", accessToken);
 
             string payload = JsonConvert.SerializeObject(obSMSReqWrapper);
-            string responseString = await PostMethodAsync(url, payload);
+            string responseString = await PostMethodAsync(url, payload, CONTENTTYPE_JSON);
             var response = JsonConvert.DeserializeObject<OutboundSMSResponseWrapper>(responseString);
             
             return response;
         }
-        public async Task<InboundSmsMessageListWrapper> ReceiveSMSAsync(string url)
+        public async Task<InboundSmsMessageListWrapper> ReceiveSMSAsync(string url, string accessToken)
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer BF-ACSI~5~20161019040217~HDujbVO0IvN05jKCkKbpdKadyL3FCBws");
+            // client.DefaultRequestHeaders.Add("Authorization", "Bearer BF-ACSI~5~20161019040217~HDujbVO0IvN05jKCkKbpdKadyL3FCBws");
+            client.DefaultRequestHeaders.Add("Authorization", accessToken);
 
             string responseString = await GetMethodAsync(url);
             var response = JsonConvert.DeserializeObject<InboundSmsMessageListWrapper>(responseString);
@@ -72,9 +77,17 @@ namespace iocCoreSMS.Services
             return response;
         }
 
-        public async Task<string> GetSMSClientToken(string url)
+        public async Task<AccessTokenResponse> GetNewSMSClientToken(string url, string appKey, string appSecret,
+            string appScope)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string payload = $"client_id={appKey}&client_secret={appSecret}&grant_type=client_credentials&scope={appScope}";
+            string responseString = await PostMethodAsync(url, payload, CONTENTTYPE_FORM);
+            var response = JsonConvert.DeserializeObject<AccessTokenResponse>(responseString);
+            
+            return response;
         }
         
         //general helpers
@@ -89,10 +102,10 @@ namespace iocCoreSMS.Services
             return responseString; 
         }
         
-        private async Task<string> PostMethodAsync(string url, string payload)
+        private async Task<string> PostMethodAsync(string url, string payload, string contenttype)
         {
             string responseString = null;
-            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+            var content = new StringContent(payload, Encoding.UTF8, contenttype);
             HttpResponseMessage response = await client.PostAsync(url, content);
             if (response.IsSuccessStatusCode)
             {
@@ -100,14 +113,11 @@ namespace iocCoreSMS.Services
             }
             return responseString; 
         }
-        private async Task<bool> PutMethodAsync(string url, string payload)
+        private async Task<bool> PutMethodAsync(string url, string payload, string contentType)
         {
-            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+            var content = new StringContent(payload, Encoding.UTF8, contentType);
             HttpResponseMessage response = await client.PutAsync(url, content);
             return response.IsSuccessStatusCode;
         }
-
-
-
     }
 }
