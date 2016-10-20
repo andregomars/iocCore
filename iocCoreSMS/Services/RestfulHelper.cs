@@ -71,6 +71,11 @@ namespace iocCoreSMS.Services
             
             return response;
         }
+
+        public async Task<string> GetSMSClientToken(string url)
+        {
+            return null;
+        }
         
         //general helpers
         private async Task<string> GetMethodAsync(string url)

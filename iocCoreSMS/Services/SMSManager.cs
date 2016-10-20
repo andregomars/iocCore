@@ -1,17 +1,30 @@
 using System;
-using System.Collections.Generic;
 using iocCoreSMS.Models;
 
 namespace iocCoreSMS.Services
 {
-    public class SMSManager
+    public sealed class SMSManager
     {
+        private static readonly SMSManager instance = new SMSManager();
+
         private string urlSendSMS = "https://api.att.com/sms/v3/messaging/outbox";
         private string urlReceiveSMS = "https://api.att.com/sms/v3/messaging/inbox/48507075";
         private bool verifyMessageDeliveryStatus = false;
 
-        public SMSManager()
-        {}
+        static SMSManager()
+        {
+        }
+        private SMSManager()
+        {
+        }
+
+        public static SMSManager Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
 
         public void Send()
         {

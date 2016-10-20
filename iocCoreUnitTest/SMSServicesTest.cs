@@ -70,18 +70,14 @@ namespace iocCoreUnitTest
         [Fact]
         public void SMSSendTest()
         {
-            SMSManager manager = new SMSManager();
-            manager.Send();
-
+            SMSManager.Instance.Send();
             Assert.True(true, "sms grabbed from db and sent through api");
         }
 
         [Fact]
         public void SMSReceiveTest()
         {
-            SMSManager manager = new SMSManager();
-            int msgReceived = manager.Receive();
-
+            int msgReceived = SMSManager.Instance.Receive();
             Assert.Equal(0, msgReceived);
         }
 
