@@ -89,6 +89,18 @@ namespace iocCoreSMS.Services
             
             return response;
         }
+        public async Task<AccessTokenResponse> RefreshSMSClientToken(string url, string appKey, string appSecret,
+            string refreshToken)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string payload = $"client_id={appKey}&client_secret={appSecret}&grant_type=refresh_token&refresh_token={refreshToken}";
+            string responseString = await PostMethodAsync(url, payload, CONTENTTYPE_FORM);
+            var response = JsonConvert.DeserializeObject<AccessTokenResponse>(responseString);
+            
+            return response;
+        }
         
         //general helpers
         private async Task<string> GetMethodAsync(string url)

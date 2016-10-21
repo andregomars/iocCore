@@ -14,11 +14,20 @@ namespace iocCoreSMS.Services
         private string appScope = "SMS";
         private string appKey = "yeiejevxcufieanzutyglrw6kqi3nimc";
         private string appSecret = "rsclv88oignborxi7vdgco81lhdqgdk5";
+        private string accessToken = null;
 
-        public string AppScope { get; set; }
-        public string AppKey { get; set; }
-        public string AppSecret { get; set; }
-        public string AccessToken { get; set; }
+        public string AccessToken
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(this.accessToken))
+                {
+                    RetrieveAccessToken();
+                }
+
+                return this.accessToken;
+            }
+        }
         public string RefreshToken { get; set; }
         public DateTime TokenExpiresDate { get; set; }
 
@@ -27,9 +36,6 @@ namespace iocCoreSMS.Services
         }
         private SMSManager()
         {
-            AppScope = this.appScope;
-            AppKey = this.appKey;
-            AppSecret = this.appSecret;
         }
 
         public static SMSManager Instance
@@ -55,7 +61,10 @@ namespace iocCoreSMS.Services
                     }
                 };
 
-                var res = new RestfulHelper().SendSMSAsync(this.urlSendSMS, AccessToken, reqWrapper).GetAwaiter().GetResult();
+                var res = new RestfulHelper()
+                    .SendSMSAsync(this.urlSendSMS, AccessToken, reqWrapper)
+                    .GetAwaiter()
+                    .GetResult();
                 msg.MessageID = res.outboundSMSResponse.messageId;
 
                 //if there is no need to check sms delivery status, then update status as "sent"
@@ -107,22 +116,29 @@ namespace iocCoreSMS.Services
 
         public void RetrieveAccessToken()
         {
-            AccessTokenResponse response;
-            if (String.IsNullOrEmpty(AccessToken))
+            AccessTokenResponse response = null;
+            if (String.IsNullOrEmpty(this.accessToken))
             {
                 response = new RestfulHelper()
-                        .GetNewSMSClientToken(this.urlGetAccessToken, AppKey, AppSecret, AppScope)
+                        .GetNewSMSClientToken(this.urlGetAccessToken, this.appKey, this.appSecret, this.appScope)
                         .GetAwaiter()
                         .GetResult();
                 
-                if (response != null && !String.IsNullOrEmpty(response.access_token))
-                {
-                    AccessToken = response.token_type + " " + response.access_token;
-                    RefreshToken = response.refresh_token;
-                    TokenExpiresDate = DateTime.Now.AddSeconds(response.expires_in);
-                }
+            }
+            else if(TokenExpiresDate <= DateTime.Now.AddHours(1))
+            {
+                response = new RestfulHelper()
+                        .RefreshSMSClientToken(this.urlGetAccessToken, this.appKey, this.appSecret, RefreshToken)
+                        .GetAwaiter()
+                        .GetResult();
             }
 
+            if (response != null && !String.IsNullOrEmpty(response.access_token))
+            {
+                this.accessToken = response.token_type + " " + response.access_token;
+                RefreshToken = response.refresh_token;
+                TokenExpiresDate = DateTime.Now.AddSeconds(response.expires_in);
+            }
         }
     }
 }

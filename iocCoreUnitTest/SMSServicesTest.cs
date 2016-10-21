@@ -4,17 +4,26 @@ using iocCoreSMS.Models;
 using System.Collections.Generic;
 using Xunit.Abstractions;
 using System;
+using NLog;
 
 namespace iocCoreUnitTest
 {
+
     public class SMSServicesTest
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         private readonly ITestOutputHelper output;
         public SMSServicesTest(ITestOutputHelper output)
         {
             this.output = output;
         }
-        
+
+        [Fact]
+        public void SimpleTest()
+        {
+            Assert.True(true);
+        }
+
         [Fact]
         public void MessageBoxGetTest()
         {
@@ -84,9 +93,22 @@ namespace iocCoreUnitTest
         [Fact]
         public void RetrieveTokenTest()
         {
+            logger.Info("RetrieveTokenTest starts...");
+
             SMSManager.Instance.RetrieveAccessToken();
+            logger.Info(
+                String.Format("New AccessToken {0} will be expired after {1}",
+                SMSManager.Instance.AccessToken, SMSManager.Instance.TokenExpiresDate.ToString()));
+
+            SMSManager.Instance.TokenExpiresDate = DateTime.Now.AddHours(-8);
+            SMSManager.Instance.RetrieveAccessToken();
+            logger.Info(
+                String.Format("Refreshed AccessToken {0} will be expired after {1}",
+                SMSManager.Instance.AccessToken, SMSManager.Instance.TokenExpiresDate.ToString()));
+
             Assert.NotNull(SMSManager.Instance.AccessToken);
             Assert.True(SMSManager.Instance.TokenExpiresDate > DateTime.Now.AddDays(1));
         }
+
     }
 }
