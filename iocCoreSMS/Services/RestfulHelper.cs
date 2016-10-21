@@ -57,7 +57,8 @@ namespace iocCoreSMS.Services
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Add("Authorization", accessToken);
 
-            string payload = JsonConvert.SerializeObject(obSMSReqWrapper);
+            object requestObj = Common.OutboundSMSRequestAdapter(obSMSReqWrapper);
+            string payload = JsonConvert.SerializeObject(requestObj);
             string responseString = await PostMethodAsync(url, payload, CONTENTTYPE_JSON);
             var response = JsonConvert.DeserializeObject<OutboundSMSResponseWrapper>(responseString);
             

@@ -1,4 +1,5 @@
 using System;
+using iocCoreSMS.Models;
 
 namespace iocCoreSMS.Services
 {
@@ -21,6 +22,21 @@ namespace iocCoreSMS.Services
             }
 
             return addrArray;
+        }
+
+        public static object OutboundSMSRequestAdapter(OutboundSMSRequestWrapper request)
+        {
+            if (request.outboundSMSRequest.address.Length == 1)
+            {
+                return new OutboundSMSSingleReceiverRequestWrapper {
+                    outboundSMSSingleReceiverRequest = new OutboundSMSSingleReceiverRequest {
+                        address = request.outboundSMSRequest.address[0],
+                        message = "test message"
+                    }
+                };
+            }
+            
+            return request;
         }
     }
 }
