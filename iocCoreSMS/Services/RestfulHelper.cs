@@ -55,7 +55,6 @@ namespace iocCoreSMS.Services
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            // client.DefaultRequestHeaders.Add("Authorization", "Bearer BF-ACSI~5~20161019040217~HDujbVO0IvN05jKCkKbpdKadyL3FCBws");
             client.DefaultRequestHeaders.Add("Authorization", accessToken);
 
             string payload = JsonConvert.SerializeObject(obSMSReqWrapper);
@@ -68,7 +67,6 @@ namespace iocCoreSMS.Services
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            // client.DefaultRequestHeaders.Add("Authorization", "Bearer BF-ACSI~5~20161019040217~HDujbVO0IvN05jKCkKbpdKadyL3FCBws");
             client.DefaultRequestHeaders.Add("Authorization", accessToken);
 
             string responseString = await GetMethodAsync(url);

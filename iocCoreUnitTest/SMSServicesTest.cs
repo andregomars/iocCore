@@ -19,9 +19,20 @@ namespace iocCoreUnitTest
         }
 
         [Fact]
-        public void SimpleTest()
+        public void ReceiverCodesSplitTest()
         {
-            Assert.True(true);
+            string rcodesMultiple = "tel:+16261112222,tel:+19092223333";
+            string rcodesSingle = "tel:+16261112222";
+            
+            string[] mcodes = Common.SplitReceiverCodes(rcodesMultiple);
+            string[] scode = Common.SplitReceiverCodes(rcodesSingle);
+            string[] ecode = Common.SplitReceiverCodes("");
+            string[] ncode = Common.SplitReceiverCodes(null);
+
+            Assert.Equal(2, mcodes.Length);
+            Assert.Equal(1, scode.Length);
+            Assert.Null(ecode);
+            Assert.Null(ncode);
         }
 
         [Fact]

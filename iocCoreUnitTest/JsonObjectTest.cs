@@ -17,8 +17,8 @@ namespace iocCoreUnitTest
         public void PassingTest()
         {
             var request = new OutboundSMSRequest {
-                address = "8002521111",
-                message = "sms message test"
+                address = new string[] {"tel:+18002521111", "tel:+19793235555"},
+                message = "sms message test"    
             }; 
             var wrapper = new OutboundSMSRequestWrapper{
                 outboundSMSRequest = request

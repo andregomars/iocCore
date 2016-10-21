@@ -25,8 +25,6 @@ namespace iocCoreSMS.Services
         {
             return new RestfulHelper().AddSMSMessageAsync(this.urlPostMessage, msg).GetAwaiter().GetResult();
         }
-
-
-       
+     
     }
 }

@@ -50,16 +50,19 @@ namespace iocCoreSMS.Services
         {
             var msgBox = new MessageBox();
             var msgs = msgBox.GetMessages();
+            
 
             //retrieve messages from db, send to sms api and get message ID
             foreach (var msg in msgs)
             {
                 var reqWrapper = new OutboundSMSRequestWrapper {
                     outboundSMSRequest = new OutboundSMSRequest {
-                        address = msg.ReceiverCode,
+                        address = Common.SplitReceiverCodes(msg.ReceiverCode),
                         message = msg.Message
                     }
                 };
+
+                if (reqWrapper.outboundSMSRequest.address == null) continue;
 
                 var res = new RestfulHelper()
                     .SendSMSAsync(this.urlSendSMS, AccessToken, reqWrapper)
