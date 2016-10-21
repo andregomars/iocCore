@@ -19,8 +19,8 @@ namespace iocCoreUnitTest
         [Fact]
         public void OutboundSMSSerializeTest()
         {
-            //string receivercodes = "tel:+18002521111";
-            string receivercodes = "tel:+18002521111,tel:+19793235555";
+            string receivercodes = "tel:+18002521111";
+            //string receivercodes = "tel:+18002521111,tel:+19793235555";
 
             var msgBox = new MessageBox();
             var msgs = msgBox.GetMessages();

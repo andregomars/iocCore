@@ -8,6 +8,6 @@ namespace iocCoreSMS.Models
 
     public class OutboundSMSSingleReceiverRequestWrapper
     {
-        public OutboundSMSSingleReceiverRequest outboundSMSSingleReceiverRequest { get; set; }
+        public OutboundSMSSingleReceiverRequest outboundSMSRequest { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace iocCoreSMS.Services
 {
     public class MessageBox
     {
-        private string urlGetMessage = "http://www.mocky.io/v2/580472bb240000db2a135c91?status=0";
+        private string urlGetMessage = "http://www.mocky.io/v2/5809eaeb1000009f13cfdaf1?status=0";
         private string urlPutMessage = "http://www.mocky.io/v2/580472bb240000db2a135c91";
         private string urlPostMessage = "http://www.mocky.io/v2/580730951000009226f187f2";
 

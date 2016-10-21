@@ -29,9 +29,9 @@ namespace iocCoreSMS.Services
             if (request.outboundSMSRequest.address.Length == 1)
             {
                 return new OutboundSMSSingleReceiverRequestWrapper {
-                    outboundSMSSingleReceiverRequest = new OutboundSMSSingleReceiverRequest {
+                    outboundSMSRequest = new OutboundSMSSingleReceiverRequest {
                         address = request.outboundSMSRequest.address[0],
-                        message = "test message"
+                        message = request.outboundSMSRequest.message
                     }
                 };
             }
