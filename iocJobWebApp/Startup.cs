@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Hangfire;
 using iocCoreSMS.Services;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 
 namespace iocJobWebApp
 {
@@ -25,6 +27,7 @@ namespace iocJobWebApp
         }
 
         public IConfigurationRoot Configuration { get; }
+        public IContainer ApplicationContainer { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -32,11 +35,19 @@ namespace iocJobWebApp
             // Add framework services.
             services.AddMvc();
             services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddSingleton<SMSManager>();
+            //services.AddSingleton<SMSManager>();
+
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new AutofacModule());
+            builder.Populate(services);
+            this.ApplicationContainer = builder.Build();
+
+            new AutofacServiceProvider(this.ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
+            ILoggerFactory loggerFactory, IApplicationLifetime appLifetime, ISMSManager smsManager)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -50,7 +61,9 @@ namespace iocJobWebApp
             //    () => SMSManager.Instance.Receive(),
             //    "*/1 * * * *");
 
-            BackgroundJob.Enqueue<SMSManager>(x => x.Receive());
+            //BackgroundJob.Enqueue(() => Console.WriteLine("Fire-and-forget"));
+            //BackgroundJob.Enqueue<SMSManager>(x => x.Receive());
+            BackgroundJob.Enqueue(() => smsManager.Receive());
 
             if (env.IsDevelopment())
             {
@@ -71,7 +84,9 @@ namespace iocJobWebApp
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-
+            // Autofac: If you want to dispose of resources that have been resolved in the
+            // application container, register for the "ApplicationStopped" event.
+            appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
         }
     }
 }

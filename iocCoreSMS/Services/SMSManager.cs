@@ -3,7 +3,13 @@ using iocCoreSMS.Models;
 
 namespace iocCoreSMS.Services
 {
-    public sealed class SMSManager
+    public interface ISMSManager
+    {
+        void Send();
+        int Receive();
+    }
+
+    public sealed class SMSManager : ISMSManager
     {
         private static readonly SMSManager instance = new SMSManager();
 
