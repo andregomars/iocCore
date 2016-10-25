@@ -24,6 +24,7 @@
     "Autofac": "4.1.1",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "HangFire": "1.6.5",
+    "NLog.Extensions.Logging": "1.0.0-*",
     "iocCoreSMS": "1.0.0-*"
   },
 

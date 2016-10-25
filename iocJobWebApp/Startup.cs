@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,59 +8,62 @@ using Hangfire;
 using iocCoreSMS.Services;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+//using NLog.Extensions.Logging;
 
 namespace iocJobWebApp
 {
     public class Startup
     {
+        public IConfigurationRoot Configuration { get; private set; }
+        public IContainer ApplicationContainer { get; private set; }
+
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
+            var configBuilder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configBuilder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
             services.AddMvc();
             services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddSingleton<SMSManager>();
 
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new AutofacModule());
-            builder.Populate(services);
-            this.ApplicationContainer = builder.Build();
+            InitSMSManager();            
 
-            new AutofacServiceProvider(this.ApplicationContainer);
+            var containerBuilder = new ContainerBuilder();
+            //containerBuilder.RegisterType<SMSManager>().As<ISMSManager>();
+            containerBuilder.RegisterInstance<ISMSManager>(SMSManager.Instance);
+            containerBuilder.Populate(services);
+            this.ApplicationContainer = containerBuilder.Build();
+
+            return new AutofacServiceProvider(this.ApplicationContainer);
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
-            ILoggerFactory loggerFactory, IApplicationLifetime appLifetime, ISMSManager smsManager)
+            ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             //add hangfire
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("");
             app.UseHangfireServer();
 
-            //init hangfir jobs
-            //RecurringJob.AddOrUpdate("Recursive SMS Receiving Job",
-            //    () => SMSManager.Instance.Receive(),
-            //    "*/1 * * * *");
-
-            //BackgroundJob.Enqueue(() => Console.WriteLine("Fire-and-forget"));
-            //BackgroundJob.Enqueue<SMSManager>(x => x.Receive());
-            BackgroundJob.Enqueue(() => smsManager.Receive());
+            //BackgroundJob.Enqueue<ISMSManager>( x => x.Send() );
+            //RecurringJob.AddOrUpdate<ISMSManager>( x => x.Receive(), "*/5 * * * *");
+            
+            RecurringJob.AddOrUpdate<ISMSManager>( x => x.Send(), 
+                Configuration["SMS.AttApi:SendSchedule"]);
+            RecurringJob.AddOrUpdate<ISMSManager>( x => x.Receive(), 
+                Configuration["SMS.AttApi:ReceiveSchedule"]);
 
             if (env.IsDevelopment())
             {
@@ -87,6 +87,18 @@ namespace iocJobWebApp
             // Autofac: If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+        }
+        
+        private void InitSMSManager()
+        {
+            SMSManager.Instance.UrlSendSMS = Configuration["SMS.AttApi:UrlSendSMS"];
+            SMSManager.Instance.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"];
+            SMSManager.Instance.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
+            SMSManager.Instance.AppScope = Configuration["SMS.AttApi:AppScope"];
+            SMSManager.Instance.AppKey = Configuration["SMS.AttApi:AppKey"];
+            SMSManager.Instance.AppSecret = Configuration["SMS.AttApi:AppSecret"];
+            SMSManager.Instance.VerifyMessageDeliveryStatus = 
+                Convert.ToBoolean(Configuration["SMS.AttApi:VerifyMessageDeliveryStatus"]);
         }
     }
 }

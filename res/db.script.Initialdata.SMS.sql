@@ -6,7 +6,7 @@ insert into Core_SMS
 ,SubMessageID
 ,SMSType
 ,SenderCode
-,RecieverCode
+,ReceiverCode
 ,Status
 ,CreateTime
 ,SendTime

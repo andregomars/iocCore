@@ -5,25 +5,26 @@ namespace iocCoreSMS.Services
 {
     public class MessageBox
     {
-        private string urlGetMessage = "http://www.mocky.io/v2/5809eaeb1000009f13cfdaf1?status=0";
-        private string urlPutMessage = "http://www.mocky.io/v2/580472bb240000db2a135c91";
-        private string urlPostMessage = "http://www.mocky.io/v2/580730951000009226f187f2";
+        private string baseUrl = "http://localhost:8005/api/SMS"; 
 
        public MessageBox()
         {}
 
         public List<SMSMessage> GetMessages()
         {
-            return new RestfulHelper().GetSMSMessageAsync(this.urlGetMessage).GetAwaiter().GetResult();
+            string urlGetMessage = $"{baseUrl}?status=0";
+            return new RestfulHelper().GetSMSMessageAsync(urlGetMessage).GetAwaiter().GetResult();
         }
 
         public bool UpdateMessage(SMSMessage msg)
         {
-            return new RestfulHelper().UpdateSMSMessageAsync(this.urlPutMessage, msg).GetAwaiter().GetResult();
+            string urlPutMessage = $"{baseUrl}/{msg.ID.ToString()}";
+            return new RestfulHelper().UpdateSMSMessageAsync(urlPutMessage, msg).GetAwaiter().GetResult();
         }
         public SMSMessage PostMessage(SMSMessage msg)
         {
-            return new RestfulHelper().AddSMSMessageAsync(this.urlPostMessage, msg).GetAwaiter().GetResult();
+            string urlPostMessage = baseUrl;
+            return new RestfulHelper().AddSMSMessageAsync(urlPostMessage, msg).GetAwaiter().GetResult();
         }
      
     }

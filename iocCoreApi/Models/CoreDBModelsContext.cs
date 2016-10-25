@@ -74,7 +74,7 @@ namespace iocCoreApi.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Core_SMS>()
-                .Property(e => e.RecieverCode)
+                .Property(e => e.ReceiverCode)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Core_SMS>()

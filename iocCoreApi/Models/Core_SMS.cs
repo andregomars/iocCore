@@ -10,7 +10,6 @@ namespace iocCoreApi.Models
     {
         public int ID { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string MessageID { get; set; }
 
@@ -24,7 +23,7 @@ namespace iocCoreApi.Models
         public string SenderCode { get; set; }
 
         [StringLength(50)]
-        public string RecieverCode { get; set; }
+        public string ReceiverCode { get; set; }
 
         [StringLength(5)]
         public string Status { get; set; }
