@@ -24,6 +24,11 @@ namespace iocCoreSMS.Services
             return addrArray;
         }
 
+        ///<summary>
+        /// when send to muitple receiver, the expected ATT SMS adderss format is ["tel:21212,tel:343434"]
+        /// ,but when send to single receiver, the expected ATT SMS adderss format is "tel:21212", there is no square bracket embraced.
+        /// while c# array with one node only would still have the [] embraced, so there needs to be an adapter to follow ATT REST API specification
+        ///</summary>
         public static object OutboundSMSRequestAdapter(OutboundSMSRequestWrapper request)
         {
             if (request.outboundSMSRequest.address.Length == 1)

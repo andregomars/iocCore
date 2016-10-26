@@ -11,7 +11,9 @@ namespace iocCoreSMS.Services
 
     public sealed class SMSManager : ISMSManager
     {
-        private static readonly SMSManager instance = new SMSManager();
+        ISMSConfiguration m_config;
+        IMessageBox m_msgBox;
+
         private string accessToken = null;
 
         public string AccessToken
@@ -27,46 +29,15 @@ namespace iocCoreSMS.Services
             }
         }
         
-        #region properties
-        public string UrlSendSMS { get; set; }
-
-        public string UrlReceiveSMS { get; set; }
-
-        public string UrlGetAccessToken { get; set; }
-
-        public string AppScope { get; set; }
-
-        public string AppKey { get; set; }
-
-        public string AppSecret { get; set; }
-
-        public bool VerifyMessageDeliveryStatus { get; set; }
-
-        public string RefreshToken { get; set; }
-        public DateTime TokenExpiresDate { get; set; }
-
-        #endregion properties
-
-        static SMSManager()
+        public SMSManager(ISMSConfiguration config, IMessageBox msgBox) 
         {
-        }
-        private SMSManager()
-        {
-        }
-
-        public static SMSManager Instance
-        {
-            get
-            {
-                return instance;
-            }
+            m_config = config;
+            m_msgBox = msgBox;
         }
 
         public void Send()
         {
-            var msgBox = new MessageBox();
-            var msgs = msgBox.GetMessages();
-            
+            var msgs = m_msgBox.GetMessages();
 
             //retrieve messages from db, send to sms api and get message ID
             foreach (var msg in msgs)
@@ -81,25 +52,25 @@ namespace iocCoreSMS.Services
                 if (reqWrapper.outboundSMSRequest.address == null) continue;
 
                 var res = new RestfulHelper()
-                    .SendSMSAsync(UrlSendSMS, AccessToken, reqWrapper)
+                    .SendSMSAsync(m_config.UrlSendSMS, AccessToken, reqWrapper)
                     .GetAwaiter()
                     .GetResult();
                 msg.MessageID = res.outboundSMSResponse.messageId;
 
                 //if there is no need to check sms delivery status, then update status as "sent"
-                if (!VerifyMessageDeliveryStatus)
+                if (!m_config.VerifyMessageDeliveryStatus)
                 {
                     msg.Status = "1";
                     msg.SendTime = DateTime.Now;
                 }
             }
 
-            //update message status back to DB 
+            //update message ID and status back to DB 
             foreach (var msg in msgs)
             {
                 if(!String.IsNullOrEmpty(msg.MessageID))
                 {
-                    msgBox.UpdateMessage(msg);
+                    m_msgBox.UpdateMessage(msg);
                 }
             }
         }
@@ -107,9 +78,10 @@ namespace iocCoreSMS.Services
         //return how many messages are received
         public int Receive()
         {
-            InboundSmsMessageListWrapper wrapper = 
-                new RestfulHelper().ReceiveSMSAsync(UrlReceiveSMS, AccessToken).GetAwaiter().GetResult();
-            MessageBox msgBox = new MessageBox();
+            var wrapper = new RestfulHelper()
+                .ReceiveSMSAsync(m_config.UrlReceiveSMS, AccessToken)
+                .GetAwaiter()
+                .GetResult();
             
             foreach (var sms in wrapper.InboundSmsMessageList.InboundSmsMessage)
             {
@@ -125,7 +97,7 @@ namespace iocCoreSMS.Services
                 msg.SendTime = null;
                 msg.Message = sms.Message;
 
-                msgBox.PostMessage(msg);
+                m_msgBox.PostMessage(msg);
             }
 
             int smsCount = 0;
@@ -133,30 +105,37 @@ namespace iocCoreSMS.Services
             return smsCount;
         }
 
+        ///<summary>
+        /// According to ATT Rest API specification, it needs to follow OAuth2.0 agreement to 
+        /// perform access token retrieving dynamically before each API request. 
+        ///</summary>
         public void RetrieveAccessToken()
         {
             AccessTokenResponse response = null;
             if (String.IsNullOrEmpty(this.accessToken))
             {
                 response = new RestfulHelper()
-                        .GetNewSMSClientToken(UrlGetAccessToken, AppKey, AppSecret, AppScope)
+                        .GetNewSMSClientToken(m_config.UrlGetAccessToken, m_config.AppKey, 
+                            m_config.AppSecret, m_config.AppScope)
                         .GetAwaiter()
                         .GetResult();
                 
             }
-            else if(TokenExpiresDate <= DateTime.Now.AddHours(1))
+            else if(m_config.TokenExpiresDate <= DateTime.Now.AddHours(1))
             {
                 response = new RestfulHelper()
-                        .RefreshSMSClientToken(UrlGetAccessToken, AppKey, AppSecret, RefreshToken)
+                        .RefreshSMSClientToken(m_config.UrlGetAccessToken, m_config.AppKey, 
+                            m_config.AppSecret, m_config.RefreshToken)
                         .GetAwaiter()
                         .GetResult();
             }
 
+            //assign access token, refresh token and token expire date
             if (response != null && !String.IsNullOrEmpty(response.access_token))
             {
                 this.accessToken = response.token_type + " " + response.access_token;
-                RefreshToken = response.refresh_token;
-                TokenExpiresDate = DateTime.Now.AddSeconds(response.expires_in);
+                m_config.RefreshToken = response.refresh_token;
+                m_config.TokenExpiresDate = DateTime.Now.AddSeconds(response.expires_in);
             }
         }
     }

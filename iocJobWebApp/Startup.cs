@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Hangfire;
+using iocCoreSMS.Models;
 using iocCoreSMS.Services;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -34,11 +35,13 @@ namespace iocJobWebApp
             services.AddMvc();
             services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
 
-            InitSMSManager();            
+            //initialize configuration, then inject as a singleton
+            ISMSConfiguration config = InitSMSManager();            
 
             var containerBuilder = new ContainerBuilder();
-            //containerBuilder.RegisterType<SMSManager>().As<ISMSManager>();
-            containerBuilder.RegisterInstance<ISMSManager>(SMSManager.Instance);
+            containerBuilder.RegisterInstance(config).SingleInstance().As<ISMSConfiguration>();
+            containerBuilder.RegisterType<MessageBox>().As<IMessageBox>();
+            containerBuilder.RegisterType<SMSManager>().As<ISMSManager>();
             containerBuilder.Populate(services);
             this.ApplicationContainer = containerBuilder.Build();
 
@@ -92,16 +95,20 @@ namespace iocJobWebApp
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
         }
         
-        private void InitSMSManager()
+        private ISMSConfiguration InitSMSManager()
         {
-            SMSManager.Instance.UrlSendSMS = Configuration["SMS.AttApi:UrlSendSMS"];
-            SMSManager.Instance.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"];
-            SMSManager.Instance.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
-            SMSManager.Instance.AppScope = Configuration["SMS.AttApi:AppScope"];
-            SMSManager.Instance.AppKey = Configuration["SMS.AttApi:AppKey"];
-            SMSManager.Instance.AppSecret = Configuration["SMS.AttApi:AppSecret"];
-            SMSManager.Instance.VerifyMessageDeliveryStatus = 
+            var config = new SMSConfiguration();
+            config.UrlSendSMS = Configuration["SMS.AttApi:UrlSendSMS"];
+            config.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"];
+            config.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
+            config.AppScope = Configuration["SMS.AttApi:AppScope"];
+            config.AppKey = Configuration["SMS.AttApi:AppKey"];
+            config.AppSecret = Configuration["SMS.AttApi:AppSecret"];
+            config.VerifyMessageDeliveryStatus = 
                 Convert.ToBoolean(Configuration["SMS.AttApi:VerifyMessageDeliveryStatus"]);
+            config.BaseUrlMessageApi = Configuration["SMS.AttApi:BaseUrlMessageApi"];
+
+            return config;
         }
     }
 }

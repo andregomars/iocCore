@@ -19,6 +19,7 @@ namespace iocCoreSMS.Services
             this.client = new HttpClient();
         }
 
+#region message helpers
         public async Task<List<SMSMessage>> GetSMSMessageAsync(string url)
         {
             client.DefaultRequestHeaders.Accept.Clear();
@@ -48,8 +49,9 @@ namespace iocCoreSMS.Services
             
             return response;
         }
- 
+#endregion message helpers 
         
+#region SMS helpers
         public async Task<OutboundSMSResponseWrapper> SendSMSAsync(string url, string accessToken, 
              OutboundSMSRequestWrapper obSMSReqWrapper)
         {
@@ -100,8 +102,9 @@ namespace iocCoreSMS.Services
             
             return response;
         }
-        
-        //general helpers
+#endregion SMS helpers
+
+#region Http method helpers
         private async Task<string> GetMethodAsync(string url)
         {
             string responseString = null;
@@ -131,4 +134,5 @@ namespace iocCoreSMS.Services
             return response.IsSuccessStatusCode;
         }
     }
+#endregion Http methods helpers
 }

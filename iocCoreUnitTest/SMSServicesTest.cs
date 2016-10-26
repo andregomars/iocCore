@@ -1,12 +1,13 @@
-using iocCoreSMS.Services;
-using Xunit;
-using iocCoreSMS.Models;
-using System.Collections.Generic;
 using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Reflection;
+using Xunit;
 using NLog.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.IO;
+using iocCoreSMS.Models;
+using iocCoreSMS.Services;
 
 namespace iocCoreUnitTest
 {
@@ -30,6 +31,7 @@ namespace iocCoreUnitTest
             logger = loggerFactory.CreateLogger<SMSServicesTest>();
 
             InitConfig();
+            LogConfig();
         }
 
         [Fact]
@@ -40,14 +42,30 @@ namespace iocCoreUnitTest
 
         private void InitConfig()
         {
-            SMSManager.Instance.UrlSendSMS = Configuration["SMS.AttApi:urlSendSMS"];
-            SMSManager.Instance.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"];
-            SMSManager.Instance.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
-            SMSManager.Instance.AppScope = Configuration["SMS.AttApi:AppScope"];
-            SMSManager.Instance.AppKey = Configuration["SMS.AttApi:AppKey"];
-            SMSManager.Instance.AppSecret = Configuration["SMS.AttApi:AppSecret"];
-            SMSManager.Instance.VerifyMessageDeliveryStatus = 
+            var config = SMSConfiguration.Instance;
+            config.UrlSendSMS = Configuration["SMS.AttApi:urlSendSMS"];
+            config.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"];
+            config.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
+            config.AppScope = Configuration["SMS.AttApi:AppScope"];
+            config.AppKey = Configuration["SMS.AttApi:AppKey"];
+            config.AppSecret = Configuration["SMS.AttApi:AppSecret"];
+            config.VerifyMessageDeliveryStatus = 
                 Convert.ToBoolean(Configuration["SMS.AttApi:VerifyMessageDeliveryStatus"]);
+            config.BaseUrlMessageApi = Configuration["SMS.AttApi:BaseUrlMessageApi"];
+        }
+
+        private void LogConfig()
+        {
+            var config = SMSConfiguration.Instance;
+            var type = SMSConfiguration.Instance.GetType();
+            PropertyInfo[] properties = type.GetProperties();
+
+            logger.LogDebug("Start logging SMSConfig properties: ");
+            foreach (PropertyInfo p in properties)
+            {
+                logger.LogDebug($"{p.Name}: {p.GetValue(config, null)}" );
+            }
+            logger.LogDebug("End logging SMSConfig properties");
         }
 
        [Fact]
@@ -111,7 +129,8 @@ namespace iocCoreUnitTest
                 Status = "0",
                 CreateTime = DateTime.Now,
                 SendTime = null,
-                Message = "new posted message"
+                Message = "posted message @ " + 
+                    DateTime.Now.ToString("MM/dd/yyyy HH:mm")
             }; 
             SMSMessage msg = msgBox.PostMessage(message);
             Assert.NotNull(msg);
@@ -122,15 +141,25 @@ namespace iocCoreUnitTest
        [Fact]
         public void SMSSendTest()
         {
-            SMSManager.Instance.Send();
+            logger.LogInformation($"SMSSendTest starts...");
+
+            new SMSManager().Send();
             Assert.True(true, "sms grabbed from db and sent through api");
+
+            logger.LogInformation($"SMSSendTest ends...");
         }
 
         [Fact]
         public void SMSReceiveTest()
         {
-            int msgReceived = SMSManager.Instance.Receive();
+            logger.LogInformation($"SMSReceiveTest starts...");
+
+            var smsManager = new SMSManager();
+            int msgReceived = smsManager.Receive();
+            logger.LogInformation($"{msgReceived} text messages received");
+
             //Assert.Equal(0, msgReceived);
+            logger.LogInformation($"SMSReceiveTest ends...");
         }
 
        [Fact]
@@ -138,19 +167,24 @@ namespace iocCoreUnitTest
         {
             logger.LogInformation("RetrieveTokenTest starts...");
 
-            SMSManager.Instance.RetrieveAccessToken();
+            var config = SMSConfiguration.Instance;
+            var smsManager = new SMSManager();
+            smsManager.RetrieveAccessToken();
+
             logger.LogInformation(
                 String.Format("New AccessToken {0} will be expired after {1}",
-                SMSManager.Instance.AccessToken, SMSManager.Instance.TokenExpiresDate.ToString()));
+                smsManager.AccessToken, config.TokenExpiresDate.ToString()));
 
-            SMSManager.Instance.TokenExpiresDate = DateTime.Now.AddHours(-8);
-            SMSManager.Instance.RetrieveAccessToken();
+            config.TokenExpiresDate = DateTime.Now.AddHours(-8);
+            smsManager.RetrieveAccessToken();
             logger.LogInformation(
                 String.Format("Refreshed AccessToken {0} will be expired after {1}",
-                SMSManager.Instance.AccessToken, SMSManager.Instance.TokenExpiresDate.ToString()));
+                smsManager.AccessToken, config.TokenExpiresDate.ToString()));
 
-            Assert.NotNull(SMSManager.Instance.AccessToken);
-            Assert.True(SMSManager.Instance.TokenExpiresDate > DateTime.Now.AddDays(1));
+            Assert.NotNull(smsManager.AccessToken);
+            Assert.True(config.TokenExpiresDate > DateTime.Now.AddDays(1));
+
+            logger.LogInformation("RetrieveTokenTest ends...");
         }
 
     }

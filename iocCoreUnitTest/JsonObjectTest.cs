@@ -1,27 +1,40 @@
 ﻿using Xunit;
 using iocCoreSMS.Models;
 using iocCoreSMS.Services;
-using Xunit.Abstractions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Xunit;
 using Newtonsoft.Json;
-using NLog;
+using NLog.Extensions.Logging;
+using System.IO;
 
 namespace iocCoreUnitTest
 {
     public class JsonObjectTest
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly ITestOutputHelper output;
-        public JsonObjectTest(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
+        private ILogger logger;
 
+        public IConfigurationRoot Configuration { get; private set; }
+
+        public JsonObjectTest()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
+
+            ILoggerFactory loggerFactory = new LoggerFactory()
+                .AddNLog();
+            logger = loggerFactory.CreateLogger<SMSServicesTest>();
+        }
+        
         [Fact]
         public void OutboundSMSSerializeTest()
         {
             string receivercodes = "tel:+18002521111";
             //string receivercodes = "tel:+18002521111,tel:+19793235555";
-
+            SMSConfiguration.Instance.BaseUrlMessageApi = Configuration["SMS.AttApi:BaseUrlMessageApi"];
             var msgBox = new MessageBox();
             var msgs = msgBox.GetMessages();
             //string receivercodes = msgs[0].ReceiverCode;
@@ -35,7 +48,8 @@ namespace iocCoreUnitTest
             
             object requestObj = Common.OutboundSMSRequestAdapter(wrapper);
             string output = JsonConvert.SerializeObject(requestObj);
-            logger.Info(output);     
+            logger.LogInformation("output of OutboundSMSSerializeTest: ");
+            logger.LogInformation(output);     
             Assert.NotNull(wrapper);   
         }
 
