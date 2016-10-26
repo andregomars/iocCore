@@ -51,7 +51,10 @@ namespace iocJobWebApp
             ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            if (env.IsDevelopment())
+            {
+                loggerFactory.AddDebug();
+            }
 
             //add hangfire
             app.UseHangfireDashboard("");
