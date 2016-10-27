@@ -7,6 +7,7 @@ namespace iocCoreSMS.Services
     {
         void Send();
         int Receive();
+        void RetrieveAccessToken();
     }
 
     public sealed class SMSManager : ISMSManager

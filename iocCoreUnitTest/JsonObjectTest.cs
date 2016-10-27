@@ -3,7 +3,6 @@ using iocCoreSMS.Models;
 using iocCoreSMS.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Xunit;
 using Newtonsoft.Json;
 using NLog.Extensions.Logging;
 using System.IO;
@@ -34,8 +33,10 @@ namespace iocCoreUnitTest
         {
             string receivercodes = "tel:+18002521111";
             //string receivercodes = "tel:+18002521111,tel:+19793235555";
-            SMSConfiguration.Instance.BaseUrlMessageApi = Configuration["SMS.AttApi:BaseUrlMessageApi"];
-            var msgBox = new MessageBox();
+            ISMSConfiguration config = new SMSConfiguration();
+            config.BaseUrlMessageApi = 
+                Configuration["SMS.AttApi:BaseUrlMessageApi"];
+            var msgBox = new MessageBox(config);
             var msgs = msgBox.GetMessages();
             //string receivercodes = msgs[0].ReceiverCode;
 

@@ -4,6 +4,7 @@ namespace iocCoreSMS.Models
 {
     public interface ISMSConfiguration
     {
+        string ShortCode { get; set; }
         string UrlSendSMS { get; set; }
         string UrlReceiveSMS { get; set; }
         string UrlGetAccessToken { get; set; }
@@ -24,6 +25,7 @@ namespace iocCoreSMS.Models
         // public static SMSConfiguration Instance { get { return Lazy.Value; } }
         // private SMSConfiguration() {}
 
+        public string ShortCode { get; set; }
         public string UrlSendSMS { get; set; }
         public string UrlReceiveSMS { get; set; }
         public string UrlGetAccessToken { get; set; }

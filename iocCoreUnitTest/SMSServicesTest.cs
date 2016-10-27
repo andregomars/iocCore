@@ -15,6 +15,7 @@ namespace iocCoreUnitTest
     public class SMSServicesTest
     {
         private ILogger logger;
+        private ISMSConfiguration config;
 
         public IConfigurationRoot Configuration { get; private set; }
 
@@ -42,9 +43,12 @@ namespace iocCoreUnitTest
 
         private void InitConfig()
         {
-            var config = SMSConfiguration.Instance;
-            config.UrlSendSMS = Configuration["SMS.AttApi:urlSendSMS"];
-            config.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"];
+            config = new SMSConfiguration();
+            config.ShortCode = Configuration["SMS.AttApi:ShortCode"];
+            config.UrlSendSMS = Configuration["SMS.AttApi:UrlSendSMS"]
+                .Replace("{{shortcode}}", config.ShortCode);
+            config.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"]
+                .Replace("{{shortcode}}", config.ShortCode);
             config.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
             config.AppScope = Configuration["SMS.AttApi:AppScope"];
             config.AppKey = Configuration["SMS.AttApi:AppKey"];
@@ -56,8 +60,7 @@ namespace iocCoreUnitTest
 
         private void LogConfig()
         {
-            var config = SMSConfiguration.Instance;
-            var type = SMSConfiguration.Instance.GetType();
+            var type = config.GetType();
             PropertyInfo[] properties = type.GetProperties();
 
             logger.LogDebug("Start logging SMSConfig properties: ");
@@ -88,17 +91,14 @@ namespace iocCoreUnitTest
        [Fact]
         public void MessageBoxGetTest()
         {
-            MessageBox msgBox = new MessageBox();
+            IMessageBox msgBox = new MessageBox(config);
             List<SMSMessage> messages = msgBox.GetMessages();
-            //Assert.NotEmpty(messages);
-            //Assert.Equal(2, messages.Count);
-            //Assert.True(true, $"here is the messages: {messages[0].Message} & {messages[1].Message} ");
         }
 
         [Fact]
         public void MessageBoxUpdateTest()
         {
-            MessageBox msgBox = new MessageBox();
+            IMessageBox msgBox = new MessageBox(config);
             SMSMessage message = new SMSMessage {
                 ID = 1,
                 MessageID = "SMSe76f8786d04ac205",
@@ -118,14 +118,14 @@ namespace iocCoreUnitTest
         [Fact]
         public void MessageBoxPostTest()
         {
-            MessageBox msgBox = new MessageBox();
+            IMessageBox msgBox = new MessageBox(config);
             SMSMessage message = new SMSMessage {
                 ID = 0,
                 MessageID = "",
                 SubMessageID = null,
                 SMSType = "1",
                 SenderCode = "48507075",
-                ReceiverCode = "tel:+16262521073",
+                ReceiverCode = "tel:+16262521073,tel:+16262170884",
                 Status = "0",
                 CreateTime = DateTime.Now,
                 SendTime = null,
@@ -143,7 +143,10 @@ namespace iocCoreUnitTest
         {
             logger.LogInformation($"SMSSendTest starts...");
 
-            new SMSManager().Send();
+            IMessageBox msgBox = new MessageBox(config);
+            ISMSManager manager = new SMSManager(config, msgBox);
+            manager.Send();
+
             Assert.True(true, "sms grabbed from db and sent through api");
 
             logger.LogInformation($"SMSSendTest ends...");
@@ -154,8 +157,9 @@ namespace iocCoreUnitTest
         {
             logger.LogInformation($"SMSReceiveTest starts...");
 
-            var smsManager = new SMSManager();
-            int msgReceived = smsManager.Receive();
+            IMessageBox msgBox = new MessageBox(config);
+            ISMSManager manager = new SMSManager(config, msgBox);
+            int msgReceived = manager.Receive();
             logger.LogInformation($"{msgReceived} text messages received");
 
             //Assert.Equal(0, msgReceived);
@@ -167,8 +171,8 @@ namespace iocCoreUnitTest
         {
             logger.LogInformation("RetrieveTokenTest starts...");
 
-            var config = SMSConfiguration.Instance;
-            var smsManager = new SMSManager();
+            IMessageBox msgBox = new MessageBox(config);
+            var smsManager = new SMSManager(config, msgBox);
             smsManager.RetrieveAccessToken();
 
             logger.LogInformation(

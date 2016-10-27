@@ -9,7 +9,6 @@ using iocCoreSMS.Models;
 using iocCoreSMS.Services;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-//using NLog.Extensions.Logging;
 
 namespace iocJobWebApp
 {
@@ -98,8 +97,11 @@ namespace iocJobWebApp
         private ISMSConfiguration InitSMSManager()
         {
             var config = new SMSConfiguration();
-            config.UrlSendSMS = Configuration["SMS.AttApi:UrlSendSMS"];
-            config.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"];
+            config.ShortCode = Configuration["SMS.AttApi:ShortCode"];
+            config.UrlSendSMS = Configuration["SMS.AttApi:UrlSendSMS"]
+                .Replace("{{shortcode}}", config.ShortCode);
+            config.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"]
+                .Replace("{{shortcode}}", config.ShortCode);
             config.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
             config.AppScope = Configuration["SMS.AttApi:AppScope"];
             config.AppKey = Configuration["SMS.AttApi:AppKey"];
