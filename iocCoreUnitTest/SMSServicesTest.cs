@@ -32,7 +32,7 @@ namespace iocCoreUnitTest
             logger = loggerFactory.CreateLogger<SMSServicesTest>();
 
             InitConfig();
-            LogConfig();
+            //LogConfig();
         }
 
         [Fact]
@@ -47,6 +47,7 @@ namespace iocCoreUnitTest
             config.ShortCode = Configuration["SMS.AttApi:ShortCode"];
             config.UrlSendSMS = Configuration["SMS.AttApi:UrlSendSMS"]
                 .Replace("{{shortcode}}", config.ShortCode);
+            config.UrlGetSMSDeliveryStatus = Configuration["SMS.AttApi:UrlGetSMSDeliveryStatus"];
             config.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"]
                 .Replace("{{shortcode}}", config.ShortCode);
             config.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
@@ -55,6 +56,8 @@ namespace iocCoreUnitTest
             config.AppSecret = Configuration["SMS.AttApi:AppSecret"];
             config.VerifyMessageDeliveryStatus = 
                 Convert.ToBoolean(Configuration["SMS.AttApi:VerifyMessageDeliveryStatus"]);
+            config.DeliverySuccessCode = Configuration["SMS.AttApi:DeliverySuccessCode"];
+            config.DeliveryFailureCode = Configuration["SMS.AttApi:DeliveryFailureCode"];
             config.BaseUrlMessageApi = Configuration["SMS.AttApi:BaseUrlMessageApi"];
         }
 
@@ -92,7 +95,7 @@ namespace iocCoreUnitTest
         public void MessageBoxGetTest()
         {
             IMessageBox msgBox = new MessageBox(config);
-            List<SMSMessage> messages = msgBox.GetMessages();
+            List<SMSMessage> messages = msgBox.GetMessages("0");
         }
 
         [Fact]
@@ -121,11 +124,12 @@ namespace iocCoreUnitTest
             IMessageBox msgBox = new MessageBox(config);
             SMSMessage message = new SMSMessage {
                 ID = 0,
-                MessageID = "",
+                MessageID = null,
                 SubMessageID = null,
                 SMSType = "1",
                 SenderCode = "48507075",
-                ReceiverCode = "tel:+16262521073,tel:+16262170884",
+                //ReceiverCode = "tel:+16262521073,tel:+16262170884",
+                ReceiverCode = "tel:+16262521073",
                 Status = "0",
                 CreateTime = DateTime.Now,
                 SendTime = null,
@@ -141,29 +145,49 @@ namespace iocCoreUnitTest
        [Fact]
         public void SMSSendTest()
         {
-            logger.LogInformation($"SMSSendTest starts...");
+            try
+            {
+                IMessageBox msgBox = new MessageBox(config);
+                ISMSManager manager = new SMSManager(config, msgBox);
+                int sentCount = manager.Send();
+                
+                logger.LogInformation($"SMSSendTest sent out {sentCount} message(s)");
+            }
+            catch(Exception e)
+            {
+                logger.LogError(e.Message + "\r\n" + e.StackTrace);
+                throw e;
+            }
+        }
 
-            IMessageBox msgBox = new MessageBox(config);
-            ISMSManager manager = new SMSManager(config, msgBox);
-            manager.Send();
+        [Fact]
+        public void SMSDeiveryStatusTest()
+        {
+            try
+            {
+                IMessageBox msgBox = new MessageBox(config);
+                ISMSManager manager = new SMSManager(config, msgBox);
+                int updatedCount = manager.GetSendStatus();
 
-            Assert.True(true, "sms grabbed from db and sent through api");
+                
+                logger.LogInformation($"SMSDeiveryStatusTest updated {updatedCount} message(s)");
+            }
+            catch(Exception e)
+            {
+                logger.LogError(e.Message + "\r\n" + e.StackTrace);
+                throw e;
+            }
 
-            logger.LogInformation($"SMSSendTest ends...");
         }
 
         [Fact]
         public void SMSReceiveTest()
         {
-            logger.LogInformation($"SMSReceiveTest starts...");
-
             IMessageBox msgBox = new MessageBox(config);
             ISMSManager manager = new SMSManager(config, msgBox);
             int msgReceived = manager.Receive();
-            logger.LogInformation($"{msgReceived} text messages received");
 
-            //Assert.Equal(0, msgReceived);
-            logger.LogInformation($"SMSReceiveTest ends...");
+            logger.LogInformation($"{msgReceived} text message(s) received");
         }
 
        [Fact]

@@ -5,11 +5,21 @@ namespace iocCoreSMS.Services
 {
     public interface ISMSManager
     {
-        void Send();
+        int Send();
+        int GetSendStatus();
         int Receive();
         void RetrieveAccessToken();
     }
 
+    ///<summary>
+    /// SMS action status codes: 
+    /// 0: wait to send 
+    /// 1: sent 
+    /// 2: sent and delivered
+    /// 3: sent but deliver failed 
+    /// 4: received
+    /// 
+    ///</summary>
     public sealed class SMSManager : ISMSManager
     {
         ISMSConfiguration m_config;
@@ -36,9 +46,10 @@ namespace iocCoreSMS.Services
             m_msgBox = msgBox;
         }
 
-        public void Send()
+        public int Send()
         {
-            var msgs = m_msgBox.GetMessages();
+            //get messages that haven't sent yet, where status = 0
+            var msgs = m_msgBox.GetMessages("0");
 
             //retrieve messages from db, send to sms api and get message ID
             foreach (var msg in msgs)
@@ -56,24 +67,116 @@ namespace iocCoreSMS.Services
                     .SendSMSAsync(m_config.UrlSendSMS, AccessToken, reqWrapper)
                     .GetAwaiter()
                     .GetResult();
+                
+                // if no qualified object gets from response, ignore this send request 
+                if (res == null || res.outboundSMSResponse == null) continue;
+
                 msg.MessageID = res.outboundSMSResponse.messageId;
 
-                //if there is no need to check sms delivery status, then update status as "sent"
+                //if there is no need to check sms delivery status, update status as "sent and delivered" if not check
                 if (!m_config.VerifyMessageDeliveryStatus)
                 {
-                    msg.Status = "1";
+                    msg.Status = "2";   //sent and delivered
+                    msg.SendTime = DateTime.Now;
+                }
+                else
+                {
+                    msg.Status = "1";   //just mark as sent
                     msg.SendTime = DateTime.Now;
                 }
             }
 
+            int sentCount = 0;
             //update message ID and status back to DB 
             foreach (var msg in msgs)
             {
                 if(!String.IsNullOrEmpty(msg.MessageID))
                 {
                     m_msgBox.UpdateMessage(msg);
+                    sentCount++;
                 }
             }
+
+            return sentCount;
+        }
+
+        public int GetSendStatus()
+        {
+            //exit if ther is no need to verify delivery status
+            if (!m_config.VerifyMessageDeliveryStatus) 
+                return 0;
+
+            //get messages already sent but not delivered yet, where status = 1
+            var msgs = m_msgBox.GetMessages("1");
+
+            //retrieve messages from db, send to sms api and get message ID
+            foreach (var msg in msgs)
+            {
+                
+                if ( String.IsNullOrEmpty(msg.MessageID) )  continue;
+
+                string messageID = msg.MessageID.Trim();
+                string urlGetStatus = $"{m_config.UrlGetSMSDeliveryStatus}/{messageID}";
+                var res = new RestfulHelper()
+                    .GetSMSSendStatusAsync(urlGetStatus, AccessToken)
+                    .GetAwaiter()
+                    .GetResult();
+
+                bool isAllDelivered = true;
+                bool isAnyDeliverFailed = false;
+
+                // if no qualified delivery object got from response, leave message status not to update
+                if (res == null || res.DeliveryInfoList == null || 
+                    res.DeliveryInfoList.DeliveryInfo == null || 
+                    res.DeliveryInfoList.DeliveryInfo.Count == 0)
+                {
+                    continue;
+                }
+
+                foreach (var deliverInfo in res.DeliveryInfoList.DeliveryInfo)
+                {
+                    // if any of the multiple receivers cannot be delivered to, set whole request deliver failed,
+                    // and it won't be pulled out any more.
+                    if ( deliverInfo.DeliveryStatus == m_config.DeliveryFailureCode )
+                    {
+                        isAnyDeliverFailed = true;
+                        isAllDelivered = false;
+                        break;
+                    } 
+                    else if ( deliverInfo.DeliveryStatus == m_config.DeliverySuccessCode )
+                    {
+                        continue;
+                    }
+                    // if any delivery status cannot be determined, set whole request not delivered yet,
+                    // but the request would be pulled out the next round to check delivery status again. 
+                    else
+                    {
+                        isAllDelivered = false;
+                    }
+                }
+
+                if (isAnyDeliverFailed)
+                {
+                    msg.Status = "3";   //sent but deliver failed
+                }
+                else if (isAllDelivered)
+                {
+                    msg.Status = "2";   //sent and delivered
+                }
+            }
+
+            int updatedCount = 0;
+            //update message ID and status back to DB 
+            foreach (var msg in msgs)
+            {
+                if(msg.Status == "2" || msg.Status == "3")
+                {
+                    m_msgBox.UpdateMessage(msg);
+                    updatedCount++;
+                }
+            }
+
+            return updatedCount;
         }
         
         //return how many messages are received
@@ -93,7 +196,7 @@ namespace iocCoreSMS.Services
                 msg.SMSType = "1";
                 msg.SenderCode = sms.SenderAddress;
                 msg.ReceiverCode = sms.DestinationAddress;
-                msg.Status = "2";   //0: wait to send, 1: sent, 2: received
+                msg.Status = "4";   //recieved
                 msg.CreateTime = DateTime.Now;
                 msg.SendTime = null;
                 msg.Message = sms.Message;

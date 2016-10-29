@@ -5,7 +5,7 @@ namespace iocCoreSMS.Services
 {
     public interface IMessageBox
     {
-        List<SMSMessage> GetMessages();
+        List<SMSMessage> GetMessages(string status);
         bool UpdateMessage(SMSMessage msg);
         SMSMessage PostMessage(SMSMessage msg);
     }
@@ -19,9 +19,9 @@ namespace iocCoreSMS.Services
             m_config = config;
         }
 
-        public List<SMSMessage> GetMessages()
+        public List<SMSMessage> GetMessages(string status)
         {
-            string urlGetMessage = $"{m_config.BaseUrlMessageApi}?status=0";
+            string urlGetMessage = $"{m_config.BaseUrlMessageApi}?status={status}";
             return new RestfulHelper().GetSMSMessageAsync(urlGetMessage).GetAwaiter().GetResult();
         }
 

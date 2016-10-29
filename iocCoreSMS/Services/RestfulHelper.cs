@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
+using System;
 
 namespace iocCoreSMS.Services
 {
@@ -26,6 +27,7 @@ namespace iocCoreSMS.Services
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             string responseString = await GetMethodAsync(url);
+            if (String.IsNullOrEmpty(responseString)) return null;
             var inboxResponse = JsonConvert.DeserializeObject<List<SMSMessage>>(responseString);
             
             return inboxResponse;
@@ -62,10 +64,25 @@ namespace iocCoreSMS.Services
             object requestObj = Common.OutboundSMSRequestAdapter(obSMSReqWrapper);
             string payload = JsonConvert.SerializeObject(requestObj);
             string responseString = await PostMethodAsync(url, payload, CONTENTTYPE_JSON);
+            if (String.IsNullOrEmpty(responseString)) return null;
             var response = JsonConvert.DeserializeObject<OutboundSMSResponseWrapper>(responseString);
             
             return response;
         }
+
+        public async Task<DeliveryInfoListWrapper> GetSMSSendStatusAsync(string url, string accessToken)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("Authorization", accessToken);
+
+            string responseString = await GetMethodAsync(url);
+            if (String.IsNullOrEmpty(responseString)) return null;
+            var response = JsonConvert.DeserializeObject<DeliveryInfoListWrapper>(responseString);
+            
+            return response;
+        }
+
         public async Task<InboundSmsMessageListWrapper> ReceiveSMSAsync(string url, string accessToken)
         {
             client.DefaultRequestHeaders.Accept.Clear();
@@ -73,6 +90,7 @@ namespace iocCoreSMS.Services
             client.DefaultRequestHeaders.Add("Authorization", accessToken);
 
             string responseString = await GetMethodAsync(url);
+            if (String.IsNullOrEmpty(responseString)) return null;
             var response = JsonConvert.DeserializeObject<InboundSmsMessageListWrapper>(responseString);
             
             return response;
@@ -86,6 +104,7 @@ namespace iocCoreSMS.Services
 
             string payload = $"client_id={appKey}&client_secret={appSecret}&grant_type=client_credentials&scope={appScope}";
             string responseString = await PostMethodAsync(url, payload, CONTENTTYPE_FORM);
+            if (String.IsNullOrEmpty(responseString)) return null;
             var response = JsonConvert.DeserializeObject<AccessTokenResponse>(responseString);
             
             return response;
@@ -98,6 +117,7 @@ namespace iocCoreSMS.Services
 
             string payload = $"client_id={appKey}&client_secret={appSecret}&grant_type=refresh_token&refresh_token={refreshToken}";
             string responseString = await PostMethodAsync(url, payload, CONTENTTYPE_FORM);
+            if (String.IsNullOrEmpty(responseString)) return null;
             var response = JsonConvert.DeserializeObject<AccessTokenResponse>(responseString);
             
             return response;

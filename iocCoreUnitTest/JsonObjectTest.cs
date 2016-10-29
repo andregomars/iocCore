@@ -37,7 +37,7 @@ namespace iocCoreUnitTest
             config.BaseUrlMessageApi = 
                 Configuration["SMS.AttApi:BaseUrlMessageApi"];
             var msgBox = new MessageBox(config);
-            var msgs = msgBox.GetMessages();
+            var msgs = msgBox.GetMessages("0");
             //string receivercodes = msgs[0].ReceiverCode;
 
             var wrapper = new OutboundSMSRequestWrapper {
@@ -52,6 +52,33 @@ namespace iocCoreUnitTest
             logger.LogInformation("output of OutboundSMSSerializeTest: ");
             logger.LogInformation(output);     
             Assert.NotNull(wrapper);   
+        }
+
+        [Fact]
+        public void DeliveryListDeserializeTest()
+        {
+            string jsonText = @"{
+                ""DeliveryInfoList"": {
+                    ""DeliveryInfo"": [
+                        {
+                            ""Id"": ""msg0"",
+                            ""Address"": ""tel:+16262170884"",
+                            ""DeliveryStatus"": ""DeliveryImpossible""
+                        },
+                        {
+                            ""Id"": ""msg1"",
+                            ""Address"": ""tel:+16262521073"",
+                            ""DeliveryStatus"": ""DeliveredToTerminal""
+                        }
+                    ],
+                    ""ResourceUrl"": ""https://ewr2-api.att.com/sms/v3/messaging/outbox/SMS28d28a6afff7f149""
+                }
+            }";
+
+            var deliveryList = JsonConvert.DeserializeObject<DeliveryInfoListWrapper>(jsonText);
+            Assert.NotNull(deliveryList);
+            Assert.Equal(2, deliveryList.DeliveryInfoList.DeliveryInfo.Count);
+            Assert.Equal("msg0", deliveryList.DeliveryInfoList.DeliveryInfo[0].Id);
         }
 
        

@@ -65,9 +65,9 @@ namespace iocJobWebApp
             //BackgroundJob.Enqueue<ISMSManager>( x => x.Send() );
             //RecurringJob.AddOrUpdate<ISMSManager>( x => x.Receive(), "*/5 * * * *");
             
-            RecurringJob.AddOrUpdate<ISMSManager>( x => x.Send(), 
+            RecurringJob.AddOrUpdate<ISMSManager>("Job-SendSMS", x => x.Send(), 
                 Configuration["SMS.AttApi:SendSchedule"]);
-            RecurringJob.AddOrUpdate<ISMSManager>( x => x.Receive(), 
+            RecurringJob.AddOrUpdate<ISMSManager>("Job-ReceiveSMS", x => x.Receive(), 
                 Configuration["SMS.AttApi:ReceiveSchedule"]);
 
             if (env.IsDevelopment())

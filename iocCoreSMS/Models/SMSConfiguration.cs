@@ -6,6 +6,7 @@ namespace iocCoreSMS.Models
     {
         string ShortCode { get; set; }
         string UrlSendSMS { get; set; }
+        string UrlGetSMSDeliveryStatus { get; set; }
         string UrlReceiveSMS { get; set; }
         string UrlGetAccessToken { get; set; }
         string AppScope { get; set; }
@@ -15,6 +16,8 @@ namespace iocCoreSMS.Models
         string RefreshToken { get; set; }
         DateTime TokenExpiresDate { get; set; }
         string BaseUrlMessageApi { get; set; } 
+        string DeliverySuccessCode { get; set; }
+        string DeliveryFailureCode { get; set; }
     }
 
     public sealed class SMSConfiguration : ISMSConfiguration
@@ -27,6 +30,7 @@ namespace iocCoreSMS.Models
 
         public string ShortCode { get; set; }
         public string UrlSendSMS { get; set; }
+        public string UrlGetSMSDeliveryStatus { get; set; }
         public string UrlReceiveSMS { get; set; }
         public string UrlGetAccessToken { get; set; }
         public string AppScope { get; set; }
@@ -36,6 +40,7 @@ namespace iocCoreSMS.Models
         public string RefreshToken { get; set; }
         public DateTime TokenExpiresDate { get; set; }
         public string BaseUrlMessageApi { get; set; }  
-            
+        public string DeliverySuccessCode { get; set; }
+        public string DeliveryFailureCode { get; set; }           
     }
 }
