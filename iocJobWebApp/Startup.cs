@@ -67,6 +67,8 @@ namespace iocJobWebApp
             
             RecurringJob.AddOrUpdate<ISMSManager>("Job-SendSMS", x => x.Send(), 
                 Configuration["SMS.AttApi:SendSchedule"]);
+            RecurringJob.AddOrUpdate<ISMSManager>("Job-SMSDeliveryStatus", x => x.GetSendStatus(), 
+                Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
             RecurringJob.AddOrUpdate<ISMSManager>("Job-ReceiveSMS", x => x.Receive(), 
                 Configuration["SMS.AttApi:ReceiveSchedule"]);
 
@@ -100,6 +102,7 @@ namespace iocJobWebApp
             config.ShortCode = Configuration["SMS.AttApi:ShortCode"];
             config.UrlSendSMS = Configuration["SMS.AttApi:UrlSendSMS"]
                 .Replace("{{shortcode}}", config.ShortCode);
+            config.UrlGetSMSDeliveryStatus = Configuration["SMS.AttApi:UrlGetSMSDeliveryStatus"];
             config.UrlReceiveSMS = Configuration["SMS.AttApi:UrlReceiveSMS"]
                 .Replace("{{shortcode}}", config.ShortCode);
             config.UrlGetAccessToken = Configuration["SMS.AttApi:UrlGetAccessToken"];
@@ -108,6 +111,8 @@ namespace iocJobWebApp
             config.AppSecret = Configuration["SMS.AttApi:AppSecret"];
             config.VerifyMessageDeliveryStatus = 
                 Convert.ToBoolean(Configuration["SMS.AttApi:VerifyMessageDeliveryStatus"]);
+            config.DeliverySuccessCode = Configuration["SMS.AttApi:DeliverySuccessCode"];
+            config.DeliveryFailureCode = Configuration["SMS.AttApi:DeliveryFailureCode"];
             config.BaseUrlMessageApi = Configuration["SMS.AttApi:BaseUrlMessageApi"];
 
             return config;
