@@ -9,6 +9,7 @@ using iocCoreSMS.Models;
 using iocCoreSMS.Services;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using System.Threading;
 
 namespace iocJobWebApp
 {
@@ -65,12 +66,21 @@ namespace iocJobWebApp
             //BackgroundJob.Enqueue<ISMSManager>( x => x.Send() );
             //RecurringJob.AddOrUpdate<ISMSManager>( x => x.Receive(), "*/5 * * * *");
             
-            RecurringJob.AddOrUpdate<ISMSManager>("Job-SendSMS", x => x.Send(), 
-                Configuration["SMS.AttApi:SendSchedule"]);
-            RecurringJob.AddOrUpdate<ISMSManager>("Job-SMSDeliveryStatus", x => x.GetSendStatus(), 
-                Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
-            RecurringJob.AddOrUpdate<ISMSManager>("Job-ReceiveSMS", x => x.Receive(), 
-                Configuration["SMS.AttApi:ReceiveSchedule"]);
+            int times = 2;
+            int interval = 60/2;
+
+            do
+            {
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS-{times}", x => x.Send(), 
+                    Configuration["SMS.AttApi:SendSchedule"]);
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus-{times}", x => x.GetSendStatus(), 
+                    Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS-{times}", x => x.Receive(), 
+                    Configuration["SMS.AttApi:ReceiveSchedule"]);
+
+                Thread.Sleep(TimeSpan.FromSeconds(interval));
+                times--;
+            } while (times > 0);
 
             if (env.IsDevelopment())
             {
