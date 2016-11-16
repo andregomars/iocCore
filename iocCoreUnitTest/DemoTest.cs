@@ -34,5 +34,12 @@ namespace iocCoreUnitTest
         {
             return value % 2 == 1;
         }
+
+        [Fact]
+        public void CalcTest()
+        {
+            Assert.Equal(8, 60/7);
+            //Assert.Equal(9, 60/7);
+        }
     }
 }

@@ -1,13 +1,17 @@
 using System;
 using iocCoreSMS.Models;
+using System.Threading;
 
 namespace iocCoreSMS.Services
 {
     public interface ISMSManager
     {
         int Send();
+        void SendTwice();
         int GetSendStatus();
+        void GetSendStatusTwice();
         int Receive();
+        void ReceiveTwice();
         void RetrieveAccessToken();
     }
 
@@ -100,6 +104,13 @@ namespace iocCoreSMS.Services
             return sentCount;
         }
 
+        public void SendTwice()
+        {
+            Send();
+            Thread.Sleep(TimeSpan.FromSeconds(30));
+            Send();
+        }
+
         public int GetSendStatus()
         {
             //exit if ther is no need to verify delivery status
@@ -178,6 +189,13 @@ namespace iocCoreSMS.Services
 
             return updatedCount;
         }
+
+        public void GetSendStatusTwice()
+        {
+            GetSendStatus();
+            Thread.Sleep(TimeSpan.FromSeconds(30));
+            GetSendStatus();
+        }
         
         //return how many messages are received
         public int Receive()
@@ -207,6 +225,13 @@ namespace iocCoreSMS.Services
             int smsCount = 0;
             Int32.TryParse(wrapper.InboundSmsMessageList.NumberOfMessagesInThisBatch, out smsCount);
             return smsCount;
+        }
+
+        public void ReceiveTwice()
+        {
+            Receive();
+            Thread.Sleep(TimeSpan.FromSeconds(30));
+            Receive();
         }
 
         ///<summary>

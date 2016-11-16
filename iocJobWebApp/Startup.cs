@@ -9,7 +9,7 @@ using iocCoreSMS.Models;
 using iocCoreSMS.Services;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using System.Threading;
+
 
 namespace iocJobWebApp
 {
@@ -63,25 +63,6 @@ namespace iocJobWebApp
             app.UseHangfireDashboard("");
             app.UseHangfireServer();
 
-            //BackgroundJob.Enqueue<ISMSManager>( x => x.Send() );
-            //RecurringJob.AddOrUpdate<ISMSManager>( x => x.Receive(), "*/5 * * * *");
-            
-            int times = 2;
-            int interval = 60/2;
-
-            do
-            {
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS-{times}", x => x.Send(), 
-                    Configuration["SMS.AttApi:SendSchedule"]);
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus-{times}", x => x.GetSendStatus(), 
-                    Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS-{times}", x => x.Receive(), 
-                    Configuration["SMS.AttApi:ReceiveSchedule"]);
-
-                Thread.Sleep(TimeSpan.FromSeconds(interval));
-                times--;
-            } while (times > 0);
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -100,6 +81,32 @@ namespace iocJobWebApp
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //read repeat times when initialize jobs, divided n times in a minute, 
+            //but is limited not less than 10 seconds an interval.
+            int repeat;
+            int.TryParse(Configuration["SMS.AttApi:RepeatTimes"], out repeat);
+            if (repeat > 2 || repeat < 1) repeat = 1; 
+
+            if (repeat == 2)
+            {
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS-R{repeat}", x => x.SendTwice(), 
+                    Configuration["SMS.AttApi:SendSchedule"]);
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus-R{repeat}", x => x.GetSendStatusTwice(), 
+                    Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS-R{repeat}", x => x.ReceiveTwice(), 
+                    Configuration["SMS.AttApi:ReceiveSchedule"]);
+            }
+            else
+            {
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS", x => x.Send(), 
+                    Configuration["SMS.AttApi:SendSchedule"]);
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus", x => x.GetSendStatus(), 
+                    Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS", x => x.Receive(), 
+                    Configuration["SMS.AttApi:ReceiveSchedule"]);
+            }
+
 
             // Autofac: If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
@@ -124,7 +131,7 @@ namespace iocJobWebApp
             config.DeliverySuccessCode = Configuration["SMS.AttApi:DeliverySuccessCode"];
             config.DeliveryFailureCode = Configuration["SMS.AttApi:DeliveryFailureCode"];
             config.BaseUrlMessageApi = Configuration["SMS.AttApi:BaseUrlMessageApi"];
-
+            
             return config;
         }
     }
