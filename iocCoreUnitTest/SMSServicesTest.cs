@@ -103,7 +103,7 @@ namespace iocCoreUnitTest
         {
             IMessageBox msgBox = new MessageBox(config);
             SMSMessage message = new SMSMessage {
-                ID = 1,
+                ID = Guid.NewGuid(),
                 MessageID = "SMSe76f8786d04ac205",
                 SubMessageID = null,
                 SMSType = "1",
@@ -112,7 +112,8 @@ namespace iocCoreUnitTest
                 Status = "1",
                 CreateTime = DateTime.Parse("2016-10-14T21:55:33.2"),
                 SendTime = DateTime.Now,
-                Message = "test message"
+                Message = "test message",
+                IsDone = 0
             }; 
             bool isUpdate = msgBox.UpdateMessage(message);
             Assert.True(isUpdate, "update message successfully"); 
@@ -123,7 +124,7 @@ namespace iocCoreUnitTest
         {
             IMessageBox msgBox = new MessageBox(config);
             SMSMessage message = new SMSMessage {
-                ID = 0,
+                ID = Guid.NewGuid(),
                 MessageID = null,
                 SubMessageID = null,
                 SMSType = "1",
@@ -134,7 +135,8 @@ namespace iocCoreUnitTest
                 CreateTime = DateTime.Now,
                 SendTime = null,
                 Message = "posted message @ " + 
-                    DateTime.Now.ToString("MM/dd/yyyy HH:mm")
+                    DateTime.Now.ToString("MM/dd/yyyy HH:mm"),
+                IsDone = 0
             }; 
             SMSMessage msg = msgBox.PostMessage(message);
             Assert.NotNull(msg);

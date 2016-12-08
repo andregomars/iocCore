@@ -208,7 +208,7 @@ namespace iocCoreSMS.Services
             foreach (var sms in wrapper.InboundSmsMessageList.InboundSmsMessage)
             {
                 SMSMessage msg = new SMSMessage();
-                msg.ID = 0;
+                msg.ID = Guid.NewGuid();
                 msg.MessageID = sms.MessageId;
                 msg.SubMessageID = null;
                 msg.SMSType = "1";
@@ -218,7 +218,7 @@ namespace iocCoreSMS.Services
                 msg.CreateTime = DateTime.Now;
                 msg.SendTime = null;
                 msg.Message = sms.Message;
-
+                msg.IsDone = 0;
                 m_msgBox.PostMessage(msg);
             }
 

@@ -4,7 +4,7 @@ namespace iocCoreSMS.Models
 {
     public class SMSMessage
     {
-       public int ID { get; set; } 
+       public Guid ID { get; set; } 
        public string MessageID { get; set; }
        public string SubMessageID { get; set; }
        public string SMSType { get; set; }
@@ -14,6 +14,6 @@ namespace iocCoreSMS.Models
        public DateTime? CreateTime { get; set; }
        public DateTime? SendTime { get; set; }
        public string Message { get; set; }
-       
+       public short? IsDone {get; set;}
     }
 }

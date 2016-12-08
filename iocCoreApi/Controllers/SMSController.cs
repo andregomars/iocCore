@@ -26,7 +26,7 @@ namespace iocCoreApi.Controllers
         // GET: api/SMS?status={status}
         public IQueryable<Core_SMS> GetCore_SMS(string status)
         {
-            if (string.IsNullOrEmpty(status) || !Regex.Match(status, "^(0|1|2)$").Success)
+            if (string.IsNullOrEmpty(status) || !Regex.Match(status, "^(0|1|2|3|4)$").Success)
             {
                 return db.Core_SMS;
             }
@@ -46,10 +46,10 @@ namespace iocCoreApi.Controllers
 
             return Ok(core_SMS);
         }
-        
+
         // PUT: api/SMS/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutCore_SMS(int id, Core_SMS core_SMS)
+        public IHttpActionResult PutCore_SMS(Guid id, Core_SMS core_SMS)
         {
             if (!ModelState.IsValid)
             {
@@ -122,9 +122,10 @@ namespace iocCoreApi.Controllers
             base.Dispose(disposing);
         }
 
-        private bool Core_SMSExists(int id)
+        private bool Core_SMSExists(Guid id)
         {
             return db.Core_SMS.Count(e => e.ID == id) > 0;
         }
+
     }
 }

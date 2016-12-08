@@ -8,7 +8,7 @@ namespace iocCoreApi.Models
 
     public partial class Core_SMS
     {
-        public int ID { get; set; }
+        public Guid ID { get; set; }
 
         [StringLength(50)]
         public string MessageID { get; set; }
@@ -22,7 +22,7 @@ namespace iocCoreApi.Models
         [StringLength(50)]
         public string SenderCode { get; set; }
 
-        [StringLength(50)]
+        [StringLength(2000)]
         public string ReceiverCode { get; set; }
 
         [StringLength(5)]
@@ -34,5 +34,7 @@ namespace iocCoreApi.Models
 
         [StringLength(4000)]
         public string Message { get; set; }
+
+        public short? IsDone { get; set; }
     }
 }

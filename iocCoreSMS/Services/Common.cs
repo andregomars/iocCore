@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using iocCoreSMS.Models;
 
 namespace iocCoreSMS.Services
@@ -42,6 +43,35 @@ namespace iocCoreSMS.Services
             }
             
             return request;
+        }
+
+        public static void AttachTelPrefix(OutboundSMSRequestWrapper request)
+        {
+            List<string> addressFormated = new List<string>();
+            foreach(string addr in request.outboundSMSRequest.address)
+            {
+                addressFormated.Add(addr.Trim().Length >= 10 ? "tel:" + addr : addr);
+            }
+            request.outboundSMSRequest.address = addressFormated.ToArray();
+        }
+
+        public static void DetachTelPrefix(InboundSmsMessageListWrapper sms)
+        {
+            foreach(var msg in sms.InboundSmsMessageList.InboundSmsMessage)
+            {
+                msg.SenderAddress = RemoveTel(msg.SenderAddress);
+                msg.DestinationAddress = RemoveTel(msg.DestinationAddress);
+            }
+        }
+
+        private static string RemoveTel(string telephone)
+        {
+            string sanitizedNumber = telephone;
+            if (sanitizedNumber.StartsWith("tel:"))
+            {
+                sanitizedNumber = telephone.Substring(4);
+            }
+            return sanitizedNumber;
         }
     }
 }
