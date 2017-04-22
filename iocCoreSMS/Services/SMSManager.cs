@@ -111,6 +111,14 @@ namespace iocCoreSMS.Services
             Send();
         }
 
+        public void SendInSeconds(int interval)
+        {
+            Timer timer = new Timer(obj => Send(),
+                null, TimeSpan.Zero, TimeSpan.FromMinutes(interval));
+            Thread.Sleep(TimeSpan.FromMinutes(1));
+            timer.Dispose();
+        }
+
         public int GetSendStatus()
         {
             //exit if ther is no need to verify delivery status
@@ -196,6 +204,14 @@ namespace iocCoreSMS.Services
             Thread.Sleep(TimeSpan.FromSeconds(30));
             GetSendStatus();
         }
+
+        public void GetSendStatusInSeconds(int interval)
+        {
+            Timer timer = new Timer(obj => GetSendStatus(),
+                null, TimeSpan.Zero, TimeSpan.FromMinutes(interval));
+            Thread.Sleep(TimeSpan.FromMinutes(1));
+            timer.Dispose();
+        }
         
         //return how many messages are received
         public int Receive()
@@ -234,6 +250,14 @@ namespace iocCoreSMS.Services
             Receive();
         }
 
+        public void ReceiveInSeconds(int interval)
+        {
+            Timer timer = new Timer(obj => Receive(),
+                null, TimeSpan.Zero, TimeSpan.FromMinutes(interval));
+            Thread.Sleep(TimeSpan.FromMinutes(1));
+            timer.Dispose();
+        }
+ 
         ///<summary>
         /// According to ATT Rest API specification, it needs to follow OAuth2.0 agreement to 
         /// perform access token retrieving dynamically before each API request. 

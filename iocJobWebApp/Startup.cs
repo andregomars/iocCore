@@ -82,28 +82,27 @@ namespace iocJobWebApp
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            //read repeat times when initialize jobs, divided n times in a minute, 
+            //read repeat times when initialize jobs, divided n+1 times in a minute, 
             //but is limited not less than 10 seconds an interval.
-            int repeat;
+            int repeat = 0;
             int.TryParse(Configuration["SMS.AttApi:RepeatTimes"], out repeat);
-            if (repeat > 2 || repeat < 1) repeat = 1; 
 
-            if (repeat == 2)
-            {
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS-R{repeat}", x => x.SendTwice(), 
-                    Configuration["SMS.AttApi:SendSchedule"]);
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus-R{repeat}", x => x.GetSendStatusTwice(), 
-                    Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS-R{repeat}", x => x.ReceiveTwice(), 
-                    Configuration["SMS.AttApi:ReceiveSchedule"]);
-            }
-            else
+            if (repeat <= 0 || repeat > 5)
             {
                 RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS", x => x.Send(), 
                     Configuration["SMS.AttApi:SendSchedule"]);
                 RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus", x => x.GetSendStatus(), 
                     Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
                 RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS", x => x.Receive(), 
+                    Configuration["SMS.AttApi:ReceiveSchedule"]);
+            }
+            else
+            {
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS-R{repeat}", x => x.SendTwice(), 
+                    Configuration["SMS.AttApi:SendSchedule"]);
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus-R{repeat}", x => x.GetSendStatusTwice(), 
+                    Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS-R{repeat}", x => x.ReceiveTwice(), 
                     Configuration["SMS.AttApi:ReceiveSchedule"]);
             }
 
