@@ -98,11 +98,11 @@ namespace iocJobWebApp
             }
             else
             {
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS-R{repeat}", x => x.SendTwice(), 
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SendSMS-R{repeat}", x => x.SendInSeconds(repeat), 
                     Configuration["SMS.AttApi:SendSchedule"]);
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus-R{repeat}", x => x.GetSendStatusTwice(), 
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-SMSDeliveryStatus-R{repeat}", x => x.GetSendStatusInSeconds(repeat), 
                     Configuration["SMS.AttApi:DeliveryStatusSchedule"]);
-                RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS-R{repeat}", x => x.ReceiveTwice(), 
+                RecurringJob.AddOrUpdate<ISMSManager>($"Job-ReceiveSMS-R{repeat}", x => x.ReceiveInSeconds(repeat), 
                     Configuration["SMS.AttApi:ReceiveSchedule"]);
             }
 

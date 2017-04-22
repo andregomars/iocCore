@@ -8,10 +8,16 @@ namespace iocCoreSMS.Services
     {
         int Send();
         void SendTwice();
+        void SendInSeconds(int interval);
+
         int GetSendStatus();
         void GetSendStatusTwice();
+        void GetSendStatusInSeconds(int interval);
+
         int Receive();
         void ReceiveTwice();
+        void ReceiveInSeconds(int interval);
+
         void RetrieveAccessToken();
     }
 
