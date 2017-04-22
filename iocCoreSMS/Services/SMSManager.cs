@@ -120,7 +120,7 @@ namespace iocCoreSMS.Services
         public void SendInSeconds(int interval)
         {
             Timer timer = new Timer(obj => Send(),
-                null, TimeSpan.Zero, TimeSpan.FromMinutes(interval));
+                null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
             Thread.Sleep(TimeSpan.FromMinutes(1));
             timer.Dispose();
         }
@@ -214,7 +214,7 @@ namespace iocCoreSMS.Services
         public void GetSendStatusInSeconds(int interval)
         {
             Timer timer = new Timer(obj => GetSendStatus(),
-                null, TimeSpan.Zero, TimeSpan.FromMinutes(interval));
+                null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
             Thread.Sleep(TimeSpan.FromMinutes(1));
             timer.Dispose();
         }
@@ -259,7 +259,7 @@ namespace iocCoreSMS.Services
         public void ReceiveInSeconds(int interval)
         {
             Timer timer = new Timer(obj => Receive(),
-                null, TimeSpan.Zero, TimeSpan.FromMinutes(interval));
+                null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
             Thread.Sleep(TimeSpan.FromMinutes(1));
             timer.Dispose();
         }
