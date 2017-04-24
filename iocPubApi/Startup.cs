@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Swagger;
+
+using iocPubApi.Models;
+using iocPubApi.Repositories;
 
 namespace iocPubApi
 {
@@ -28,7 +33,16 @@ namespace iocPubApi
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddDbContext<io_onlineContext>(opt => 
+                opt.UseSqlServer(Configuration.GetConnectionString("IO_OnlineDatabase")));
             services.AddMvc();
+            services.AddLogging();
+            services.AddScoped<IIoFleetRepository, IoFleetRepository>();
+            services.AddScoped<IIoVehicleRepository, IoVehicleRepository>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "IO_Online API", Version = "V1" } );
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +52,11 @@ namespace iocPubApi
             loggerFactory.AddDebug();
 
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "IO_Online API V1");
+            });
         }
     }
 }
