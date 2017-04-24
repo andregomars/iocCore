@@ -37,8 +37,14 @@ namespace iocPubApi
                 opt.UseSqlServer(Configuration.GetConnectionString("IO_OnlineDatabase")));
             services.AddMvc();
             services.AddLogging();
+            services.AddCors();
+
+            // Insert repositories
             services.AddScoped<IIoFleetRepository, IoFleetRepository>();
             services.AddScoped<IIoVehicleRepository, IoVehicleRepository>();
+            services.AddScoped<IVehicleIdentityRepository, VehicleIdentityRepository>();
+
+            // Add Swagger API documents
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "IO_Online API", Version = "V1" } );
@@ -51,6 +57,14 @@ namespace iocPubApi
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            // app.UseCors("IocPubApiPolicy");
+            // Must use before MVC, Set up CORS policy to allow *
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
