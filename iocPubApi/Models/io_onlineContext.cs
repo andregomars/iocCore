@@ -9,10 +9,10 @@ namespace iocPubApi.Models
         public virtual DbSet<IoFleet> IoFleet { get; set; }
         public virtual DbSet<IoVehicle> IoVehicle { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=localhost;Database=io_online;Trusted_Connection=True;");
-        }
+        
+        public io_onlineContext(DbContextOptions<io_onlineContext> options)
+            : base(options)
+        {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
