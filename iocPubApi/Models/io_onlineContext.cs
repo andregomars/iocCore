@@ -6,16 +6,43 @@ namespace iocPubApi.Models
 {
     public partial class io_onlineContext : DbContext
     {
+        public virtual DbSet<HamsNetData> HamsNetData { get; set; }
+        public virtual DbSet<HamsNetDataItem> HamsNetDataItem { get; set; }
         public virtual DbSet<IoFleet> IoFleet { get; set; }
         public virtual DbSet<IoVehicle> IoVehicle { get; set; }
-
         
         public io_onlineContext(DbContextOptions<io_onlineContext> options)
-            : base(options)
-        {}
-
+            : base(options) {}
+            
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<HamsNetData>(entity =>
+            {
+                entity.HasKey(e => e.DataId)
+                    .HasName("HAMS_NetData_PK");
+
+                entity.Property(e => e.DataId).ValueGeneratedNever();
+
+                entity.Property(e => e.CreateTime).HasDefaultValueSql("[dbo].[IO_LocalNow_To_UTC]()");
+
+                entity.Property(e => e.DataType).HasDefaultValueSql("0");
+
+                entity.Property(e => e.Gps).HasDefaultValueSql("0");
+
+                entity.Property(e => e.IsView).HasDefaultValueSql("0");
+            });
+
+            modelBuilder.Entity<HamsNetDataItem>(entity =>
+            {
+                entity.Property(e => e.CreateTime).HasDefaultValueSql("[dbo].[IO_LocalNow_To_UTC]()");
+
+                entity.Property(e => e.DataType).HasDefaultValueSql("0");
+
+                entity.Property(e => e.Source).HasDefaultValueSql("0");
+
+                entity.Property(e => e.Value).HasDefaultValueSql("0");
+            });
+
             modelBuilder.Entity<IoFleet>(entity =>
             {
                 entity.HasKey(e => e.FleetId)
