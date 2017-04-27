@@ -54,7 +54,9 @@ SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 9005, 'Engin
 UNION ALL
 SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 9006, 'Coolant temp', 0, 55, null, 'F', GETDATE()
 UNION ALL
-SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4001, 'Current', 0, 20, null, 'A', GETDATE()
+SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4001, 'SOC', 0, 80, null, 'A', GETDATE()
 UNION ALL
-SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4002, 'Remaining energy', 0, 12, null, 'kWh', GETDATE()
+SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4002, 'Current', 0, 20, null, 'A', GETDATE()
+UNION ALL
+SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4003, 'Remaining energy', 0, 12, null, 'kWh', GETDATE()
 
