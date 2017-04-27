@@ -2,7 +2,9 @@ namespace iocPubApi.Models
 {
     public class VehicleIdentity
     {
-        public string Vid { get; set; } 
-        public string Fid { get; set; } 
+        public int Vid { get; set; } 
+        public string Vname { get; set; }
+        public int Fid { get; set; } 
+        public string Fname { get; set; }
     }
 }

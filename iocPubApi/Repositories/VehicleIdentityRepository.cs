@@ -23,8 +23,10 @@ namespace iocPubApi.Repositories
                             on vehicle.FleetId equals fleet.FleetId
                         select new VehicleIdentity 
                         { 
-                            Vid = vehicle.BusNo, 
-                            Fid = fleet.Name 
+                            Vid = vehicle.VehicleId, 
+                            Vname = vehicle.BusNo,
+                            Fid = fleet.FleetId,
+                            Fname = fleet.Name
                         };
             
             return ids;
