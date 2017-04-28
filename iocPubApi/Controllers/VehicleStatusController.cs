@@ -20,7 +20,7 @@ namespace iocPubApi.Controllers
         }
 
         // GET api/vehicleidentity
-        [HttpGet]
+        [HttpGet("{vehicleName}")]
         public VehicleStatus Get(string vehicleName)
         {
             return _repository.Get(vehicleName);

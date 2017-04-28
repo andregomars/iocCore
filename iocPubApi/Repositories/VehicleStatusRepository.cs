@@ -61,14 +61,15 @@ namespace iocPubApi.Repositories
                                 fname = group.Key.Fname,
                                 updated = group.Key.CreateTime,
                                 soc = group.Where(row => row.SPN == 4001).Max(row => row.Value),
-                                status = "Charging",
+                                status = group.Where(row => row.SPN == 4004).Max(row => row.Value),
                                 range = group.Where(row => row.SPN == 9007).Max(row => row.Value),
                                 mileage = group.Where(row => row.SPN == 917).Max(row => row.Value),
                                 voltage = group.Where(row => row.SPN == 9002).Max(row => row.Value),
                                 current = group.Where(row => row.SPN == 4002).Max(row => row.Value),
                                 temperaturehigh = group.Where(row => row.SPN == 9005).Max(row => row.Value),
                                 temperaturelow = group.Where(row => row.SPN == 9006).Max(row => row.Value),
-                                speed = group.Where(row => row.SPN == 190).Max(row => row.Value),
+                                speed = group.Where(row => row.SPN == 84).Max(row => row.Value),
+                                remainingenergy = group.Where(row => row.SPN == 4003).Max(row => row.Value)
                             })
                             .FirstOrDefault();
 

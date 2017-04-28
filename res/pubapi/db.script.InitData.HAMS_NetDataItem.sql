@@ -38,7 +38,7 @@ INSERT INTO [dbo].[HAMS_NetDataItem]
 ,CreateTime)
 SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 917, 'Total mileage', 0, 6237.9, null, 'miles', GETDATE()
 UNION ALL
-SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 84, 'Vehicle speed', 0, 0, null, 'mph', GETDATE()
+SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 84, 'Vehicle speed', 0, 35, null, 'mph', GETDATE()
 UNION ALL
 SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 9007, 'Range', 0, 253, null, 'miles', GETDATE()
 UNION ALL
@@ -59,4 +59,5 @@ UNION ALL
 SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4002, 'Current', 0, 20, null, 'A', GETDATE()
 UNION ALL
 SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4003, 'Remaining energy', 0, 12, null, 'kWh', GETDATE()
-
+UNION ALL
+SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4004, 'Status', 0, 1, null, '', GETDATE()

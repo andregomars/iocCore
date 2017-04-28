@@ -9,7 +9,7 @@ namespace iocPubApi.Models
         public int fid { get; set; }
         public string fname { get; set; }
         public double soc { get; set; }
-        public string status { get; set; }
+        public double status { get; set; }
         public double range { get; set; }
         public double mileage { get; set; }
         public double voltage { get; set; }
@@ -17,6 +17,7 @@ namespace iocPubApi.Models
         public double temperaturehigh { get; set; }
         public double temperaturelow { get; set; }
         public double speed { get; set; }
+        public double remainingenergy { get; set; }
         public DateTime? updated { get; set; }
     }
 }
