@@ -1,5 +1,36 @@
+USE [IO_Online]
+GO
 
-truncate table dbo.IO_Vehicle
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES 
+           WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME='IO_Vehicle') 
+	DROP TABLE dbo.IO_Vehicle
+GO
+
+CREATE TABLE [dbo].[IO_Vehicle](
+	[VehicleId] [int] IDENTITY(1,1) NOT NULL,
+	[FleetId] [int] NULL,
+	[CompanyId] [int] NOT NULL,
+	[BuilderId] [int] NULL,
+	[UserId] [int] NOT NULL,
+	[BusNo] [nvarchar](50) NOT NULL,
+	[Phone] [nvarchar](50) NOT NULL,
+	[MAC] [nvarchar](50) NOT NULL,
+	[VINNO] [varchar](30) NULL,
+	[TypeId] [smallint] NULL,
+	[Online] [smallint] NOT NULL CONSTRAINT [DF__IO_Vehicl__Onlin__63A3C44B]  DEFAULT ((0)),
+	[OnlineTime] [datetime] NULL,
+	[Monitor] [smallint] NULL,
+	[CFG_FileId] [int] NULL,
+	[Remark] [varchar](50) NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[Status] [int] NULL,
+ CONSTRAINT [IO_Vehicle_PK] PRIMARY KEY CLUSTERED 
+(
+	[VehicleId] ASC
+)
+) ON [PRIMARY]
+GO
+
 set identity_insert dbo.IO_Vehicle on
 
 insert into dbo.IO_Vehicle

@@ -1,8 +1,11 @@
 USE [IO_Online]
 GO
 
-DROP table dbo.HAMS_NetData
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES 
+           WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME='HAMS_NetData') 
+	DROP TABLE dbo.HAMS_NetData
 GO
+
 
 CREATE TABLE [dbo].[HAMS_NetData](
 	[DataId] [uniqueidentifier] NOT NULL,
@@ -18,7 +21,7 @@ CREATE TABLE [dbo].[HAMS_NetData](
 	[DataArray] [varbinary](1024) NULL,
 	[IsView] [smallint] NULL CONSTRAINT [DF_HAMS_NetData_IsView]  DEFAULT ((0)),
 	[RealTime] [datetime] NULL,
-	[CreateTime] [datetime] NULL CONSTRAINT [HAMS_NetData_CreateTime]  DEFAULT ([dbo].[IO_LocalNow_To_UTC]())
+	[CreateTime] [datetime] NULL,
  CONSTRAINT [HAMS_NetData_PK] PRIMARY KEY CLUSTERED 
 (
 	[DataId] ASC
