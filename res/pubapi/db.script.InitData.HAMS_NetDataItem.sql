@@ -211,7 +211,7 @@ SELECT '696CEDF1-409E-4AA5-871F-57D328007CE3', 0, null, null, null, 4004, 'Statu
 UNION ALL
 SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 917, 'Total mileage', 0, 0, null, 'miles', GETDATE()
 UNION ALL
-SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 84, 'Vehicle speed', 0, 0, null, 'mph', GETDATE()
+SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 84, 'Vehicle speed', 0, 42, null, 'mph', GETDATE()
 UNION ALL
 SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 9007, 'Range', 0, 240, null, 'miles', GETDATE()
 UNION ALL
@@ -227,19 +227,19 @@ SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 9005, 'Engin
 UNION ALL
 SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 9006, 'Coolant temp', 0, 35, null, 'F', GETDATE()
 UNION ALL
-SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 4001, 'SOC', 0, 100, null, 'A', GETDATE()
+SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 4001, 'SOC', 0, 32, null, 'A', GETDATE()
 UNION ALL
 SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 4002, 'Current', 0, 50, null, 'A', GETDATE()
 UNION ALL
-SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 4003, 'Remaining energy', 0, 80, null, 'kWh', GETDATE()
+SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 4003, 'Remaining energy', 0, 40, null, 'kWh', GETDATE()
 UNION ALL
 SELECT 'F8D276ED-B87B-4B2A-8A6F-ABCDB7D8ADCB', 0, null, null, null, 4004, 'Status', 0, 0, null, '', GETDATE()
 
 --vid: 1005
 UNION ALL
-SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 917, 'Total mileage', 0, 0, null, 'miles', GETDATE()
+SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 917, 'Total mileage', 0, 100, null, 'miles', GETDATE()
 UNION ALL
-SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 84, 'Vehicle speed', 0, 0, null, 'mph', GETDATE()
+SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 84, 'Vehicle speed', 0, 65, null, 'mph', GETDATE()
 UNION ALL
 SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 9007, 'Range', 0, 240, null, 'miles', GETDATE()
 UNION ALL
@@ -255,10 +255,10 @@ SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 9005, 'Engin
 UNION ALL
 SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 9006, 'Coolant temp', 0, 35, null, 'F', GETDATE()
 UNION ALL
-SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 4001, 'SOC', 0, 100, null, 'A', GETDATE()
+SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 4001, 'SOC', 0, 35, null, 'A', GETDATE()
 UNION ALL
 SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 4002, 'Current', 0, 50, null, 'A', GETDATE()
 UNION ALL
-SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 4003, 'Remaining energy', 0, 80, null, 'kWh', GETDATE()
+SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 4003, 'Remaining energy', 0, 35, null, 'kWh', GETDATE()
 UNION ALL
-SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 4004, 'Status', 0, 0, null, '', GETDATE()
+SELECT '45B323C0-4FF4-4C47-A9CD-994BEA21478E', 0, null, null, null, 4004, 'Status', 0, 1, null, '', GETDATE()
