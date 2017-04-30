@@ -5,6 +5,7 @@ namespace iocPubApi.Repositories
 {
     public interface IVehicleStatusRepository
     {
-        VehicleStatus Get(string vname);
+        VehicleStatus GetByVehicleName(string vname);
+        IEnumerable<VehicleStatus> GetAllByFleetName(string fname);
     }
 }

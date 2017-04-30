@@ -97,31 +97,31 @@ SELECT 'A05E0915-3EA5-4215-B3FA-101E3925CDC0', 0, null, null, null, 4004, 'Statu
 
 --vid: UPS
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 917, 'Total mileage', 0, 120, null, 'miles', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 917, 'Total mileage', 0, 120, null, 'miles', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 84, 'Vehicle speed', 0, 45, null, 'mph', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 84, 'Vehicle speed', 0, 45, null, 'mph', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 9007, 'Range', 0, 60, null, 'miles', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 9007, 'Range', 0, 60, null, 'miles', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 190, 'Engine speed', 0, 0, null, 'rpm', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 190, 'Engine speed', 0, 0, null, 'rpm', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 9012, 'Engine hour', 0, 57.7, null, 'h', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 9012, 'Engine hour', 0, 57.7, null, 'h', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 9013, 'Idel time', 0, 95, null, 'h', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 9013, 'Idel time', 0, 95, null, 'h', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 9002, 'Voltage', 0, 110, null, 'V', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 9002, 'Voltage', 0, 110, null, 'V', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 9005, 'Engine temp', 0, 80, null, 'F', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 9005, 'Engine temp', 0, 80, null, 'F', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 9006, 'Coolant temp', 0, 35, null, 'F', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 9006, 'Coolant temp', 0, 35, null, 'F', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 4001, 'SOC', 0, 40, null, 'A', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 4001, 'SOC', 0, 40, null, 'A', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 4002, 'Current', 0, 105, null, 'A', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 4002, 'Current', 0, 105, null, 'A', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 4003, 'Remaining energy', 0, 50, null, 'kWh', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 4003, 'Remaining energy', 0, 50, null, 'kWh', GETDATE()
 UNION ALL
-SELECT '0266B4BC-4E7D-4974-B116-09E5E2BA2E0F', 0, null, null, null, 4004, 'Status', 0, 0, null, '', GETDATE()
+SELECT '9ED42238-939D-493D-8947-B059E27EC7D7', 0, null, null, null, 4004, 'Status', 0, 0, null, '', GETDATE()
 
 --vid: 1001
 UNION ALL
