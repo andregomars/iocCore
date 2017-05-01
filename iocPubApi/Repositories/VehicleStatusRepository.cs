@@ -101,13 +101,15 @@ namespace iocPubApi.Repositories
 
             /* Simply pivot the table */
             IEnumerable<VehicleStatus> statusList = spnItems
-                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, item.DataTime })
+                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, item.Lat, item.Lng, item.DataTime })
                             .Select(group => new VehicleStatus 
                             {
                                 vid = group.Key.Vid,
                                 vname = group.Key.Vname,
                                 fid = group.Key.Fid,
                                 fname = group.Key.Fname,
+                                lat = double.Parse(group.Key.Lat.Trim()),
+                                lng = double.Parse(group.Key.Lng.Trim()),
                                 updated = group.Key.DataTime,
                                 soc = group.Where(row => row.SPN == 4001).Max(row => row.Value),
                                 status = group.Where(row => row.SPN == 4004).Max(row => row.Value),
@@ -162,7 +164,7 @@ namespace iocPubApi.Repositories
 
             /* Simply pivot the table */
             VehicleStatus status = spnItems
-                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, item.DataTime })
+                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, item.Lat, item.Lng, item.DataTime })
                             .Select(group => new VehicleStatus 
                             {
                                 vid = group.Key.Vid,
@@ -170,6 +172,8 @@ namespace iocPubApi.Repositories
                                 fid = group.Key.Fid,
                                 fname = group.Key.Fname,
                                 updated = group.Key.DataTime,
+                                lat = double.Parse(group.Key.Lat.Trim()),
+                                lng = double.Parse(group.Key.Lng.Trim()),
                                 soc = group.Where(row => row.SPN == 4001).Max(row => row.Value),
                                 status = group.Where(row => row.SPN == 4004).Max(row => row.Value),
                                 range = group.Where(row => row.SPN == 9007).Max(row => row.Value),

@@ -8,6 +8,8 @@ namespace iocPubApi.Models
         public string vname { get; set; }
         public int fid { get; set; }
         public string fname { get; set; }
+        public double lat { get; set; }
+        public double lng { get; set; }
         public double soc { get; set; }
         public double status { get; set; }
         public double range { get; set; }
