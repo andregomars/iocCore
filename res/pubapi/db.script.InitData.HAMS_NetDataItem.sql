@@ -40,7 +40,7 @@ INSERT INTO [dbo].[HAMS_NetDataItem]
 ,StatusText
 ,Unit
 ,CreateTime)
---vid: 4370
+--vid: 4370 - 01
 SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 917, 'Total mileage', 0, 6237.9, null, 'miles', GETDATE()
 UNION ALL
 SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 84, 'Vehicle speed', 0, 35, null, 'mph', GETDATE()
@@ -65,7 +65,63 @@ SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4002, 'Curre
 UNION ALL
 SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4003, 'Remaining energy', 0, 12, null, 'kWh', GETDATE()
 UNION ALL
-SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4004, 'Status', 0, 1, null, '', GETDATE()
+SELECT '9A30B6D9-8780-4269-BDAD-1C8A67317A7C', 0, null, null, null, 4004, 'Status', 0, 0, null, '', GETDATE()
+
+--vid: 4370 - 02
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 917, 'Total mileage', 0, 6239.8, null, 'miles', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 84, 'Vehicle speed', 0, 40, null, 'mph', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 9007, 'Range', 0, 245, null, 'miles', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 190, 'Engine speed', 0, 0, null, 'rpm', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 9012, 'Engine hour', 0, 317.7, null, 'h', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 9013, 'Idel time', 0, 95, null, 'h', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 9002, 'Voltage', 0, 220, null, 'V', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 9005, 'Engine temp', 0, 65, null, 'F', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 9006, 'Coolant temp', 0, 55, null, 'F', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 4001, 'SOC', 0, 70, null, 'A', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 4002, 'Current', 0, 80, null, 'A', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 4003, 'Remaining energy', 0, 10, null, 'kWh', GETDATE()
+UNION ALL
+SELECT 'CE6B4F7C-8562-49E5-8829-3FBF05E63B11', 0, null, null, null, 4004, 'Status', 0, 0, null, '', GETDATE()
+
+--vid: 4370 - 03
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 917, 'Total mileage', 0, 6242.1, null, 'miles', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 84, 'Vehicle speed', 0, 45, null, 'mph', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 9007, 'Range', 0, 235, null, 'miles', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 190, 'Engine speed', 0, 0, null, 'rpm', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 9012, 'Engine hour', 0, 317.7, null, 'h', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 9013, 'Idel time', 0, 95, null, 'h', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 9002, 'Voltage', 0, 220, null, 'V', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 9005, 'Engine temp', 0, 65, null, 'F', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 9006, 'Coolant temp', 0, 55, null, 'F', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 4001, 'SOC', 0, 65, null, 'A', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 4002, 'Current', 0, 80, null, 'A', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 4003, 'Remaining energy', 0, 8, null, 'kWh', GETDATE()
+UNION ALL
+SELECT 'ED3EEDCE-3536-4656-AA34-C133F55C0853', 0, null, null, null, 4004, 'Status', 0, 0, null, '', GETDATE()
 
 --vid: 4371
 UNION ALL
