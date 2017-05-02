@@ -33,5 +33,11 @@ namespace iocPubApi.Controllers
             return _repository.GetAllByFleetName(fleetName);
         }
 
+        // GET /api/VehicleStatus/GetRecentAllByVehicleName/{vehicleName}
+        [HttpGet("GetRecentAllByVehicleName/{vehicleName}")]
+        public IEnumerable<VehicleStatus> GetRecentAllByVehicleName(string vehicleName)
+        {
+            return _repository.GetRecentAllByVehicleName(vehicleName);
+        }
     }
 }
