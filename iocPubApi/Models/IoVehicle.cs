@@ -14,14 +14,13 @@ namespace iocPubApi.Models
         public int? BuilderId { get; set; }
         public int UserId { get; set; }
         [Required]
-        [MaxLength(50)]
+        [Column(TypeName = "varchar(50)")]
         public string BusNo { get; set; }
         [Required]
-        [MaxLength(50)]
+        [Column(TypeName = "varchar(50)")]
         public string Phone { get; set; }
         [Required]
-        [Column("MAC")]
-        [MaxLength(50)]
+        [Column("MAC", TypeName = "varchar(50)")]
         public string Mac { get; set; }
         [Column("VINNO", TypeName = "varchar(30)")]
         public string Vinno { get; set; }
@@ -30,8 +29,7 @@ namespace iocPubApi.Models
         [Column(TypeName = "datetime")]
         public DateTime? OnlineTime { get; set; }
         public short? Monitor { get; set; }
-        [Column("CFG_FileId")]
-        public int? CfgFileId { get; set; }
+        public short? Renewable { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string Remark { get; set; }
         [Column(TypeName = "datetime")]
