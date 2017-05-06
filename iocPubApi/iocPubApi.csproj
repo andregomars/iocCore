@@ -20,7 +20,11 @@
               -t dbo.IO_Vehicle \
               -t dbo.IO_Fleet \
               -t dbo.HAMS_NetData \
-              -t dbo.HAMS_NetDataItem 
+              -t dbo.HAMS_NetDataItem \
+              -t dbo.HAMS_AlertData \
+              -t dbo.HAMS_AlertItem \
+              -t dbo.HAMS_SMSData \
+              -t dbo.HAMS_SMSItem 
     -->
    <!-- ### db context constructor
             public io_onlineContext(DbContextOptions<io_onlineContext> options)

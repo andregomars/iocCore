@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace iocPubApi.Repositories
 {
-    public class VehicleStatusRepository : IVehicleStatusRepository
+    public class VehicleSnapshotRepository : IVehicleSnapshotRepository
     {
         private readonly io_onlineContext db;
 
-        public VehicleStatusRepository(io_onlineContext context)
+        public VehicleSnapshotRepository(io_onlineContext context)
         {
             db = context;
         }
@@ -91,87 +91,19 @@ namespace iocPubApi.Repositories
             return statusList;
         }
 
-       IEnumerable<VehicleStatus> IVehicleStatusRepository.GetRecentAllByVehicleName(string vname)
+        VehicleSnapshot IVehicleSnapshotRepository.GetByVehicleName(string vname)
         {
-           /* equivalent T-SQL of the LINQ above
+            /* equivalent T-SQL of the LINQ above
             use io_online
-            ;with dataIdList as
-            (
-                select top (10) m.DataId 
-                from HAMS_SMSData m
-                inner join IO_Vehicle v
-                    on m.VehicleId = v.VehicleId
-                where v.BusNo = '4003'
-                order by m.DataTime desc
-			)
-           */ 
-            var dataIdList = (from m in db.HamsSmsdata
-                        join v in db.IoVehicle
-                            on m.VehicleId equals v.VehicleId
-                        where v.BusNo == vname
-                        orderby m.DataTime descending 
-                        select m.DataId).Take(10);
-                        // select new 
-                        // {
-                        //     DataId = m.DataId
-                        // }).Take(10);
-
-           return GetAllByDataId(dataIdList);
-                                 
-  
-        }
-
-        IEnumerable<VehicleStatus> IVehicleStatusRepository.GetAllByFleetName(string fname)
-        {
-           /* equivalent T-SQL of the LINQ above
-            use io_online
-            ;with dataIdList as
-            (
-			select b.dataid from
-                (select m.VehicleId,max(DataTime) as DataTime 
-                from HAMS_SMSData m
-                inner join IO_Vehicle v
-                    on m.VehicleId = v.VehicleId
-                inner join IO_Fleet f
-                    on v.FleetId = f.FleetID
-                where f.Name = 'HAMS06 test'
-                group by m.VehicleId) a
-            inner join HAMS_SMSData b 
-            on a.VehicleId = b.VehicleId
-                and a.DataTime = b.DataTime
-			)
-           */ 
-            var dataIdList = from a in (from m in db.HamsSmsdata
-                        join v in db.IoVehicle
-                            on m.VehicleId equals v.VehicleId
-                        join f in db.IoFleet
-                            on v.FleetId equals f.FleetId
-                        where f.Name == fname
-                        group m by m.VehicleId into g
-                        select new
-                        {
-                            VehicleId = g.Key,
-                            DataTime = (from row in g select row.DataTime).Max()
-                        }) join b in db.HamsSmsdata
-                            on new { a.VehicleId, a.DataTime } equals new { b.VehicleId, b.DataTime }
-                        select b.DataId;
-            
-            return GetAllByDataId(dataIdList);
-        }
-
-        VehicleStatus IVehicleStatusRepository.GetByVehicleName(string vname)
-        {
-           /* equivalent T-SQL of the LINQ above
-            use io_online
-            ;with dataIdList as
-            (
-                select top (1) m.DataId 
-                from HAMS_SMSData m
-                inner join IO_Vehicle v
-                    on m.VehicleId = v.VehicleId
-                where v.BusNo = '4003'
-                order by m.DataTime desc
-			)
+            select detail.ItemCode, detail.ItemName, detail.Value, detail.Unit 
+from HAMS_SMSData master
+inner join HAMS_SMSItem detail 
+	on master.DataId = detail.DataId
+inner join IO_Vehicle vehicle
+    on master.VehicleId = vehicle.VehicleId
+inner join IO_Fleet fleet
+    on vehicle.FleetId = fleet.FleetID
+where vehicle.BusNo = '4003'
            */
             var dataIdList = (from m in db.HamsSmsdata
                         join v in db.IoVehicle
@@ -181,6 +113,6 @@ namespace iocPubApi.Repositories
                         select m.DataId).Take(1);
             
             return GetAllByDataId(dataIdList).FirstOrDefault();
-        }   
+        }
     }
 }

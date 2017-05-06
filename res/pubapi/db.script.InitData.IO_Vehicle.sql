@@ -12,6 +12,34 @@ CREATE TABLE [dbo].[IO_Vehicle](
 	[CompanyId] [int] NOT NULL,
 	[BuilderId] [int] NULL,
 	[UserId] [int] NOT NULL,
+	[BusNo] [varchar](50) NOT NULL,
+	[Phone] [varchar](50) NOT NULL,
+	[MAC] [varchar](50) NOT NULL,
+	[VINNO] [varchar](30) NULL,
+	[TypeId] [smallint] NULL,
+	[Online] [smallint] NOT NULL DEFAULT ((0)),
+	[OnlineTime] [datetime] NULL,
+	[Monitor] [smallint] NULL,
+	[Renewable] [smallint] NULL DEFAULT ((0)),
+	[Remark] [varchar](50) NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[Status] [int] NULL DEFAULT ((0))
+ CONSTRAINT [IO_Vehicle_PK] PRIMARY KEY CLUSTERED 
+(
+	[VehicleId] ASC
+)
+) ON [PRIMARY]
+GO
+
+
+/*
+
+CREATE TABLE [dbo].[IO_Vehicle](
+	[VehicleId] [int] IDENTITY(1,1) NOT NULL,
+	[FleetId] [int] NULL,
+	[CompanyId] [int] NOT NULL,
+	[BuilderId] [int] NULL,
+	[UserId] [int] NOT NULL,
 	[BusNo] [nvarchar](50) NOT NULL,
 	[Phone] [nvarchar](50) NOT NULL,
 	[MAC] [nvarchar](50) NOT NULL,
@@ -30,6 +58,7 @@ CREATE TABLE [dbo].[IO_Vehicle](
 )
 ) ON [PRIMARY]
 GO
+
 
 set identity_insert dbo.IO_Vehicle on
 
@@ -86,5 +115,5 @@ UNION ALL
 SELECT 17, 4, 22, null, 33, '1609', '13182939966', '20:F8:5E:C9:3D:10', null, null, 0, null, null, null, '', getdate(), 0
 UNION ALL
 SELECT 18, 4, 22, null, 33, '1610', '13182939966', '20:F8:5E:C9:3D:10', null, null, 0, null, null, null, '', getdate(), 0
-
+*/
 

@@ -6,16 +6,28 @@ namespace iocPubApi.Models
 {
     public partial class io_onlineContext : DbContext
     {
+        public virtual DbSet<HamsAlertData> HamsAlertData { get; set; }
+        public virtual DbSet<HamsAlertItem> HamsAlertItem { get; set; }
         public virtual DbSet<HamsNetData> HamsNetData { get; set; }
         public virtual DbSet<HamsNetDataItem> HamsNetDataItem { get; set; }
+        public virtual DbSet<HamsSmsdata> HamsSmsdata { get; set; }
+        public virtual DbSet<HamsSmsitem> HamsSmsitem { get; set; }
         public virtual DbSet<IoFleet> IoFleet { get; set; }
         public virtual DbSet<IoVehicle> IoVehicle { get; set; }
-        
+
         public io_onlineContext(DbContextOptions<io_onlineContext> options)
             : base(options) {}
-            
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<HamsAlertData>(entity =>
+            {
+                entity.HasKey(e => e.DataId)
+                    .HasName("HAMS_AlertData_PK");
+
+                entity.Property(e => e.DataId).ValueGeneratedNever();
+            });
+
             modelBuilder.Entity<HamsNetData>(entity =>
             {
                 entity.HasKey(e => e.DataId)
@@ -34,11 +46,39 @@ namespace iocPubApi.Models
 
             modelBuilder.Entity<HamsNetDataItem>(entity =>
             {
-                entity.Property(e => e.CreateTime).HasDefaultValueSql("[dbo].[IO_LocalNow_To_UTC]()");
-
                 entity.Property(e => e.DataType).HasDefaultValueSql("0");
 
                 entity.Property(e => e.Source).HasDefaultValueSql("0");
+
+                entity.Property(e => e.Value).HasDefaultValueSql("0");
+            });
+
+            modelBuilder.Entity<HamsSmsdata>(entity =>
+            {
+                entity.HasKey(e => e.DataId)
+                    .HasName("HAMS_HAMS_SMSData_PK");
+
+                entity.Property(e => e.DataId).ValueGeneratedNever();
+
+                entity.Property(e => e.Gps).HasDefaultValueSql("0");
+
+                entity.Property(e => e.IsMoved).HasDefaultValueSql("0");
+
+                entity.Property(e => e.IsUpdate).HasDefaultValueSql("0");
+            });
+
+            modelBuilder.Entity<HamsSmsitem>(entity =>
+            {
+                entity.HasKey(e => new { e.DataId, e.ItemCode })
+                    .HasName("HAMS_SMSItem_PK");
+
+                entity.Property(e => e.Data).HasDefaultValueSql("0");
+
+                entity.Property(e => e.IsCondition).HasDefaultValueSql("0");
+
+                entity.Property(e => e.IsMoved).HasDefaultValueSql("0");
+
+                entity.Property(e => e.IsUpdate).HasDefaultValueSql("0");
 
                 entity.Property(e => e.Value).HasDefaultValueSql("0");
             });
@@ -48,15 +88,11 @@ namespace iocPubApi.Models
                 entity.HasKey(e => e.FleetId)
                     .HasName("IO_Fleet_PK");
 
-                entity.Property(e => e.CreateTime).HasDefaultValueSql("[dbo].[IO_LocalNow_To_UTC]()");
-
                 entity.Property(e => e.IntervalNet).HasDefaultValueSql("5");
 
                 entity.Property(e => e.IntervalSms).HasDefaultValueSql("5");
 
                 entity.Property(e => e.LogFormat).HasDefaultValueSql("0");
-
-                entity.Property(e => e.Status).HasDefaultValueSql("0");
 
                 entity.Property(e => e.TimeOffset).HasDefaultValueSql("0");
 
@@ -67,6 +103,12 @@ namespace iocPubApi.Models
             {
                 entity.HasKey(e => e.VehicleId)
                     .HasName("IO_Vehicle_PK");
+
+                entity.Property(e => e.Online).HasDefaultValueSql("0");
+
+                entity.Property(e => e.Renewable).HasDefaultValueSql("0");
+
+                entity.Property(e => e.Status).HasDefaultValueSql("0");
             });
         }
     }

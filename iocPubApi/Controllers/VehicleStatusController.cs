@@ -19,12 +19,25 @@ namespace iocPubApi.Controllers
             _repository = repository;
         }
 
-        // GET api/vehicleidentity
-        [HttpGet("{vehicleName}")]
-        public VehicleStatus Get(string vehicleName)
+        // GET /api/VehicleStatus/GetByVehicleName/{vehicleName}
+        [HttpGet("GetByVehicleName/{vehicleName}")]
+        public VehicleStatus GetByVehicleName(string vehicleName)
         {
-            return _repository.Get(vehicleName);
+            return _repository.GetByVehicleName(vehicleName);
         }
 
+        // GET /api/VehicleStatus/GetAllByFleetName/{fleetName}
+        [HttpGet("GetAllByFleetName/{fleetName}")]
+        public IEnumerable<VehicleStatus> GetAllByFleetName(string fleetName)
+        {
+            return _repository.GetAllByFleetName(fleetName);
+        }
+
+        // GET /api/VehicleStatus/GetRecentAllByVehicleName/{vehicleName}
+        [HttpGet("GetRecentAllByVehicleName/{vehicleName}")]
+        public IEnumerable<VehicleStatus> GetRecentAllByVehicleName(string vehicleName)
+        {
+            return _repository.GetRecentAllByVehicleName(vehicleName);
+        }
     }
 }
