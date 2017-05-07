@@ -5,6 +5,6 @@ namespace iocPubApi.Repositories
 {
     public interface IVehicleSnapshotRepository
     {
-        VehicleSnapshot GetByVehicleName(string vname);
+        IEnumerable<VehicleSnapshot> GetByVehicleName(string vname);
     }
 }

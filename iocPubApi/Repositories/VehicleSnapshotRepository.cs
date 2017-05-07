@@ -14,22 +14,38 @@ namespace iocPubApi.Repositories
         {
             db = context;
         }
-
-        private IEnumerable<VehicleStatus> GetAllByDataId(IEnumerable<Guid> dataIdList)
+        
+        IEnumerable<VehicleSnapshot> IVehicleSnapshotRepository.GetByVehicleName(string vname)
         {
             /* equivalent T-SQL of the LINQ above
+            use io_online
+            ;with dataIdList as
+            (
+                select top (1) m.DataId 
+                from HAMS_SMSData m
+                inner join IO_Vehicle v
+                    on m.VehicleId = v.VehicleId
+                where v.BusNo = '4003'
+                order by m.DataTime desc
+			)
+           */
+            var dataIdList = (from m in db.HamsSmsdata
+                        join v in db.IoVehicle
+                            on m.VehicleId equals v.VehicleId
+                        where v.BusNo == vname
+                        orderby m.DataTime descending 
+                        select m.DataId).Take(1);
+
+          /* equivalent T-SQL of the LINQ above
            use io_online
-			select Vid = vehicle.VehicleId, 
-                Vname = vehicle.BusNo,
-                Fid = fleet.FleetId,
-                Fname = fleet.Name,
-                Lng = master.Lng,
-                Lat = master.Lat,
-                ItemCode = detail.ItemCode,
-                ItemName = detail.ItemName,
-                Value = detail.Value,
-                Unit = detail.Unit,
-                DataTime = master.DataTime
+            select vid = vehicle.VehicleId, 
+                    vname = vehicle.BusNo,
+                    fid = fleet.FleetId,
+                    fname = fleet.Name,
+                    code = detail.ItemCode, 
+                    name = detail.ItemName, 
+                    value = detail.Value, 
+                    unit = detail.Unit 
             from [dataIdList] list
             inner join HAMS_SMSItem detail
                 on list.DataId = detail.DataId
@@ -40,7 +56,7 @@ namespace iocPubApi.Repositories
             inner join IO_Fleet fleet
                 on vehicle.FleetId = fleet.FleetID
            */
-            var spnItems = from list in dataIdList
+            var items = from list in dataIdList
                                 join detail in db.HamsSmsitem
                                     on list equals detail.DataId
                                 join master in db.HamsSmsdata
@@ -49,70 +65,19 @@ namespace iocPubApi.Repositories
                                     on master.VehicleId equals vehicle.VehicleId
                                 join fleet in db.IoFleet
                                     on vehicle.FleetId equals fleet.FleetId
-                                select new  
+                                select new VehicleSnapshot 
                                 {  
-                                    Vid = vehicle.VehicleId, 
-                                    Vname = vehicle.BusNo,
-                                    Fid = fleet.FleetId,
-                                    Fname = fleet.Name,
-                                    Lng = master.Lng,
-                                    Lat = master.Lat,
-                                    ItemCode = detail.ItemCode,
-                                    ItemName = detail.ItemName,
-                                    Value = detail.Value,
-                                    Unit = detail.Unit,
-                                    DataTime = master.DataTime
-                                };
+                                    vid = vehicle.VehicleId, 
+                                    vname = vehicle.BusNo,
+                                    fid = fleet.FleetId,
+                                    fname = fleet.Name,
+                                    code = detail.ItemCode,
+                                    name = detail.ItemName,
+                                    value = detail.Value,
+                                    unit = detail.Unit,
+                                };            
 
-            /* Simply pivot the table */
-            IEnumerable<VehicleStatus> statusList = spnItems
-                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, item.Lat, item.Lng, item.DataTime })
-                            .Select(group => new VehicleStatus 
-                            {
-                                vid = group.Key.Vid,
-                                vname = group.Key.Vname,
-                                fid = group.Key.Fid,
-                                fname = group.Key.Fname,
-                                lat = double.Parse(group.Key.Lat.Trim()),
-                                lng = double.Parse(group.Key.Lng.Trim()),
-                                updated = group.Key.DataTime,
-                                soc = group.Where(row => row.ItemCode.Equals("1E")).Max(row => row.Value),
-                                status = group.Where(row => row.ItemCode.Equals("1I")).Max(row => row.Value),
-                                range = group.Where(row => row.ItemCode.Equals("2H")).Max(row => row.Value),
-                                mileage = group.Where(row => row.ItemCode.Equals("1H")).Max(row => row.Value),
-                                voltage = group.Where(row => row.ItemCode.Equals("1F")).Max(row => row.Value),
-                                current = group.Where(row => row.ItemCode.Equals("2F")).Max(row => row.Value),
-                                temperaturehigh = group.Where(row => row.ItemCode.Equals("2G")).Max(row => row.Value),
-                                temperaturelow = group.Where(row => row.ItemCode.Equals("1G")).Max(row => row.Value),
-                                speed = group.Where(row => row.ItemCode.Equals("1D")).Max(row => row.Value),
-                                remainingenergy = group.Where(row => row.ItemCode.Equals("1J")).Max(row => row.Value)
-                            });
-
-            return statusList;
-        }
-
-        VehicleSnapshot IVehicleSnapshotRepository.GetByVehicleName(string vname)
-        {
-            /* equivalent T-SQL of the LINQ above
-            use io_online
-            select detail.ItemCode, detail.ItemName, detail.Value, detail.Unit 
-from HAMS_SMSData master
-inner join HAMS_SMSItem detail 
-	on master.DataId = detail.DataId
-inner join IO_Vehicle vehicle
-    on master.VehicleId = vehicle.VehicleId
-inner join IO_Fleet fleet
-    on vehicle.FleetId = fleet.FleetID
-where vehicle.BusNo = '4003'
-           */
-            var dataIdList = (from m in db.HamsSmsdata
-                        join v in db.IoVehicle
-                            on m.VehicleId equals v.VehicleId
-                        where v.BusNo == vname
-                        orderby m.DataTime descending 
-                        select m.DataId).Take(1);
-            
-            return GetAllByDataId(dataIdList).FirstOrDefault();
+            return items;
         }
     }
 }
