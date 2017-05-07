@@ -25,5 +25,12 @@ namespace iocPubApi.Controllers
         {
             return _repository.GetByVehicleName(vehicleName);
         }
+        
+        // GET /api/VehicleSnapshot/GetWholeDayByVehicleName/{vehicleName}/{date}
+        [HttpGet("GetWholeDayByVehicleName/{vehicleName}/{date}")]
+        public IEnumerable<VehicleSnapshot> GetWholeDayByVehicleName(string vehicleName, DateTime date)
+        {
+            return _repository.GetWholeDayByVehicleName(vehicleName, date);
+        }
    }
 }
