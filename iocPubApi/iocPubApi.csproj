@@ -24,7 +24,10 @@
               -t dbo.HAMS_AlertData \
               -t dbo.HAMS_AlertItem \
               -t dbo.HAMS_SMSData \
-              -t dbo.HAMS_SMSItem 
+              -t dbo.HAMS_SMSItem \
+              -t dbo.HAMS_SMSAlertData \
+              -t dbo.HAMS_SMSAlertItem 
+
     -->
    <!-- ### db context constructor
             public io_onlineContext(DbContextOptions<io_onlineContext> options)

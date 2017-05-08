@@ -10,6 +10,8 @@ namespace iocPubApi.Models
         public virtual DbSet<HamsAlertItem> HamsAlertItem { get; set; }
         public virtual DbSet<HamsNetData> HamsNetData { get; set; }
         public virtual DbSet<HamsNetDataItem> HamsNetDataItem { get; set; }
+        public virtual DbSet<HamsSmsalertData> HamsSmsalertData { get; set; }
+        public virtual DbSet<HamsSmsalertItem> HamsSmsalertItem { get; set; }
         public virtual DbSet<HamsSmsdata> HamsSmsdata { get; set; }
         public virtual DbSet<HamsSmsitem> HamsSmsitem { get; set; }
         public virtual DbSet<IoFleet> IoFleet { get; set; }
@@ -51,6 +53,20 @@ namespace iocPubApi.Models
                 entity.Property(e => e.Source).HasDefaultValueSql("0");
 
                 entity.Property(e => e.Value).HasDefaultValueSql("0");
+            });
+
+            modelBuilder.Entity<HamsSmsalertData>(entity =>
+            {
+                entity.HasKey(e => e.DataId)
+                    .HasName("HAMS_SMSAlertData_PK");
+
+                entity.Property(e => e.DataId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<HamsSmsalertItem>(entity =>
+            {
+                entity.HasKey(e => new { e.DataId, e.ItemCode })
+                    .HasName("HAMS_SMSAlertItem_PK");
             });
 
             modelBuilder.Entity<HamsSmsdata>(entity =>

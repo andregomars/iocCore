@@ -15,95 +15,51 @@ namespace iocPubApi.Repositories
             db = context;
         }
 
-        private IEnumerable<VehicleStatus> GetAllByDataId(IEnumerable<Guid> dataIdList)
+        private IEnumerable<VehicleSnapshot> GetAllByDataId(IEnumerable<Guid> dataIdList)
         {
-            /* equivalent T-SQL of the LINQ above
+          /* equivalent T-SQL of the LINQ above
            use io_online
-			select Vid = vehicle.VehicleId, 
-                Vname = vehicle.BusNo,
-                Fid = fleet.FleetId,
-                Fname = fleet.Name,
-                Lng = master.Lng,
-                Lat = master.Lat,
-                ItemCode = detail.ItemCode,
-                ItemName = detail.ItemName,
-                Value = detail.Value,
-                Unit = detail.Unit,
-                DataTime = master.DataTime
+            select code = detail.ItemCode, 
+                    name = detail.ItemName, 
+                    value = detail.Value, 
+                    unit = detail.Unit,
+                    time = master.RealTime
             from [dataIdList] list
-            inner join HAMS_SMSItem detail
-                on list.DataId = detail.DataId
             inner join HAMS_SMSData master
-                on detail.DataId = master.DataId
-            inner join IO_Vehicle vehicle
-                on master.VehicleId = vehicle.VehicleId
-            inner join IO_Fleet fleet
-                on vehicle.FleetId = fleet.FleetID
+                on list.DataId = master.DataId
+            inner join HAMS_SMSItem detail
+                on master.DataId = detail.DataId
            */
-            var spnItems = from list in dataIdList
-                                join detail in db.HamsSmsitem
-                                    on list equals detail.DataId
+            var items = from list in dataIdList                                
                                 join master in db.HamsSmsdata
-                                    on detail.DataId equals master.DataId
-                                join vehicle in db.IoVehicle
-                                    on master.VehicleId equals vehicle.VehicleId
-                                join fleet in db.IoFleet
-                                    on vehicle.FleetId equals fleet.FleetId
-                                select new  
+                                    on list equals master.DataId
+                                join detail in db.HamsSmsitem
+                                    on master.DataId equals detail.DataId
+                                select new VehicleSnapshot 
                                 {  
-                                    Vid = vehicle.VehicleId, 
-                                    Vname = vehicle.BusNo,
-                                    Fid = fleet.FleetId,
-                                    Fname = fleet.Name,
-                                    Lng = master.Lng,
-                                    Lat = master.Lat,
-                                    ItemCode = detail.ItemCode,
-                                    ItemName = detail.ItemName,
-                                    Value = detail.Value,
-                                    Unit = detail.Unit,
-                                    DataTime = master.DataTime
-                                };
+                                    code = detail.ItemCode,
+                                    name = detail.ItemName,
+                                    value = detail.Value,
+                                    unit = detail.Unit,
+                                    time = master.RealTime?? Convert.ToDateTime("1900-01-01")
+                                };            
 
-            /* Simply pivot the table */
-            IEnumerable<VehicleStatus> statusList = spnItems
-                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, item.Lat, item.Lng, item.DataTime })
-                            .Select(group => new VehicleStatus 
-                            {
-                                vid = group.Key.Vid,
-                                vname = group.Key.Vname,
-                                fid = group.Key.Fid,
-                                fname = group.Key.Fname,
-                                lat = double.Parse(group.Key.Lat.Trim()),
-                                lng = double.Parse(group.Key.Lng.Trim()),
-                                updated = group.Key.DataTime,
-                                soc = group.Where(row => row.ItemCode.Equals("1E")).Max(row => row.Value),
-                                status = group.Where(row => row.ItemCode.Equals("1I")).Max(row => row.Value),
-                                range = group.Where(row => row.ItemCode.Equals("2H")).Max(row => row.Value),
-                                mileage = group.Where(row => row.ItemCode.Equals("1H")).Max(row => row.Value),
-                                voltage = group.Where(row => row.ItemCode.Equals("1F")).Max(row => row.Value),
-                                current = group.Where(row => row.ItemCode.Equals("2F")).Max(row => row.Value),
-                                temperaturehigh = group.Where(row => row.ItemCode.Equals("2G")).Max(row => row.Value),
-                                temperaturelow = group.Where(row => row.ItemCode.Equals("1G")).Max(row => row.Value),
-                                speed = group.Where(row => row.ItemCode.Equals("1D")).Max(row => row.Value),
-                                remainingenergy = group.Where(row => row.ItemCode.Equals("1J")).Max(row => row.Value)
-                            });
-
-            return statusList;
+            return items;
         }
 
-        VehicleSnapshot IVehicleSnapshotRepository.GetByVehicleName(string vname)
+        IEnumerable<VehicleSnapshot> IVehicleSnapshotRepository.GetByVehicleName(string vname)
         {
             /* equivalent T-SQL of the LINQ above
             use io_online
-            select detail.ItemCode, detail.ItemName, detail.Value, detail.Unit 
-from HAMS_SMSData master
-inner join HAMS_SMSItem detail 
-	on master.DataId = detail.DataId
-inner join IO_Vehicle vehicle
-    on master.VehicleId = vehicle.VehicleId
-inner join IO_Fleet fleet
-    on vehicle.FleetId = fleet.FleetID
-where vehicle.BusNo = '4003'
+            ;with dataIdList as
+            (
+                select top (1) m.DataId 
+                from HAMS_SMSData m
+                inner join IO_Vehicle v
+                    on m.VehicleId = v.VehicleId
+                where v.BusNo = '4003'
+                order by m.DataTime desc
+			)
            */
             var dataIdList = (from m in db.HamsSmsdata
                         join v in db.IoVehicle
@@ -111,8 +67,35 @@ where vehicle.BusNo = '4003'
                         where v.BusNo == vname
                         orderby m.DataTime descending 
                         select m.DataId).Take(1);
-            
-            return GetAllByDataId(dataIdList).FirstOrDefault();
+
+            return GetAllByDataId(dataIdList);
+        }
+
+                
+        IEnumerable<VehicleSnapshot> IVehicleSnapshotRepository.GetWholeDayByVehicleName(string vname, DateTime date)
+        {
+            /* equivalent T-SQL of the LINQ above
+            use io_online
+            ;with dataIdList as
+            (
+                select m.DataId
+                from HAMS_SMSData m
+                inner join IO_Vehicle v
+                    on m.VehicleId = v.VehicleId
+                where v.BusNo = '4003'
+                and m.RealTime >= @selectedDate 
+                and m.RealTime < DATEADD(d,1, @selectedDate)
+            )
+           */
+            var dataIdList = from m in db.HamsSmsdata
+                        join v in db.IoVehicle
+                            on m.VehicleId equals v.VehicleId
+                        where v.BusNo == vname &&
+                            m.RealTime >= date &&
+                            m.RealTime < date.AddDays(1)
+                        select m.DataId;
+
+            return GetAllByDataId(dataIdList).OrderBy(row => row.time);  //ascending by time
         }
     }
 }
