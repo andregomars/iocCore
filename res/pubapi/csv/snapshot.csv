@@ -1,0 +1,17 @@
+code,name,value,unit,time
+1D,Speed,0,mph,2017-05-04T21:25:32
+1E,SOC,99,%,2017-05-04T21:25:32
+1F,Total Voltage,623,V,2017-05-04T21:25:32
+1G,Lowest Battery Temp,68,F,2017-05-04T21:25:32
+1H,Total Mileage,7185.43462,miles,2017-05-04T21:25:32
+1I,Charging Status,0,bit,2017-05-04T21:25:32
+1J,Battery Energy,255.5,kWh,2017-05-04T21:25:32
+1K,High Voltage,1,bit,2017-05-04T21:25:32
+1L,Motor Voltage,608,V,2017-05-04T21:25:32
+1M,WAVE Status,0,bit,2017-05-04T21:25:32
+1N,Left Charging Gun,0,bit,2017-05-04T21:25:32
+2F,Total Current,22,A,2017-05-04T21:25:32
+2G,Highest Battery Temp,77,F,2017-05-04T21:25:32
+2H,Range,152.981294,miles,2017-05-04T21:25:32
+2L,Motor RPM,0,rpm,2017-05-04T21:25:32
+2N,Right Charging Gun,0,bit,2017-05-04T21:25:32
