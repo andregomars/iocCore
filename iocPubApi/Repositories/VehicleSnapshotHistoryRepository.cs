@@ -37,7 +37,6 @@ namespace iocPubApi.Repositories
             // };
 
             var snapshot = new List<VehicleSnapshot>();
-            // list.Add(snapshot);
 
             int rowCount = csv.NumRows;
             int colCount = csv.NumColumns;
