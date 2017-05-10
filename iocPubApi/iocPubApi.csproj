@@ -27,7 +27,8 @@
               -t dbo.HAMS_SMSData \
               -t dbo.HAMS_SMSItem \
               -t dbo.HAMS_SMSAlertData \
-              -t dbo.HAMS_SMSAlertItem 
+              -t dbo.HAMS_SMSAlertItem \
+              -t dbo.IO_DayTotal 
 
     -->
     <!-- ### db context constructor
