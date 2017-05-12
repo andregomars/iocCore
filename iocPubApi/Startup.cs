@@ -76,7 +76,7 @@ namespace iocPubApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "IO_Online API V1");
+                c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "IO_Online API V1");
             });
         }
     }

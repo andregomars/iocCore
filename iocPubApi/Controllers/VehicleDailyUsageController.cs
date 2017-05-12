@@ -9,7 +9,7 @@ using iocPubApi.Repositories;
 
 namespace iocPubApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class VehicleDailyUsageController : Controller
     {
         private readonly IVehicleDailyUsageRepository _repository;
