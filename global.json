@@ -1,9 +1,0 @@
-{
-    "projects": [
-      "iocCoreApi",
-      "iocCoreSMS",
-      "iocCoreUnitTest",
-      "iocUnitTest",
-      "iocJobWebApp"
-    ]
-}

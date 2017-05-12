@@ -1,22 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{95A585DF-DFFC-460B-9FB6-7DF0480366EF}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iocCoreApi", "iocCoreApi\iocCoreApi.csproj", "{CF3ADC58-2461-4EB3-9AEF-42ECCD9DDC4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iocUnitTest", "iocUnitTest\iocUnitTest.csproj", "{21F18EB3-0F0B-4597-B684-501A24E3FF3A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "iocCoreSMS", "iocCoreSMS\iocCoreSMS.xproj", "{ED90D150-2596-4CF9-8599-5F96C5090DFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iocCoreSMS", "iocCoreSMS\iocCoreSMS.csproj", "{ED90D150-2596-4CF9-8599-5F96C5090DFB}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "iocCoreUnitTest", "iocCoreUnitTest\iocCoreUnitTest.xproj", "{24AFACEA-6F88-4788-9357-E42762A6DE59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iocCoreUnitTest", "iocCoreUnitTest\iocCoreUnitTest.csproj", "{24AFACEA-6F88-4788-9357-E42762A6DE59}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{95A585DF-DFFC-460B-9FB6-7DF0480366EF}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "iocJobWebApp", "iocJobWebApp\iocJobWebApp.xproj", "{061DE7F3-9AE1-49C9-9DDA-D5E389455732}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iocJobWebApp", "iocJobWebApp\iocJobWebApp.csproj", "{061DE7F3-9AE1-49C9-9DDA-D5E389455732}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
