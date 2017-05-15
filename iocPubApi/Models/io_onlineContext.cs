@@ -16,6 +16,7 @@ namespace iocPubApi.Models
         public virtual DbSet<HamsSmsitem> HamsSmsitem { get; set; }
         public virtual DbSet<IoDayTotal> IoDayTotal { get; set; }
         public virtual DbSet<IoFleet> IoFleet { get; set; }
+        public virtual DbSet<IoUsers> IoUsers { get; set; }
         public virtual DbSet<IoVehicle> IoVehicle { get; set; }
 
         public io_onlineContext(DbContextOptions<io_onlineContext> options)
@@ -144,6 +145,14 @@ namespace iocPubApi.Models
                 entity.Property(e => e.TimeOffset).HasDefaultValueSql("0");
 
                 entity.Property(e => e.Timezone).HasDefaultValueSql("0");
+            });
+
+            modelBuilder.Entity<IoUsers>(entity =>
+            {
+                entity.HasKey(e => e.UserId)
+                    .HasName("IO_Users_PK");
+
+                entity.Property(e => e.CreateTime).HasDefaultValueSql("[dbo].[IO_LocalNow_To_UTC]()");
             });
 
             modelBuilder.Entity<IoVehicle>(entity =>

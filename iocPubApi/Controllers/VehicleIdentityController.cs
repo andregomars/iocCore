@@ -26,5 +26,11 @@ namespace iocPubApi.Controllers
             return _repository.GetAll();
         }
 
+        // GET api/vehicleidentity
+        [HttpGet("VehicleIdentity/LoginName/{loginName}")]
+        public IEnumerable<VehicleIdentity> GetAllByUser(string loginName)
+        {
+            return _repository.GetAllByUser(loginName);
+        }                            
     }
 }
