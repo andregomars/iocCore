@@ -23,8 +23,11 @@ namespace iocPubApi.Repositories
                 Vname = vehicle.BusNo,
                 Fid = fleet.FleetId,
                 Fname = fleet.Name,
-                Lng = master.Lng,
-                Lat = master.Lat,
+				Lat = CASE master.SN WHEN 'N' THEN master.Lat ELSE master.Lat * -1 END,
+				Lng = CASE master.EW WHEN 'E' THEN master.Lng ELSE master.Lng * -1 END,
+				AxisX = master.AxisX,
+				AxisY = master.AxisY,
+				AxisZ = master.AxisZ,
                 ItemCode = detail.ItemCode,
                 ItemName = detail.ItemName,
                 Value = detail.Value,
@@ -57,6 +60,9 @@ namespace iocPubApi.Repositories
                                     Fname = fleet.Name,
                                     Lat = master.Sn.Trim().Equals("N") ? double.Parse(master.Lat) : -double.Parse(master.Lat),
                                     Lng = master.Ew.Trim().Equals("E") ? double.Parse(master.Lng) : -double.Parse(master.Lng),
+                                    AxisX = double.Parse(master.AxisX),
+                                    AxisY = double.Parse(master.AxisY),
+                                    AxisZ = double.Parse(master.AxisZ),
                                     ItemCode = detail.ItemCode,
                                     ItemName = detail.ItemName,
                                     Value = detail.Value,
@@ -66,7 +72,8 @@ namespace iocPubApi.Repositories
 
             /* Simply pivot the table */
             IEnumerable<VehicleStatus> statusList = spnItems
-                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, item.Lat, item.Lng, item.DataTime })
+                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, 
+                                item.Lat, item.Lng, item.AxisX, item.AxisY, item.AxisZ, item.DataTime })
                             .Select(group => new VehicleStatus 
                             {
                                 vid = group.Key.Vid,
@@ -75,6 +82,9 @@ namespace iocPubApi.Repositories
                                 fname = group.Key.Fname,
                                 lat = group.Key.Lat,
                                 lng = group.Key.Lng,
+                                axisx = group.Key.AxisX,
+                                axisy = group.Key.AxisY,
+                                axisz = group.Key.AxisZ,
                                 updated = group.Key.DataTime,
                                 soc = group.Where(row => row.ItemCode.Equals("1E")).Max(row => row.Value),
                                 status = group.Where(row => row.ItemCode.Equals("1I")).Max(row => row.Value),
@@ -111,10 +121,6 @@ namespace iocPubApi.Repositories
                         where v.BusNo == vname
                         orderby m.DataTime descending 
                         select m.DataId).Take(10);
-                        // select new 
-                        // {
-                        //     DataId = m.DataId
-                        // }).Take(10);
 
            return GetAllByDataId(dataIdList);
                                  

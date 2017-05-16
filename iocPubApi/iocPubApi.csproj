@@ -46,3 +46,7 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
   </ItemGroup>
 </Project>
+<!--
+Publish to api web app root:
+$> dotnet publish -c Production -o /c/inetpub/wwwroot/api
+-->
