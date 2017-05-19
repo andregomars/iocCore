@@ -42,6 +42,14 @@ namespace iocPubApi.Repositories
             return ids;
         }
 
+        /*
+         * IO Control Admin (UserType=4)
+            * load everything
+         * Manufacturor Admin (UserType=64)
+            * load related fleets
+         * Others include Consumers
+            * nothing
+         */
         IEnumerable<VehicleIdentity> IVehicleIdentityRepository.GetAllByUser(string loginName)
         {
             /* equivalent T-SQL
