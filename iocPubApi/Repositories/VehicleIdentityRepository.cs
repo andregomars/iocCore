@@ -15,7 +15,7 @@ namespace iocPubApi.Repositories
             _context = context;
         }
 
-        IEnumerable<VehicleIdentity> IVehicleIdentityRepository.GetAll()
+        public IEnumerable<VehicleIdentity> GetAll()
         {
             /* equivalent T-SQL
             select
@@ -50,7 +50,7 @@ namespace iocPubApi.Repositories
          * Others include Consumers
             * nothing
          */
-        IEnumerable<VehicleIdentity> IVehicleIdentityRepository.GetAllByUser(string loginName)
+        public IEnumerable<VehicleIdentity> GetAllByUser(string loginName)
         {
             /* equivalent T-SQL
             select distinct
@@ -69,20 +69,34 @@ namespace iocPubApi.Repositories
             -- fleet.FleetID,fleet.Name
              */
             var db = _context;
-            var ids = (from users in db.IoUsers 
-                        join vehicle in db.IoVehicle
-                            on users.CompanyId equals vehicle.CompanyId
-                        join fleet in db.IoFleet
-                            on vehicle.FleetId equals fleet.FleetId
-                        where users.LogName == loginName
-                        select new VehicleIdentity 
-                        { 
-                            Vid = vehicle.VehicleId, 
-                            Vname = vehicle.BusNo,
-                            Fid = fleet.FleetId,
-                            Fname = fleet.Name
-                        }).Distinct();
+            IEnumerable<VehicleIdentity> ids;
+
+            int? userType = (from users in db.IoUsers
+                            where users.LogName == loginName
+                            select users.UserType).SingleOrDefault();
             
+            // return all fleets and vehicles when user is ioc user or admin 
+            if (userType == 4 || userType == 2) 
+                ids = this.GetAll(); 
+            // return all vehicles when user is manufacturer or consumer
+            else if (userType == 8 || userType == 16 || userType == 32 || userType == 64)
+                ids = (from users in db.IoUsers 
+                            join vehicle in db.IoVehicle
+                                on users.CompanyId equals vehicle.CompanyId
+                            join fleet in db.IoFleet
+                                on vehicle.FleetId equals fleet.FleetId
+                            where users.LogName == loginName
+                            select new VehicleIdentity 
+                            { 
+                                Vid = vehicle.VehicleId, 
+                                Vname = vehicle.BusNo,
+                                Fid = fleet.FleetId,
+                                Fname = fleet.Name
+                            }).Distinct();
+            else
+            // return nothing when user not found in ioc user list, or no user type is found
+                ids = null;
+
             return ids;
         }
     }

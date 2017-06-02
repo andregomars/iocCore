@@ -48,5 +48,5 @@
 </Project>
 <!--
 Publish to api web app root:
-$> dotnet publish -c Production -o /c/inetpub/wwwroot/api
+$> dotnet publish -c Production -o /c/inetpub/api
 -->
