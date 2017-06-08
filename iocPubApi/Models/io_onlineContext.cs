@@ -136,9 +136,15 @@ namespace iocPubApi.Models
                 entity.HasKey(e => e.FleetId)
                     .HasName("IO_Fleet_PK");
 
+                entity.Property(e => e.DayTotal).HasDefaultValueSql("'N'");
+
+                entity.Property(e => e.Icon).HasDefaultValueSql("'Default'");
+
                 entity.Property(e => e.IntervalNet).HasDefaultValueSql("5");
 
                 entity.Property(e => e.IntervalSms).HasDefaultValueSql("5");
+
+                entity.Property(e => e.IsUtc).HasDefaultValueSql("0");
 
                 entity.Property(e => e.LogFormat).HasDefaultValueSql("0");
 

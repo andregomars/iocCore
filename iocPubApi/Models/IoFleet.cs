@@ -30,6 +30,13 @@ namespace iocPubApi.Models
         public string LogStartTime { get; set; }
         [Column(TypeName = "varchar(8)")]
         public string LogEndTime { get; set; }
+        [Column("IsUTC")]
+        public short IsUtc { get; set; }
+        [Column("ICON", TypeName = "varchar(50)")]
+        public string Icon { get; set; }
+        [Required]
+        [Column(TypeName = "char(1)")]
+        public string DayTotal { get; set; }
         [Column(TypeName = "varchar(200)")]
         public string Remark { get; set; }
         [Column(TypeName = "datetime")]

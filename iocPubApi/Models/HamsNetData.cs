@@ -13,7 +13,7 @@ namespace iocPubApi.Models
         [Column("MAC", TypeName = "varchar(50)")]
         public string Mac { get; set; }
         [Column("GPS")]
-        public short? Gps { get; set; }
+        public int? Gps { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string Lng { get; set; }
         [Column("EW", TypeName = "char(1)")]
@@ -28,8 +28,6 @@ namespace iocPubApi.Models
         [MaxLength(1024)]
         public byte[] DataArray { get; set; }
         public short? IsView { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? RealTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
     }

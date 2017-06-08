@@ -7,5 +7,6 @@ namespace iocPubApi.Repositories
     {
         IEnumerable<VehicleIdentity> GetAll();
         IEnumerable<VehicleIdentity> GetAllByUser(string userID);
+
     }
 }

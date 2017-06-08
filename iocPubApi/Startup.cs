@@ -40,8 +40,9 @@ namespace iocPubApi
             services.AddCors();
 
             // Insert repositories
-            services.AddScoped<IIoFleetRepository, IoFleetRepository>();
-            services.AddScoped<IIoVehicleRepository, IoVehicleRepository>();
+            // services.AddScoped<IIoFleetRepository, IoFleetRepository>();
+            // services.AddScoped<IIoVehicleRepository, IoVehicleRepository>();
+            services.AddScoped<IFleetIdentityRepository, FleetIdentityRepository>();
             services.AddScoped<IVehicleIdentityRepository, VehicleIdentityRepository>();
             services.AddScoped<IHamsNetDataRepository, HamsNetDataRepository>();
             services.AddScoped<IHamsNetDataItemRepository, HamsNetDataItemRepository>();
