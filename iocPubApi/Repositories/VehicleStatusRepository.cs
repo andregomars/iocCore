@@ -86,18 +86,18 @@ namespace iocPubApi.Repositories
                                 axisy = group.Key.AxisY,
                                 axisz = group.Key.AxisZ,
                                 updated = group.Key.DataTime,
-                                soc = group.Where(row => row.ItemCode.Equals("2A")).Max(row => row.Value),
-                                status = Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2M")).Max(row => row.Value))
-                                    | Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2N")).Max(row => row.Value)),
-                                range = group.Where(row => row.ItemCode.Equals("2L")).Max(row => row.Value),
-                                mileage = group.Where(row => row.ItemCode.Equals("2K")).Max(row => row.Value),
-                                voltage = group.Where(row => row.ItemCode.Equals("2F")).Max(row => row.Value),
-                                current = group.Where(row => row.ItemCode.Equals("2E")).Max(row => row.Value),
-                                temperaturehigh = group.Where(row => row.ItemCode.Equals("2H")).Max(row => row.Value),
-                                temperaturelow = group.Where(row => row.ItemCode.Equals("2G")).Max(row => row.Value),
-                                speed = group.Where(row => row.ItemCode.Equals("2I")).Max(row => row.Value),
-                                remainingenergy = group.Where(row => row.ItemCode.Equals("2C")).Max(row => row.Value) 
-                                    - group.Where(row => row.ItemCode.Equals("2D")).Max(row => row.Value)
+                                soc = group.Where(row => row.ItemCode.Equals("2A")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
+                                status = Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2M")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value))
+                                    | Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2N")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value)),
+                                range = group.Where(row => row.ItemCode.Equals("2L")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
+                                mileage = group.Where(row => row.ItemCode.Equals("2K")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
+                                voltage = group.Where(row => row.ItemCode.Equals("2F")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
+                                current = group.Where(row => row.ItemCode.Equals("2E")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
+                                temperaturehigh = group.Where(row => row.ItemCode.Equals("2H")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
+                                temperaturelow = group.Where(row => row.ItemCode.Equals("2G")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
+                                speed = group.Where(row => row.ItemCode.Equals("2I")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
+                                remainingenergy = group.Where(row => row.ItemCode.Equals("2C")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value) 
+                                     - group.Where(row => row.ItemCode.Equals("2D")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value)
                             });
 
             return statusList;

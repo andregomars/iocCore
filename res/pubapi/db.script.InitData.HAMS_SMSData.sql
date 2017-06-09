@@ -25,6 +25,7 @@ CREATE TABLE [dbo].[HAMS_SMSData](
 	[RealTime] [datetime] NULL,
 	[IsUpdate] [smallint] NOT NULL DEFAULT ((0)),
 	[IsMoved] [smallint] NULL DEFAULT ((0)),
+	[IsDone] [smallint] NULL DEFAULT ((0)),
 	[CreateTime] [datetime] NULL,
  CONSTRAINT [HAMS_HAMS_SMSData_PK] PRIMARY KEY CLUSTERED 
 (
