@@ -100,6 +100,7 @@ namespace iocPubApi.Repositories
                             on vehicle.FleetId equals fleet.FleetId
                         join users in db.IoUsers
                             on fleet.CompanyId equals users.CompanyId
+                        where users.LogName == loginName
                         select new FleetIdentity 
                         { 
                             Fname = fleet.Name,
