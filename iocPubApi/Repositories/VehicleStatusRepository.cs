@@ -23,8 +23,13 @@ namespace iocPubApi.Repositories
                 Vname = vehicle.BusNo,
                 Fid = fleet.FleetId,
                 Fname = fleet.Name,
-				Lat = CASE master.SN WHEN 'N' THEN master.Lat ELSE master.Lat * -1 END,
-				Lng = CASE master.EW WHEN 'E' THEN master.Lng ELSE master.Lng * -1 END,
+				Lat = CASE master.SN 
+					WHEN 'N' THEN (CASE ISNUMERIC(master.Lat) WHEN 1 THEN master.Lat ELSE 0 END) 
+					ELSE (CASE ISNUMERIC(master.Lat) WHEN 1 THEN master.Lat ELSE 0 END) * -1 
+					END,
+				Lng = CASE master.EW WHEN 'E' THEN (CASE ISNUMERIC(master.Lng) WHEN 1 THEN master.Lng ELSE 0 END) 
+					ELSE (CASE ISNUMERIC(master.Lng) WHEN 1 THEN master.Lng ELSE 0 END) * -1 
+					END,
 				AxisX = master.AxisX,
 				AxisY = master.AxisY,
 				AxisZ = master.AxisZ,
@@ -58,8 +63,8 @@ namespace iocPubApi.Repositories
                                     Vname = vehicle.BusNo,
                                     Fid = fleet.FleetId,
                                     Fname = fleet.Name,
-                                    Lat = master.Sn.Trim().Equals("N") ? double.Parse(master.Lat) : -double.Parse(master.Lat),
-                                    Lng = master.Ew.Trim().Equals("E") ? double.Parse(master.Lng) : -double.Parse(master.Lng),
+                                    Lat = master.Sn.Trim().Equals("N") ? ConvertGeoValue(master.Lat, false) : ConvertGeoValue(master.Lat, true),
+                                    Lng = master.Ew.Trim().Equals("E") ? ConvertGeoValue(master.Lng, false) : ConvertGeoValue(master.Lng, true),
                                     AxisX = double.Parse(master.AxisX),
                                     AxisY = double.Parse(master.AxisY),
                                     AxisZ = double.Parse(master.AxisZ),
@@ -101,6 +106,19 @@ namespace iocPubApi.Repositories
                             });
 
             return statusList;
+        }
+
+        private double ConvertGeoValue(string valueString, bool toNegative)
+        {
+            if (string.IsNullOrEmpty(valueString)) 
+                return 0;
+            
+            //non-number would be in geo value from database, e.g. "FFFFFF"
+            double val;
+            if (double.TryParse(valueString, out val))
+                return toNegative ? -val : val;
+            else
+                return 0;
         }
 
        IEnumerable<VehicleStatus> IVehicleStatusRepository.GetRecentAllByVehicleName(string vname)
