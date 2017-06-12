@@ -75,7 +75,7 @@ namespace iocPubApi.Repositories
                                     DataTime = master.DataTime
                                 };
 
-            /* Simply pivot the table */
+            /* Pivot the table */
             IEnumerable<VehicleStatus> statusList = spnItems
                             .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, 
                                 item.Lat, item.Lng, item.AxisX, item.AxisY, item.AxisZ, item.DataTime })
@@ -92,8 +92,8 @@ namespace iocPubApi.Repositories
                                 axisz = group.Key.AxisZ,
                                 updated = group.Key.DataTime,
                                 soc = group.Where(row => row.ItemCode.Equals("2A")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                status = Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2M")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value))
-                                    | Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2N")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value)),
+                                status = GetChargingStatus(Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2M")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value))
+                                    , Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2N")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value))),
                                 range = group.Where(row => row.ItemCode.Equals("2L")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
                                 mileage = group.Where(row => row.ItemCode.Equals("2K")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
                                 voltage = group.Where(row => row.ItemCode.Equals("2F")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
@@ -108,17 +108,30 @@ namespace iocPubApi.Repositories
             return statusList;
         }
 
+        
+        private double GetChargingStatus(double leftChargingStatus, double rightChargingStatus)
+        {
+            int valLeft = Convert.ToInt32(leftChargingStatus);
+            int valRight = Convert.ToInt32(rightChargingStatus);
+            //either left or right has status value of 2, it counts in charging status
+            if ( valLeft == 2 || valRight == 2)
+                return 1;
+            else
+                return 0;
+        }
+
         private double ConvertGeoValue(string valueString, bool toNegative)
         {
             if (string.IsNullOrEmpty(valueString)) 
                 return 0;
             
             //non-number would be in geo value from database, e.g. "FFFFFF"
-            double val;
-            if (double.TryParse(valueString, out val))
-                return toNegative ? -val : val;
-            else
-                return 0;
+            double val = double.TryParse(valueString, out val) ? val : 0;
+            return toNegative ? -val : val;
+            // if (double.TryParse(valueString, out val))
+            //     return toNegative ? -val : val;
+            // else
+            //     return 0;
         }
 
        IEnumerable<VehicleStatus> IVehicleStatusRepository.GetRecentAllByVehicleName(string vname)
