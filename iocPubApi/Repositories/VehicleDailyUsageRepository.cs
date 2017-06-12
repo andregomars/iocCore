@@ -48,7 +48,7 @@ namespace iocPubApi.Repositories
 
              */
             IEnumerable<VehicleDailyUsage> usageList =
-                from m in db.IoDayTotal
+                from m in db.HamsDayTotal
                     join v in db.IoVehicle
                         on m.VehicleId equals v.VehicleId
                     join f in db.IoFleet

@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iocPubApi.Models
 {
-    [Table("IO_DayTotal")]
-    public partial class IoDayTotal
+    [Table("HAMS_DayTotal")]
+    public partial class HamsDayTotal
     {
         [Column("YYMMDD", TypeName = "varchar(6)")]
         public string Yymmdd { get; set; }
@@ -37,6 +37,8 @@ namespace iocPubApi.Models
         public DateTime? DataTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? RealTime { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string DataType { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
     }

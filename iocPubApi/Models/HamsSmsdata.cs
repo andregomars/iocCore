@@ -37,6 +37,7 @@ namespace iocPubApi.Models
         public DateTime? RealTime { get; set; }
         public short IsUpdate { get; set; }
         public short? IsMoved { get; set; }
+        public short? IsDone { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
     }
