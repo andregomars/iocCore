@@ -179,9 +179,12 @@ namespace iocPubApi.Repositories
                     energy_mile = group.Sum(r => r.energyused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
                     mile_energy = group.Sum(r => r.mileage) / (group.Sum(r => r.energyused) == 0 ? 1 : group.Sum(r => r.energyused)),
                 }).SingleOrDefault();
-            usageListDaysSummary = usageListDaysSummary.Concat(new VehicleDailyUsage[] { usageTotalRow });
 
-            return usageListDaysSummary;
+            //concat and put total row in first line
+            IEnumerable<VehicleDailyUsage> usageListDaysSummaryWithTotalRow = new VehicleDailyUsage[] { usageTotalRow };
+            usageListDaysSummaryWithTotalRow = usageListDaysSummaryWithTotalRow.Concat(usageListDaysSummary);
+
+            return usageListDaysSummaryWithTotalRow;
         }
     }
 }
