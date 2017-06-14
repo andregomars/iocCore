@@ -37,7 +37,7 @@ namespace iocPubApi.Repositories
                 ItemName = detail.ItemName,
                 Value = detail.Value,
                 Unit = detail.Unit,
-                DataTime = master.DataTime
+                RealTime = master.RealTime
             from [dataIdList] list
             inner join HAMS_SMSItem detail
                 on list.DataId = detail.DataId
@@ -72,13 +72,13 @@ namespace iocPubApi.Repositories
                                     ItemName = detail.ItemName,
                                     Value = detail.Value,
                                     Unit = detail.Unit,
-                                    DataTime = master.DataTime
+                                    RealTime = master.RealTime
                                 };
 
             /* Pivot the table */
             IEnumerable<VehicleStatus> statusList = spnItems
                             .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, 
-                                item.Lat, item.Lng, item.AxisX, item.AxisY, item.AxisZ, item.DataTime })
+                                item.Lat, item.Lng, item.AxisX, item.AxisY, item.AxisZ, item.RealTime })
                             .Select(group => new VehicleStatus 
                             {
                                 vid = group.Key.Vid,
@@ -90,7 +90,7 @@ namespace iocPubApi.Repositories
                                 axisx = group.Key.AxisX,
                                 axisy = group.Key.AxisY,
                                 axisz = group.Key.AxisZ,
-                                updated = group.Key.DataTime,
+                                updated = group.Key.RealTime,
                                 soc = group.Where(row => row.ItemCode.Equals("2A")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
                                 status = GetChargingStatus(Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2M")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value))
                                     , Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2N")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value))),
@@ -145,14 +145,14 @@ namespace iocPubApi.Repositories
                 inner join IO_Vehicle v
                     on m.VehicleId = v.VehicleId
                 where v.BusNo = '4003'
-                order by m.DataTime desc
+                order by m.RealTime desc
 			)
            */ 
             var dataIdList = (from m in db.HamsSmsdata
                         join v in db.IoVehicle
                             on m.VehicleId equals v.VehicleId
                         where v.BusNo == vname
-                        orderby m.DataTime descending 
+                        orderby m.RealTime descending 
                         select m.DataId).Take(10);
 
            return GetAllByDataId(dataIdList);
@@ -167,7 +167,7 @@ namespace iocPubApi.Repositories
             ;with dataIdList as
             (
 			select b.dataid from
-                (select m.VehicleId,max(DataTime) as DataTime 
+                (select m.VehicleId,max(RealTime) as RealTime 
                 from HAMS_SMSData m
                 inner join IO_Vehicle v
                     on m.VehicleId = v.VehicleId
@@ -177,7 +177,7 @@ namespace iocPubApi.Repositories
                 group by m.VehicleId) a
             inner join HAMS_SMSData b 
             on a.VehicleId = b.VehicleId
-                and a.DataTime = b.DataTime
+                and a.RealTime = b.RealTime
 			)
            */ 
             var dataIdList = from a in (from m in db.HamsSmsdata
@@ -190,9 +190,9 @@ namespace iocPubApi.Repositories
                         select new
                         {
                             VehicleId = g.Key,
-                            DataTime = (from row in g select row.DataTime).Max()
+                            RealTime = (from row in g select row.RealTime).Max()
                         }) join b in db.HamsSmsdata
-                            on new { a.VehicleId, a.DataTime } equals new { b.VehicleId, b.DataTime }
+                            on new { a.VehicleId, a.RealTime } equals new { b.VehicleId, b.RealTime }
                         select b.DataId;
             
             return GetAllByDataId(dataIdList);
@@ -209,14 +209,14 @@ namespace iocPubApi.Repositories
                 inner join IO_Vehicle v
                     on m.VehicleId = v.VehicleId
                 where v.BusNo = '4003'
-                order by m.DataTime desc
+                order by m.RealTime desc
 			)
            */
             var dataIdList = (from m in db.HamsSmsdata
                         join v in db.IoVehicle
                             on m.VehicleId equals v.VehicleId
                         where v.BusNo == vname
-                        orderby m.DataTime descending 
+                        orderby m.RealTime descending 
                         select m.DataId).Take(1);
             
             return GetAllByDataId(dataIdList).FirstOrDefault();

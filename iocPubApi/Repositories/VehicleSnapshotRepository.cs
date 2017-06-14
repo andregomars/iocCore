@@ -58,14 +58,14 @@ namespace iocPubApi.Repositories
                 inner join IO_Vehicle v
                     on m.VehicleId = v.VehicleId
                 where v.BusNo = '4003'
-                order by m.DataTime desc
+                order by m.RealTime desc
 			)
            */
             var dataIdList = (from m in db.HamsSmsdata
                         join v in db.IoVehicle
                             on m.VehicleId equals v.VehicleId
                         where v.BusNo == vname
-                        orderby m.DataTime descending 
+                        orderby m.RealTime descending 
                         select m.DataId).Take(1);
 
             return GetAllByDataId(dataIdList);
