@@ -8,5 +8,6 @@ namespace iocPubApi.Repositories
     {
         IEnumerable<VehicleDailyUsage> GetByDateRange(string vname, DateTime beginDate, DateTime endDate);
         IEnumerable<VehicleDailyUsage> GetByFleet(string fname, DateTime beginDate, DateTime endDate);
+        IEnumerable<VehicleDailyUsage> GetDaysSummaryByFleet(string fname, DateTime beginDate, DateTime endDate);
     }
 }

@@ -126,9 +126,62 @@ namespace iocPubApi.Repositories
                         ,socused = m.SocUsed?? 0
                         ,energycharged = m.KWhCharged?? 0
                         ,energyused = m.KWhUsed?? 0
+                        ,soc_mile = (m.SocUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1)
+                        ,mile_soc = (m.Mileage?? 0) / ((m.SocUsed?? 1) == 0 ? 1 : m.SocUsed?? 1)
+                        ,energy_mile = (m.KWhUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1)
+                        ,mile_energy = (m.Mileage?? 0) / ((m.KWhUsed?? 1) == 0 ? 1 : m.KWhUsed?? 1)
                     };
 
             return usageList;
+        }
+
+        public IEnumerable<VehicleDailyUsage> GetDaysSummaryByFleet(string fname, DateTime beginDate, DateTime endDate)
+        {
+
+            IEnumerable<VehicleDailyUsage> usageListDaily = GetByFleet(fname, beginDate, endDate);
+            IEnumerable<VehicleDailyUsage> usageListDaysSummary = usageListDaily
+                .GroupBy(item => new { item.vid, item.vname, item.fid, item.fname })
+                .Select(group => new VehicleDailyUsage
+                {
+                    vid = group.Key.vid,
+                    vname = group.Key.vname,
+                    fid = group.Key.fid,
+                    fname = group.Key.fname,
+                    date = beginDate,
+                    mileage = group.Sum(r => r.mileage),
+                    soccharged = group.Sum(r => r.soccharged),
+                    socused = group.Sum(r => r.socused),
+                    energycharged = group.Sum(r => r.energycharged),
+                    energyused = group.Sum(r => r.energyused),
+                    soc_mile = group.Sum(r => r.socused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
+                    mile_soc = group.Sum(r => r.mileage) / (group.Sum(r => r.socused) == 0 ? 1 : group.Sum(r => r.socused)),
+                    energy_mile = group.Sum(r => r.energyused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
+                    mile_energy = group.Sum(r => r.mileage) / (group.Sum(r => r.energyused) == 0 ? 1 : group.Sum(r => r.energyused)),
+                });
+            
+            //attach total row
+            VehicleDailyUsage usageTotalRow = usageListDaysSummary
+                .GroupBy(item => new { item.fid, item.fname })
+                .Select(group => new VehicleDailyUsage
+                {
+                    vid = 0,
+                    vname = "All",
+                    fid = group.Key.fid,
+                    fname = group.Key.fname,
+                    date = beginDate,
+                    mileage = group.Sum(r => r.mileage),
+                    soccharged = group.Sum(r => r.soccharged),
+                    socused = group.Sum(r => r.socused),
+                    energycharged = group.Sum(r => r.energycharged),
+                    energyused = group.Sum(r => r.energyused),
+                    soc_mile = group.Sum(r => r.socused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
+                    mile_soc = group.Sum(r => r.mileage) / (group.Sum(r => r.socused) == 0 ? 1 : group.Sum(r => r.socused)),
+                    energy_mile = group.Sum(r => r.energyused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
+                    mile_energy = group.Sum(r => r.mileage) / (group.Sum(r => r.energyused) == 0 ? 1 : group.Sum(r => r.energyused)),
+                }).SingleOrDefault();
+            usageListDaysSummary = usageListDaysSummary.Concat(new VehicleDailyUsage[] { usageTotalRow });
+
+            return usageListDaysSummary;
         }
     }
 }

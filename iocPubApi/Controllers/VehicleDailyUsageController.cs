@@ -34,5 +34,14 @@ namespace iocPubApi.Controllers
         {
             return _repository.GetByFleet(fleetName, beginDate, endDate);
         }
+
+        // GET /api/VehicleDailyUsage/GetDaysSummaryByFleet/{fleetName}/{beginDate}/{endDate}
+        [HttpGet("GetDaysSummaryByFleet/{fleetName}/{beginDate}/{endDate}")]
+        public IEnumerable<VehicleDailyUsage> GetDaysSummaryByFleet(string fleetName,
+            DateTime beginDate, DateTime endDate)
+        {
+            return _repository.GetDaysSummaryByFleet(fleetName, beginDate, endDate);
+        }
+
     }
 }

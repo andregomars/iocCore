@@ -14,5 +14,9 @@ namespace iocPubApi.Models
         public double socused { get; set; }
         public double energycharged { get; set; }
         public double energyused { get; set; }
+        public double soc_mile { get; set; }
+        public double mile_soc { get; set; }
+        public double energy_mile { get; set; }
+        public double mile_energy { get; set; }
     }
 }
