@@ -167,9 +167,9 @@ namespace iocPubApi.Repositories
                         select m.DataId).Take(10);
 
            return GetAllByDataId(dataIdList);
-                                 
-  
         }
+
+
 
         IEnumerable<VehicleStatus> IVehicleStatusRepository.GetAllByFleetName(string fname)
         {
@@ -235,6 +235,25 @@ namespace iocPubApi.Repositories
 
         public IEnumerable<VehicleStatus> GetWholeDayByVehicleName(string vname, DateTime date)
         {
+            //two days ago
+            if (date < DateTime.Today.AddDays(-1)) 
+            {
+                return GetWholeDayFromFile(vname, date);
+            }
+            //over today, return nothing  
+            else if (date >= DateTime.Today.AddDays(1))
+            {
+                return new List<VehicleStatus>();
+            }
+            //today or yesterday
+            else
+            {
+                return GetWholeDayFromDatabase(vname, date);
+            }
+        }
+
+        private IEnumerable<VehicleStatus> GetWholeDayFromFile(string vname, DateTime date)
+        {
             Csv csv = new Csv();
             csv.HasColumnNames = true;
             var statusList = new List<VehicleStatus>();
@@ -281,9 +300,42 @@ namespace iocPubApi.Repositories
             return statusList;  
         }
 
+        private IEnumerable<VehicleStatus> GetWholeDayFromDatabase(string vname, DateTime date)
+        {
+           /* equivalent T-SQL of the LINQ above
+            use io_online
+            declare @vname varchar(50), @date DateTime
+			set @vname = '3470'
+			set @date = '2017-06-14'
+            ;with dataIdList as
+            (
+                select m.DataId 
+                from HAMS_SMSData m
+                inner join IO_Vehicle v
+                    on m.VehicleId = v.VehicleId
+                where v.BusNo = @vname
+                    and m.RealTime >= @date
+                    and m.RealTime < DATEADD(day,1, @date)
+                order by m.RealTime desc
+		    )
+           */ 
+            var dataIdList = from m in db.HamsSmsdata
+                        join v in db.IoVehicle
+                            on m.VehicleId equals v.VehicleId
+                        where v.BusNo == vname
+                            && m.RealTime >= date
+                            && m.RealTime < date.AddDays(1)
+                        orderby m.RealTime descending 
+                        select m.DataId;
+
+           return GetAllByDataId(dataIdList);
+        }
+
+        /*** Helper methods section ***/
+
         private string GetFilePath(string vname, DateTime date)
         {
-            return $"{folder}/{vname}/{date.ToString("yyyy-MM-dd")}.csv";
+            return $"{folder}\\{date.Year}\\{date.Month}\\{vname}_{date.ToString("yyyy-MM-dd")}.csv";
         }
 
         private double ParseGeoValue(string geoString)
