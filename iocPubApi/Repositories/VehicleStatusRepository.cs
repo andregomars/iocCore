@@ -3,16 +3,27 @@ using System.Collections.Generic;
 using iocPubApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using Chilkat;
 
 namespace iocPubApi.Repositories
 {
     public class VehicleStatusRepository : IVehicleStatusRepository
     {
         private readonly io_onlineContext db;
+        private string folder;
+        public IConfigurationRoot Configuration { get; }
 
         public VehicleStatusRepository(io_onlineContext context)
         {
             db = context;
+
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json").Build();
+
+            folder = Configuration["HAMS.Api:Directory.SMSData"];
         }
 
         private IEnumerable<VehicleStatus> GetAllByDataId(IEnumerable<Guid> dataIdList)
@@ -221,5 +232,91 @@ namespace iocPubApi.Repositories
             
             return GetAllByDataId(dataIdList).FirstOrDefault();
         }   
+
+        public IEnumerable<VehicleStatus> GetWholeDayByVehicleName(string vname, DateTime date)
+        {
+            Csv csv = new Csv();
+            csv.HasColumnNames = true;
+            var statusList = new List<VehicleStatus>();
+
+            string path = GetFilePath(vname, date);
+            bool success = csv.LoadFile(path);
+            if(!success) return statusList; 
+
+            int rowCount = csv.NumRows;
+            int colCount = csv.NumColumns;
+            for(int i = 0; i < rowCount; i++)
+            {
+                try {
+                    statusList.Add(new VehicleStatus {
+                        vid = 0,
+                        vname = vname,
+                        fid = 0,
+                        fname = "",
+                        lat = ParseGeoValue(csv.GetCellByName(i, "Latitude")),
+                        lng = ParseGeoValue(csv.GetCellByName(i, "Longitude")),
+                        axisx = ParseValue(csv.GetCellByName(i, "X")),
+                        axisy = ParseValue(csv.GetCellByName(i, "Y")),
+                        axisz = ParseValue(csv.GetCellByName(i, "Z")),
+                        soc = ParseValue(csv.GetCellByName(i, "2A/SOC/%")),
+                        status = ParseStatusValue(csv.GetCellByName(i, "2M/Left Charge Status/bit"),
+                            csv.GetCellByName(i, "2N/Right Charge Status/bit")),
+                        range = ParseValue(csv.GetCellByName(i, "2L/Range/miles")),
+                        mileage = ParseValue(csv.GetCellByName(i, "2K/Total Mileage/miles")),
+                        voltage = ParseValue(csv.GetCellByName(i, "2F/Total Voltage/V")),
+                        temperaturehigh = ParseValue(csv.GetCellByName(i, "2H/Highest Battery Temp/F")),
+                        temperaturelow = ParseValue(csv.GetCellByName(i, "2G/Lowest Battery Temp/F")),
+                        speed = ParseValue(csv.GetCellByName(i, "2I/Speed/mph")),
+                        remainingenergy = ParseValue(csv.GetCellByName(i, "2B/Battery Energy/kWh")),
+                        updated = ParseDateValue(csv.GetCellByName(i, "Time"), date),
+                    });
+                }
+                catch
+                {
+                    //when error when parsing a line, keep looping 
+                    continue;
+                }
+            }
+
+            return statusList;  
+        }
+
+        private string GetFilePath(string vname, DateTime date)
+        {
+            return $"{folder}/{vname}/{date.ToString("yyyy-MM-dd")}.csv";
+        }
+
+        private double ParseGeoValue(string geoString)
+        {
+            if (String.IsNullOrEmpty(geoString) || geoString.Trim().ToUpper().Equals("N/A"))
+                return 0;
+            double val = double.TryParse(geoString, out val) ? val : 0;
+            return val; 
+        }
+
+        private double ParseValue(string valString)
+        {
+            if (String.IsNullOrEmpty(valString) || String.IsNullOrWhiteSpace(valString))
+                return 0;
+            double val = double.TryParse(valString, out val) ? val : 0;
+            return val;
+        }
+
+        private DateTime ParseDateValue(string dateString, DateTime date)
+        {
+            //when input datetime string is invalid, return the default datetime passed in
+            if (String.IsNullOrEmpty(dateString) || String.IsNullOrWhiteSpace(dateString))
+                return date; 
+            DateTime val = DateTime.TryParse(dateString, out val) ? val : date;
+            return val;
+        }
+
+        private double ParseStatusValue(string statusLeftStr, string statusRightStr)
+        {
+            double left = ParseValue(statusLeftStr);
+            double right = ParseValue(statusRightStr);
+            double val = (left == 2 && right == 2) ? 1 : 0;
+            return val;
+        }
     }
 }
