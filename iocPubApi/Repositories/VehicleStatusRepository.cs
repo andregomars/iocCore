@@ -258,7 +258,11 @@ namespace iocPubApi.Repositories
             csv.HasColumnNames = true;
             var statusList = new List<VehicleStatus>();
 
-            string path = GetFilePath(vname, date);
+            // get file path from db, return nothing while no path is found
+            string path = GetDailyFilePath(vname, date);
+            if(String.IsNullOrEmpty(path)) return statusList;
+
+            // load file as csv based on path, return nothing while no csv can be loaded
             bool success = csv.LoadFile(path);
             if(!success) return statusList; 
 
@@ -302,7 +306,7 @@ namespace iocPubApi.Repositories
 
         private IEnumerable<VehicleStatus> GetWholeDayFromDatabase(string vname, DateTime date)
         {
-           /* equivalent T-SQL of the LINQ above
+           /* equivalent T-SQL of the LINQ below
             use io_online
             declare @vname varchar(50), @date DateTime
 			set @vname = '3470'
@@ -331,12 +335,36 @@ namespace iocPubApi.Repositories
            return GetAllByDataId(dataIdList);
         }
 
+        private string GetDailyFilePath(string vname, DateTime date)
+        {
+            /* equivalent T-SQL of the LINQ below 
+            use io_online
+            declare @vname varchar(50), @date DateTime
+            set @vname = '3470'
+            set @date = '2017-06-14'
+
+            select [file] = rtrim(csv.filepath) + '\' + rtrim(csv.filename)
+            from HAMS_CSV csv
+            inner join IO_VEHICLE vehicle
+                on csv.vehicleid = vehicle.vehicleid
+            where vehicle.busno = @vname
+            and csv.dailydate = @date
+            */
+            var path = from csv in db.HamsCsv
+                        join vehicle in db.IoVehicle
+                            on csv.VehicleId equals vehicle.VehicleId
+                        where vehicle.BusNo == vname
+                            && (csv.DailyDate??Convert.ToDateTime("1900-01-01")) == date
+                        select $"{csv.FilePath.Trim()}\\{csv.FileName.Trim()}";
+            return path.SingleOrDefault();
+        }
+
         /*** Helper methods section ***/
 
-        private string GetFilePath(string vname, DateTime date)
-        {
-            return $"{folder}\\{date.Year}\\{date.Month}\\{vname}_{date.ToString("yyyy-MM-dd")}.csv";
-        }
+        // private string GetFilePath(string vname, DateTime date)
+        // {
+        //     return $"{folder}\\{date.Year}\\{date.Month}\\{vname}_{date.ToString("yyyy-MM-dd")}.csv";
+        // }
 
         private double ParseGeoValue(string geoString)
         {

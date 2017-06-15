@@ -29,6 +29,7 @@
               -t dbo.HAMS_SMSAlertData \
               -t dbo.HAMS_SMSAlertItem \
               -t dbo.HAMS_DayTotal \
+              -t dbo.HAMS_CSV \
               -t dbo.IO_Users
 
     -->

@@ -8,6 +8,7 @@ namespace iocPubApi.Models
     {
         public virtual DbSet<HamsAlertData> HamsAlertData { get; set; }
         public virtual DbSet<HamsAlertItem> HamsAlertItem { get; set; }
+        public virtual DbSet<HamsCsv> HamsCsv { get; set; }
         public virtual DbSet<HamsDayTotal> HamsDayTotal { get; set; }
         public virtual DbSet<HamsNetData> HamsNetData { get; set; }
         public virtual DbSet<HamsNetDataItem> HamsNetDataItem { get; set; }
@@ -30,6 +31,12 @@ namespace iocPubApi.Models
                     .HasName("HAMS_AlertData_PK");
 
                 entity.Property(e => e.DataId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<HamsCsv>(entity =>
+            {
+                entity.HasKey(e => e.Csvid)
+                    .HasName("HAMS_CSV_PK");
             });
 
             modelBuilder.Entity<HamsDayTotal>(entity =>
