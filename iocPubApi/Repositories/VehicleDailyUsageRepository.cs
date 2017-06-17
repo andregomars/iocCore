@@ -17,8 +17,8 @@ namespace iocPubApi.Repositories
 
         IEnumerable<VehicleDailyUsage> IVehicleDailyUsageRepository.GetByDateRange(string vname, DateTime beginDate, DateTime endDate)
         {
-            string beginDay = beginDate.ToString("yyMMdd");
-            string endDay = endDate.ToString("yyMMdd");
+            // string beginDay = beginDate.ToString("yyMMdd");
+            // string endDay = endDate.ToString("yyMMdd");
 
             /* equivalent T-SQL of the LINQ above
             use io_online
@@ -31,7 +31,7 @@ namespace iocPubApi.Repositories
             ,vname = v.BusNo
             ,fid = f.FleetId
             ,fname = f.Name
-            ,date = m.YYMMDD
+            ,date = m.RealTime
             ,mileage = m.Mileage
             ,soccharged = m.SOC_Charged
             ,socused = m.SOC_Used
@@ -43,8 +43,8 @@ namespace iocPubApi.Repositories
             inner join IO_Fleet f
                 on v.FleetId = f.FleetID
             where v.BusNo = '3470'
-			and m.YYMMDD >= @beginDay
-            and m.YYMMDD <= @endDay
+			and m.RealTime >= @beginDay
+            and m.RealTime <= @endDay
 
              */
             IEnumerable<VehicleDailyUsage> usageList =
@@ -54,15 +54,18 @@ namespace iocPubApi.Repositories
                     join f in db.IoFleet
                         on v.FleetId equals f.FleetId
                     where v.BusNo == vname
-                        && DateTime.ParseExact(m.Yymmdd, "yyMMdd", null) >= beginDate 
-                        && DateTime.ParseExact(m.Yymmdd, "yyMMdd", null) <= endDate 
+                        && m.RealTime >= beginDate
+                        && m.RealTime <= endDate
+                        // && DateTime.ParseExact(m.Yymmdd, "yyMMdd", null) >= beginDate 
+                        // && DateTime.ParseExact(m.Yymmdd, "yyMMdd", null) <= endDate 
                     select new VehicleDailyUsage
                     {
                         vid = v.VehicleId 
                         ,vname = v.BusNo
                         ,fid = f.FleetId
                         ,fname = f.Name
-                        ,date = DateTime.ParseExact(m.Yymmdd, "yyMMdd", null)
+                        // ,date = DateTime.ParseExact(m.Yymmdd, "yyMMdd", null)
+                        ,date = m.RealTime?? Convert.ToDateTime("1900-01-01")
                         ,mileage = m.Mileage?? 0
                         ,soccharged = m.SocCharged?? 0
                         ,socused = m.SocUsed?? 0
@@ -75,11 +78,8 @@ namespace iocPubApi.Repositories
 
         public IEnumerable<VehicleDailyUsage> GetByFleet(string fname, DateTime beginDate, DateTime endDate)
         {
-            string beginDay = beginDate.ToString("yyMMdd");
-            string endDay = endDate.ToString("yyMMdd");
-
             /* equivalent T-SQL of the LINQ above
-                      use io_online
+            use io_online
             declare @beginDay varchar(6)
                 ,@endDay varchar(6)
             set @beginDay = '170603'
@@ -89,7 +89,7 @@ namespace iocPubApi.Repositories
             ,vname = v.BusNo
             ,fid = f.FleetId
             ,fname = f.Name
-            ,date = m.YYMMDD
+            ,date = m.RealTime
             ,mileage = m.Mileage
             ,soccharged = m.SOC_Charged
             ,socused = m.SOC_Used
@@ -101,8 +101,8 @@ namespace iocPubApi.Repositories
             inner join IO_Fleet f
                 on v.FleetId = f.FleetID
             where f.Name = 'avta'
-			and m.YYMMDD >= @beginDay
-            and m.YYMMDD <= @endDay
+			and m.RealTime >= @beginDay
+            and m.RealTime <= @endDay
 
              */
             IEnumerable<VehicleDailyUsage> usageList =
@@ -112,15 +112,15 @@ namespace iocPubApi.Repositories
                     join f in db.IoFleet
                         on v.FleetId equals f.FleetId
                     where f.Name == fname 
-                        && DateTime.ParseExact(m.Yymmdd, "yyMMdd", null) >= beginDate 
-                        && DateTime.ParseExact(m.Yymmdd, "yyMMdd", null) <= endDate 
+                        && m.RealTime >= beginDate
+                        && m.RealTime <= endDate
                     select new VehicleDailyUsage
                     {
                         vid = v.VehicleId 
                         ,vname = v.BusNo
                         ,fid = f.FleetId
                         ,fname = f.Name
-                        ,date = DateTime.ParseExact(m.Yymmdd, "yyMMdd", null)
+                        ,date = m.RealTime?? Convert.ToDateTime("1900-01-01") 
                         ,mileage = m.Mileage?? 0
                         ,soccharged = m.SocCharged?? 0
                         ,socused = m.SocUsed?? 0
