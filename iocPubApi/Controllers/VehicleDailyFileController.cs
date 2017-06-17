@@ -42,9 +42,10 @@ namespace iocPubApi.Controllers
         //GET api/download/12345abc
         [HttpGet("GetFileStream/{fileId}")]
         public async Task<IActionResult> GetFileStream(string fileId) {
-            var stream = await {{__get_stream_here__}}
-            var response = File(stream, "text/csv"); 
-            return response;
+            throw new NotImplementedException();
+            // var stream = await {{__get_stream_here__}}
+            // var response = File(stream, "text/csv"); 
+            // return response;
         }    
    }
 }
