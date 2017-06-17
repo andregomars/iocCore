@@ -35,6 +35,7 @@ namespace iocPubApi.Repositories
             ,fid = fleet.FleetId
             ,fname = fleet.Name
             ,fileid = csv.CSVId
+            ,filename = csv.FileName
             ,filetime = csv.DailyDate
             ,begintime = csv.StartTime
             ,endtime = csv.EndTime
@@ -66,6 +67,7 @@ namespace iocPubApi.Repositories
                         ,fid = fleet.FleetId
                         ,fname = fleet.Name
                         ,fileid = Convert.ToInt32(csv.Csvid)
+                        ,filename = csv.FileName
                         ,filetime = csv.DailyDate?? Convert.ToDateTime("1900-01-01")
                         ,begintime = csv.StartTime?? Convert.ToDateTime("1900-01-01")
                         ,endtime = csv.EndTime?? Convert.ToDateTime("1900-01-01")

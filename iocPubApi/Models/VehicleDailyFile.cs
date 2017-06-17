@@ -9,6 +9,7 @@ namespace iocPubApi.Models
         public int fid { get; set; }
         public string fname { get; set; }
         public int fileid { get; set; }
+        public string filename { get; set; }
         public DateTime filetime { get; set; } 
         public DateTime begintime { get; set; } 
         public DateTime endtime { get; set; } 
