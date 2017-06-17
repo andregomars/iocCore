@@ -51,6 +51,7 @@ namespace iocPubApi
             services.AddScoped<IVehicleSnapshotHistoryRepository, VehicleSnapshotHistoryRepository>();
             services.AddScoped<IVehicleAlertRepository, VehicleAlertRepository>();
             services.AddScoped<IVehicleDailyUsageRepository, VehicleDailyUsageRepository>();
+            services.AddScoped<IVehicleDailyFileRepository, VehicleDailyFileRepository>();
 
             // Add Swagger API documents
             services.AddSwaggerGen(c =>
