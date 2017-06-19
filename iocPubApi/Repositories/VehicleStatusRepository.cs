@@ -58,6 +58,15 @@ namespace iocPubApi.Repositories
                 on master.VehicleId = vehicle.VehicleId
             inner join IO_Fleet fleet
                 on vehicle.FleetId = fleet.FleetID
+            group by vehicle.VehicleId,vehicle.BusNo,fleet.FleetID, fleet.Name
+			    ,CASE master.SN 
+					WHEN 'N' THEN (CASE ISNUMERIC(master.Lat) WHEN 1 THEN master.Lat ELSE 0 END) 
+					ELSE (CASE ISNUMERIC(master.Lat) WHEN 1 THEN master.Lat ELSE 0 END) * -1 
+					END
+			    ,CASE master.EW WHEN 'E' THEN (CASE ISNUMERIC(master.Lng) WHEN 1 THEN master.Lng ELSE 0 END) 
+					ELSE (CASE ISNUMERIC(master.Lng) WHEN 1 THEN master.Lng ELSE 0 END) * -1 
+					END
+			    ,AxisX,AxisY,AxisZ,RealTime
            */
             var spnItems = from list in dataIdList
                                 join detail in db.HamsSmsitem
@@ -118,7 +127,7 @@ namespace iocPubApi.Repositories
 
             return statusList;
         }
-
+        
         
         private double GetChargingStatus(double leftChargingStatus, double rightChargingStatus)
         {
@@ -184,7 +193,7 @@ namespace iocPubApi.Repositories
                     on m.VehicleId = v.VehicleId
                 inner join IO_Fleet f
                     on v.FleetId = f.FleetID
-                where f.Name = 'HAMS06 test'
+                where f.Name = 'AVTA'
                 group by m.VehicleId) a
             inner join HAMS_SMSData b 
             on a.VehicleId = b.VehicleId
