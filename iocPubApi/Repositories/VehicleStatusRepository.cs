@@ -123,7 +123,8 @@ namespace iocPubApi.Repositories
                                 speed = group.Where(row => row.ItemCode.Equals("2I")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
                                 remainingenergy = group.Where(row => row.ItemCode.Equals("2C")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value) 
                                      - group.Where(row => row.ItemCode.Equals("2D")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value)
-                            });
+                            })
+                            .OrderBy(status => status.vname);
 
             return statusList;
         }

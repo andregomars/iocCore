@@ -86,6 +86,7 @@ namespace iocPubApi.Repositories
                             join fleet in db.IoFleet
                                 on vehicle.FleetId equals fleet.FleetId
                             where users.LogName == loginName
+                            orderby vehicle.BusNo ascending
                             select new VehicleIdentity 
                             { 
                                 Vid = vehicle.VehicleId, 
