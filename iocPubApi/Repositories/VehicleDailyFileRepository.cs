@@ -60,6 +60,7 @@ namespace iocPubApi.Repositories
                         on vehicle.BusNo.Trim() equals names
                     where csv.StartTime >= beginDate
                         && csv.EndTime <= endDate
+                    orderby fleet.Name, csv.DailyDate
                     select new VehicleDailyFile
                     {
                         vid = vehicle.VehicleId 
