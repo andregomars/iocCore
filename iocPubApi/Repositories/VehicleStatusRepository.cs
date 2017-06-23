@@ -9,7 +9,7 @@ using Chilkat;
 
 namespace iocPubApi.Repositories
 {
-    public class VehicleStatusRepository : IVehicleStatusRepository
+    public class VehicleStatusRepository : IVehicleStatusRepository, IDisposable
     {
         private readonly io_onlineContext db;
         private string folder;
@@ -408,5 +408,27 @@ namespace iocPubApi.Repositories
             double val = (left == 2 && right == 2) ? 1 : 0;
             return val;
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    db.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace iocPubApi.Repositories
 {
-    public class VehicleSnapshotRepository : IVehicleSnapshotRepository
+    public class VehicleSnapshotRepository : IVehicleSnapshotRepository, IDisposable
     {
         private readonly io_onlineContext db;
 
@@ -161,6 +161,28 @@ namespace iocPubApi.Repositories
                     };    
             
             return item.FirstOrDefault();
-        } 
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    db.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

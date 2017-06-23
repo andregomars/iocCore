@@ -8,15 +8,15 @@ using System.Linq;
 
 namespace iocPubApi.Repositories
 {
-    public class FleetIdentityRepository : IFleetIdentityRepository
+    public class FleetIdentityRepository : IFleetIdentityRepository, IDisposable
     {
-        private readonly io_onlineContext _context;
+        private readonly io_onlineContext db;
         private string iconBaseUrl;
         public IConfigurationRoot Configuration { get; }
 
         public FleetIdentityRepository(io_onlineContext context)
         {
-            _context = context;
+            db = context;
 
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -36,7 +36,7 @@ namespace iocPubApi.Repositories
             inner join IO_Fleet fleet
                 on vehicle.FleetId = fleet.FleetID
              */
-            var db = _context;
+            var db = this.db;
             var fleets = (from vehicle in db.IoVehicle
                         join fleet in db.IoFleet
                             on vehicle.FleetId equals fleet.FleetId
@@ -83,7 +83,7 @@ namespace iocPubApi.Repositories
 				on fleet.CompanyId = users.CompanyId
 			where users.LogName = 'iocontrol'
              */
-            var db = _context;
+            var db = this.db;
             IEnumerable<FleetIdentity> fleets;
 
             int? userType = (from users in db.IoUsers
@@ -118,6 +118,28 @@ namespace iocPubApi.Repositories
 
             return fleets;
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    db.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
 
     }
 }

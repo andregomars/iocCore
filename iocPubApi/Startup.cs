@@ -41,19 +41,17 @@ namespace iocPubApi
             services.AddCors();
 
             // Insert repositories
-            // services.AddScoped<IIoFleetRepository, IoFleetRepository>();
-            // services.AddScoped<IIoVehicleRepository, IoVehicleRepository>();
             services.AddScoped<IFleetIdentityRepository, FleetIdentityRepository>();
             services.AddScoped<IVehicleIdentityRepository, VehicleIdentityRepository>();
-            services.AddScoped<IHamsNetDataRepository, HamsNetDataRepository>();
-            services.AddScoped<IHamsNetDataItemRepository, HamsNetDataItemRepository>();
+            // services.AddScoped<IHamsNetDataRepository, HamsNetDataRepository>();
+            // services.AddScoped<IHamsNetDataItemRepository, HamsNetDataItemRepository>();
             services.AddScoped<IVehicleStatusRepository, VehicleStatusRepository>();
             services.AddScoped<IVehicleSnapshotRepository, VehicleSnapshotRepository>();
             services.AddScoped<IVehicleSnapshotHistoryRepository, VehicleSnapshotHistoryRepository>();
             services.AddScoped<IVehicleAlertRepository, VehicleAlertRepository>();
             services.AddScoped<IVehicleDailyUsageRepository, VehicleDailyUsageRepository>();
             services.AddScoped<IVehicleDailyFileRepository, VehicleDailyFileRepository>();
-
+        
             // Add Swagger API documents
             services.AddSwaggerGen(c =>
             {

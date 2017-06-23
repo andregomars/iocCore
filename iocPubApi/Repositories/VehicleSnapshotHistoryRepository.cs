@@ -9,7 +9,7 @@ using Chilkat;
 
 namespace iocPubApi.Repositories
 {
-    public class VehicleSnapshotHistoryRepository : IVehicleSnapshotHistoryRepository
+    public class VehicleSnapshotHistoryRepository : IVehicleSnapshotHistoryRepository, IDisposable
     {
         private Csv csv;
         private string folder; //= "/Users/andre/projects/iocCore/res/pubapi/csv";
@@ -54,5 +54,27 @@ namespace iocPubApi.Repositories
         {
             throw new NotImplementedException();
        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    csv.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
    }
 }

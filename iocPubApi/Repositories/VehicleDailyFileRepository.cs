@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace iocPubApi.Repositories
 {
-    public class VehicleDailyFileRepository : IVehicleDailyFileRepository
+    public class VehicleDailyFileRepository : IVehicleDailyFileRepository, IDisposable
     {
         private readonly io_onlineContext db;
 
@@ -90,6 +90,28 @@ namespace iocPubApi.Repositories
                         select $"{csv.FilePath.Trim()}\\{csv.FileName.Trim()}";
             return path.SingleOrDefault();
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    db.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
 
     }
 }

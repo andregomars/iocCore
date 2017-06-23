@@ -6,19 +6,17 @@ using System.Linq;
 
 namespace iocPubApi.Repositories
 {
-    public class VehicleAlertRepository : IVehicleAlertRepository
+    public class VehicleAlertRepository : IVehicleAlertRepository, IDisposable
     {
-        private readonly io_onlineContext _context;
+        private readonly io_onlineContext db;
 
         public VehicleAlertRepository(io_onlineContext context)
         {
-            _context = context;
+            db = context;
         }
 
        IEnumerable<VehicleAlert> IVehicleAlertRepository.GetRecentAllByVehicleName(string vname)
         {
-            var db = _context;
- 
            /* equivalent T-SQL of the LINQ above
             use io_online
             ;with dataIdList as
@@ -94,5 +92,27 @@ namespace iocPubApi.Repositories
         {
            throw new Exception("function GetByVehicleName not implemented yet.");
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    db.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

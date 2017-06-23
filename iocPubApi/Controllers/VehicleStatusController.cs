@@ -62,5 +62,6 @@ namespace iocPubApi.Controllers
         {
             return _repository.GetWholeDayByVehicleName(vehicleName, date);
         }
+
     }
 }
