@@ -22,7 +22,7 @@ namespace iocPubApi
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                // .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -35,8 +35,9 @@ namespace iocPubApi
             // Add framework services.
             services.AddDbContext<io_onlineContext>(opt => 
                 opt.UseSqlServer(Configuration.GetConnectionString("IO_OnlineDatabase")));
+            services.AddMemoryCache();
             services.AddMvc();
-            services.AddLogging();
+            // services.AddLogging();
             services.AddCors();
 
             // Insert repositories
@@ -63,8 +64,8 @@ namespace iocPubApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            // loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            // loggerFactory.AddDebug();
 
             // app.UseCors("IocPubApiPolicy");
             // Must use before MVC, Set up CORS policy to allow *

@@ -12,7 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
     <!-- $> dotnet ef dbcontext scaffold "Server=localhost;Database=IO_Online;User Id=xxx;Password=xxx\!\@\#" Microsoft.EntityFrameworkCore.SqlServer -t IO_Vehicle -f -d -o ./Models -->
     <!-- $> dotnet ef dbcontext scaffold \
@@ -39,6 +38,7 @@
     -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0-rc3" />
   </ItemGroup>
@@ -48,6 +48,9 @@
   </ItemGroup>
 </Project>
 <!--
-Publish to api web app root:
+Staging
 $> dotnet publish -c Production -o /c/inetpub/api
+
+Prod
+$> dotnet publish -c Production -o /C/IO_Online_2016/api
 -->
