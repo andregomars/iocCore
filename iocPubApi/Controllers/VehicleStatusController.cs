@@ -37,7 +37,7 @@ namespace iocPubApi.Controllers
         {
             IEnumerable<VehicleStatus> cacheEntry;
             string cacheKey = Key_FleetStatusList + fleetName;
-            if(!_cache.TryGetValue(Key_FleetStatusList, out cacheEntry))
+            if(!_cache.TryGetValue(cacheKey, out cacheEntry))
             {
                 cacheEntry = _repository.GetAllByFleetName(fleetName);
                 var cacheEntryOptions = new MemoryCacheEntryOptions()

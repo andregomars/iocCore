@@ -69,62 +69,105 @@ namespace iocPubApi.Repositories
 			    ,AxisX,AxisY,AxisZ,RealTime
            */
             var spnItems = from list in dataIdList
-                                join detail in db.HamsSmsitem
-                                    on list equals detail.DataId
-                                join master in db.HamsSmsdata
-                                    on detail.DataId equals master.DataId
-                                join vehicle in db.IoVehicle
-                                    on master.VehicleId equals vehicle.VehicleId
-                                join fleet in db.IoFleet
-                                    on vehicle.FleetId equals fleet.FleetId
-                                select new  
-                                {  
-                                    Vid = vehicle.VehicleId, 
-                                    Vname = vehicle.BusNo,
-                                    Fid = fleet.FleetId,
-                                    Fname = fleet.Name,
-                                    Lat = master.Sn.Trim().Equals("N") ? ConvertGeoValue(master.Lat, false) : ConvertGeoValue(master.Lat, true),
-                                    Lng = master.Ew.Trim().Equals("E") ? ConvertGeoValue(master.Lng, false) : ConvertGeoValue(master.Lng, true),
-                                    AxisX = double.Parse(master.AxisX),
-                                    AxisY = double.Parse(master.AxisY),
-                                    AxisZ = double.Parse(master.AxisZ),
-                                    ItemCode = detail.ItemCode,
-                                    ItemName = detail.ItemName,
-                                    Value = detail.Value,
-                                    Unit = detail.Unit,
-                                    RealTime = master.RealTime
-                                };
+                    join detail in db.HamsSmsitem
+                        on list equals detail.DataId
+                    join master in db.HamsSmsdata
+                        on detail.DataId equals master.DataId
+                    join vehicle in db.IoVehicle
+                        on master.VehicleId equals vehicle.VehicleId
+                    join fleet in db.IoFleet
+                        on vehicle.FleetId equals fleet.FleetId
+                    select new VehicleStatusWithCode
+                    {  
+                        vid = vehicle.VehicleId, 
+                        vname = vehicle.BusNo,
+                        fid = fleet.FleetId,
+                        fname = fleet.Name,
+                        lat = master.Sn.Trim().Equals("N") ? ConvertGeoValue(master.Lat, false) : ConvertGeoValue(master.Lat, true),
+                        lng = master.Ew.Trim().Equals("E") ? ConvertGeoValue(master.Lng, false) : ConvertGeoValue(master.Lng, true),
+                        axisx = double.Parse(master.AxisX),
+                        axisy = double.Parse(master.AxisY),
+                        axisz = double.Parse(master.AxisZ),
+                        itemcode = detail.ItemCode,
+                        itemname = detail.ItemName,
+                        value = detail.Value,
+                        unit = detail.Unit,
+                        realTime = master.RealTime
+                    };          
+
+                // db.Dispose();
+                // var vidList = spnItems.Select(r => r.vid).Distinct().OrderBy(id => id);
+                // var statusList = new List<VehicleStatus>();
+                // foreach(var id in vidList)
+                // {
+                //     var snapshotList = spnItems.Where(r => r.vid == id);
+                //     var status = new VehicleStatus() 
+                //     {
+                //         vid = snapshotList.First().vid,
+                //         vname = snapshotList.First().vname,
+                //         fid = snapshotList.First().fid,
+                //         fname = snapshotList.First().fname,
+                //         lat = snapshotList.First().lat,
+                //         lng = snapshotList.First().lng,
+                //         axisx = snapshotList.First().axisx,
+                //         axisy = snapshotList.First().axisy,
+                //         axisz = snapshotList.First().axisz,
+                //         updated = snapshotList.First().realTime
+                //     };
+
+                //     foreach(var snapshot in snapshotList)
+                //     {
+                //         switch(snapshot.itemcode.ToUpper())
+                //         {
+                //             case "2A":
+                //                 status.soc = snapshot.value;
+                //                 break;
+                //             case "2M":
+                //                 status.status = 1;
+                //                 break;
+                //             case "2L":
+                //                 status.range = snapshot.value;
+                //                 break;
+                //             case "2K":
+                //                 status.mileage = snapshot.value;
+                //                 break;
+                //             default:
+                //                 break;
+                //         } 
+                //     }
+                //     statusList.Add(status);
+                // }
 
             /* Pivot the table */
             IEnumerable<VehicleStatus> statusList = spnItems
-                            .GroupBy(item => new { item.Vid, item.Vname, item.Fid, item.Fname, 
-                                item.Lat, item.Lng, item.AxisX, item.AxisY, item.AxisZ, item.RealTime })
-                            .Select(group => new VehicleStatus 
-                            {
-                                vid = group.Key.Vid,
-                                vname = group.Key.Vname,
-                                fid = group.Key.Fid,
-                                fname = group.Key.Fname,
-                                lat = group.Key.Lat,
-                                lng = group.Key.Lng,
-                                axisx = group.Key.AxisX,
-                                axisy = group.Key.AxisY,
-                                axisz = group.Key.AxisZ,
-                                updated = group.Key.RealTime,
-                                soc = group.Where(row => row.ItemCode.Equals("2A")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                status = GetChargingStatus(Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2M")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value))
-                                    , Convert.ToInt32(group.Where(row => row.ItemCode.Equals("2N")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value))),
-                                range = group.Where(row => row.ItemCode.Equals("2L")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                mileage = group.Where(row => row.ItemCode.Equals("2K")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                voltage = group.Where(row => row.ItemCode.Equals("2F")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                current = group.Where(row => row.ItemCode.Equals("2E")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                temperaturehigh = group.Where(row => row.ItemCode.Equals("2H")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                temperaturelow = group.Where(row => row.ItemCode.Equals("2G")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                speed = group.Where(row => row.ItemCode.Equals("2I")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value),
-                                remainingenergy = group.Where(row => row.ItemCode.Equals("2C")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value) 
-                                     - group.Where(row => row.ItemCode.Equals("2D")).DefaultIfEmpty().Max(row => row == null ? 0 : row.Value)
-                            })
-                            .OrderBy(status => status.vname);
+                .GroupBy(item => new { item.vid, item.vname, item.fid, item.fname, 
+                    item.lat, item.lng, item.axisx, item.axisy, item.axisz, item.realTime })
+                .Select(group => new VehicleStatus 
+                {
+                    vid = group.Key.vid,
+                    vname = group.Key.vname,
+                    fid = group.Key.fid,
+                    fname = group.Key.fname,
+                    lat = group.Key.lat,
+                    lng = group.Key.lng,
+                    axisx = group.Key.axisx,
+                    axisy = group.Key.axisy,
+                    axisz = group.Key.axisz,
+                    updated = group.Key.realTime,
+                    soc = group.Where(row => row.itemcode.Equals("2A")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value),
+                    status = GetChargingStatus(Convert.ToInt32(group.Where(row => row.itemcode.Equals("2M")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value))
+                        , Convert.ToInt32(group.Where(row => row.itemcode.Equals("2N")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value))),
+                    range = group.Where(row => row.itemcode.Equals("2L")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value),
+                    mileage = group.Where(row => row.itemcode.Equals("2K")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value),
+                    voltage = group.Where(row => row.itemcode.Equals("2F")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value),
+                    current = group.Where(row => row.itemcode.Equals("2E")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value),
+                    temperaturehigh = group.Where(row => row.itemcode.Equals("2H")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value),
+                    temperaturelow = group.Where(row => row.itemcode.Equals("2G")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value),
+                    speed = group.Where(row => row.itemcode.Equals("2I")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value),
+                    remainingenergy = group.Where(row => row.itemcode.Equals("2C")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value) 
+                            - group.Where(row => row.itemcode.Equals("2D")).DefaultIfEmpty().Max(row => row == null ? 0 : row.value)
+                })
+                .OrderBy(status => status.vname);
 
             return statusList;
         }
@@ -155,7 +198,7 @@ namespace iocPubApi.Repositories
             //     return 0;
         }
 
-       IEnumerable<VehicleStatus> IVehicleStatusRepository.GetRecentAllByVehicleName(string vname)
+       public IEnumerable<VehicleStatus> GetRecentAllByVehicleName(string vname)
         {
            /* equivalent T-SQL of the LINQ above
             use io_online
@@ -181,7 +224,7 @@ namespace iocPubApi.Repositories
 
 
 
-        IEnumerable<VehicleStatus> IVehicleStatusRepository.GetAllByFleetName(string fname)
+        public IEnumerable<VehicleStatus> GetAllByFleetName(string fname)
         {
            /* equivalent T-SQL of the LINQ above
             use io_online
@@ -215,11 +258,11 @@ namespace iocPubApi.Repositories
                         }) join b in db.HamsSmsdata
                             on new { a.VehicleId, a.RealTime } equals new { b.VehicleId, b.RealTime }
                         select b.DataId;
-            
+
             return GetAllByDataId(dataIdList);
         }
 
-        VehicleStatus IVehicleStatusRepository.GetByVehicleName(string vname)
+        public VehicleStatus GetByVehicleName(string vname)
         {
            /* equivalent T-SQL of the LINQ above
             use io_online

@@ -38,7 +38,7 @@ namespace iocPubApi.Controllers
         {
             IEnumerable<VehicleIdentity> cacheEntry;
             string cacheKey = Key_VehicleList + loginName;
-            if(!_cache.TryGetValue(Key_VehicleList, out cacheEntry))
+            if(!_cache.TryGetValue(cacheKey, out cacheEntry))
             {
                 cacheEntry = _repository.GetAllByUser(loginName);
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
