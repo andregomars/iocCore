@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace iocPubApi.Repositories
 {
-    public class VehicleAlertRepository : IVehicleAlertRepository, IDisposable
+    public class VehicleAlertRepository : IVehicleAlertRepository
     {
         private readonly io_onlineContext db;
 
@@ -94,26 +94,26 @@ namespace iocPubApi.Repositories
            throw new Exception("function GetByVehicleName not implemented yet.");
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; 
+        // #region IDisposable Support
+        // private bool disposedValue = false; 
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    db.Dispose();
-                }
-                disposedValue = true;
-            }
-        }
+        // protected virtual void Dispose(bool disposing)
+        // {
+        //     if (!disposedValue)
+        //     {
+        //         if (disposing)
+        //         {
+        //             db.Dispose();
+        //         }
+        //         disposedValue = true;
+        //     }
+        // }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
+        // public void Dispose()
+        // {
+        //     Dispose(true);
+        //     GC.SuppressFinalize(this);
+        // }
+        // #endregion
     }
 }

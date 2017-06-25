@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace iocPubApi.Repositories
 {
-    public class FleetIdentityRepository : IFleetIdentityRepository, IDisposable
+    public class FleetIdentityRepository : IFleetIdentityRepository
     {
         private readonly io_onlineContext db;
         private string iconBaseUrl;
@@ -120,27 +120,27 @@ namespace iocPubApi.Repositories
             return fleets;
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; 
+        // #region IDisposable Support
+        // private bool disposedValue = false; 
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    db.Dispose();
-                }
-                disposedValue = true;
-            }
-        }
+        // protected virtual void Dispose(bool disposing)
+        // {
+        //     if (!disposedValue)
+        //     {
+        //         if (disposing)
+        //         {
+        //             db.Dispose();
+        //         }
+        //         disposedValue = true;
+        //     }
+        // }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
+        // public void Dispose()
+        // {
+        //     Dispose(true);
+        //     GC.SuppressFinalize(this);
+        // }
+        // #endregion
 
     }
 }
