@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using iocPubApi.Models;
 using iocPubApi.Repositories;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace iocPubApi.Controllers
 {
@@ -16,12 +17,15 @@ namespace iocPubApi.Controllers
         private readonly IVehicleStatusRepository _repository;
         private readonly IMemoryCache _cache;
         private const string Key_FleetStatusList = "FleetStatusList_";
+        ILogger<VehicleStatusController> _logger;
 
         public VehicleStatusController(IVehicleStatusRepository repository,
-            IMemoryCache memCache)
+            IMemoryCache memCache,
+            ILogger<VehicleStatusController> logger)
         {
             _repository = repository;
             _cache = memCache; 
+            _logger = logger;
         }
 
         // GET /api/VehicleStatus/GetByVehicleName/{vehicleName}
@@ -35,6 +39,7 @@ namespace iocPubApi.Controllers
         [HttpGet("GetAllByFleetName/{fleetName}")]
         public IEnumerable<VehicleStatus> GetAllByFleetName(string fleetName)
         {
+            _logger.LogInformation("call function getallbyfleetname...");
             IEnumerable<VehicleStatus> cacheEntry;
             string cacheKey = Key_FleetStatusList + fleetName;
             if(!_cache.TryGetValue(cacheKey, out cacheEntry))
