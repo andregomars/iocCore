@@ -18,6 +18,7 @@ namespace iocPubApi.Repositories
         public VehicleStatusRepository(io_onlineContext context)
         {
             db = context;
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

@@ -13,6 +13,7 @@ namespace iocPubApi.Repositories
         public VehicleIdentityRepository(io_onlineContext context)
         {
             db = context;
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public IEnumerable<VehicleIdentity> GetAll()

@@ -13,6 +13,7 @@ namespace iocPubApi.Repositories
         public VehicleDailyUsageRepository(io_onlineContext context)
         {
             db = context;
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         IEnumerable<VehicleDailyUsage> IVehicleDailyUsageRepository.GetByDateRange(string vname, DateTime beginDate, DateTime endDate)

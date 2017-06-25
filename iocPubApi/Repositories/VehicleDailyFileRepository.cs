@@ -13,6 +13,7 @@ namespace iocPubApi.Repositories
         public VehicleDailyFileRepository(io_onlineContext context)
         {
             db = context;
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public IEnumerable<VehicleDailyFile> GetFileList(string[] vnames, DateTime beginDate, DateTime endDate)

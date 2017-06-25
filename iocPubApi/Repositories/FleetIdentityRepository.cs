@@ -17,6 +17,7 @@ namespace iocPubApi.Repositories
         public FleetIdentityRepository(io_onlineContext context)
         {
             db = context;
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

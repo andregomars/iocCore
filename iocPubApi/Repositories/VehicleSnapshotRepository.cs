@@ -13,6 +13,7 @@ namespace iocPubApi.Repositories
         public VehicleSnapshotRepository(io_onlineContext context)
         {
             db = context;
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         private IEnumerable<VehicleSnapshot> GetAllByDataId(IEnumerable<Guid> dataIdList)

@@ -13,6 +13,7 @@ namespace iocPubApi.Repositories
         public VehicleAlertRepository(io_onlineContext context)
         {
             db = context;
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
        IEnumerable<VehicleAlert> IVehicleAlertRepository.GetRecentAllByVehicleName(string vname)
