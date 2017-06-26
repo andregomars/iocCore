@@ -16,7 +16,7 @@ namespace iocPubApi.Repositories
             db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        IEnumerable<VehicleDailyUsage> IVehicleDailyUsageRepository.GetByDateRange(string vname, DateTime beginDate, DateTime endDate)
+        public IEnumerable<VehicleDailyUsage> GetByDateRange(string vname, DateTime beginDate, DateTime endDate)
         {
             // string beginDay = beginDate.ToString("yyMMdd");
             // string endDay = endDate.ToString("yyMMdd");
@@ -57,8 +57,7 @@ namespace iocPubApi.Repositories
                     where v.BusNo == vname
                         && m.RealTime >= beginDate
                         && m.RealTime <= endDate
-                        // && DateTime.ParseExact(m.Yymmdd, "yyMMdd", null) >= beginDate 
-                        // && DateTime.ParseExact(m.Yymmdd, "yyMMdd", null) <= endDate 
+                    orderby m.RealTime ascending    
                     select new VehicleDailyUsage
                     {
                         vid = v.VehicleId 
@@ -115,6 +114,7 @@ namespace iocPubApi.Repositories
                     where f.Name == fname 
                         && m.RealTime >= beginDate
                         && m.RealTime <= endDate
+                    orderby m.RealTime ascending
                     select new VehicleDailyUsage
                     {
                         vid = v.VehicleId 

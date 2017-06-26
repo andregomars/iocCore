@@ -6,6 +6,7 @@ using System.Linq;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Chilkat;
+using Microsoft.Extensions.Logging;
 
 namespace iocPubApi.Repositories
 {
@@ -14,9 +15,12 @@ namespace iocPubApi.Repositories
         private readonly io_onlineContext db;
         private string folder;
         public IConfigurationRoot Configuration { get; }
+        private ILogger<VehicleStatusRepository> _logger;
 
-        public VehicleStatusRepository(io_onlineContext context)
+        public VehicleStatusRepository(io_onlineContext context,
+            ILogger<VehicleStatusRepository> logger)
         {
+            _logger = logger;
             db = context;
             db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
@@ -67,7 +71,7 @@ namespace iocPubApi.Repositories
 			    ,CASE master.EW WHEN 'E' THEN (CASE ISNUMERIC(master.Lng) WHEN 1 THEN master.Lng ELSE 0 END) 
 					ELSE (CASE ISNUMERIC(master.Lng) WHEN 1 THEN master.Lng ELSE 0 END) * -1 
 					END
-			    ,AxisX,AxisY,AxisZ,RealTime
+			    ,AxisX,AxisY,AxisZ,detail.ItemCode, detail.ItemName, detail.Value, detail.Unit, RealTime
            */
             var spnItems = from list in dataIdList
                     join detail in db.HamsSmsitem

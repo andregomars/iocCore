@@ -6,5 +6,6 @@ namespace iocPubApi.Repositories
     public interface IPingRepository
     {
         string PingDB();
+        string Reproduce();
     }
 }

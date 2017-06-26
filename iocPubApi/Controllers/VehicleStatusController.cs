@@ -17,7 +17,7 @@ namespace iocPubApi.Controllers
         private readonly IVehicleStatusRepository _repository;
         private readonly IMemoryCache _cache;
         private const string Key_FleetStatusList = "FleetStatusList_";
-        ILogger<VehicleStatusController> _logger;
+        private ILogger<VehicleStatusController> _logger;
 
         public VehicleStatusController(IVehicleStatusRepository repository,
             IMemoryCache memCache,
@@ -32,8 +32,16 @@ namespace iocPubApi.Controllers
         [HttpGet("GetByVehicleName/{vehicleName}")]
         public VehicleStatus GetByVehicleName(string vehicleName)
         {
-            return _repository.GetByVehicleName(vehicleName);
-        }
+            VehicleStatus status = new VehicleStatus();
+            try {
+                status = _repository.GetByVehicleName(vehicleName);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+            }
+            return status;
+       }
 
         // GET /api/VehicleStatus/GetAllByFleetName/{fleetName}
         [HttpGet("GetAllByFleetName/{fleetName}")]

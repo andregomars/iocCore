@@ -30,5 +30,11 @@ namespace iocPubApi.Controllers
         {
             return _repository.PingDB();
         }
+
+        [HttpGet("Reproduce")]
+        public string Reproduce()
+        {
+            return _repository.Reproduce();
+        }
     }
 }
