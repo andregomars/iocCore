@@ -52,26 +52,10 @@ namespace iocPubApi.Repositories
         
         private VehicleStatus GetByVehicleName(string vname)
         {
-           /* equivalent T-SQL of the LINQ above
-            use io_online
-            ;with dataIdList as
-            (
-                select top (1) m.DataId 
-                from HAMS_SMSData m
-                inner join IO_Vehicle v
-                    on m.VehicleId = v.VehicleId
-                where v.BusNo = '3470'
-                order by m.RealTime desc
-			)
-           */
-            var dataIdList = (from m in db.HamsSmsdata
-                        join v in db.IoVehicle
-                            on m.VehicleId equals v.VehicleId
-                        where v.BusNo == vname
-                        orderby m.RealTime descending 
-                        select m.DataId).Take(1);
-            
-            return GetAllByDataId(dataIdList).FirstOrDefault();
+            var statusList = db.Set<VehicleStatus>().FromSql("dbo.UP_HAMS_GetLatestVehicleStatusByVehicle @VehicleName = {0}", vname);
+            _logger.LogInformation("status list count is "+statusList.Count().ToString());
+            if (statusList != null) return statusList.FirstOrDefault(); 
+            else return null;
         }  
 
         private IEnumerable<VehicleStatus> GetAllByDataId(IEnumerable<Guid> dataIdList)
