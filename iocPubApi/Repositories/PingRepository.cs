@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
+using Dapper;
+using System.Data;
 
 namespace iocPubApi.Repositories
 {
@@ -40,6 +42,8 @@ namespace iocPubApi.Repositories
             try
             {
                 var resultObj = GetByVehicleName("3470");
+                // var resultObj = GetSampleByEF();
+                // var resultObj = GetSampleByDapper();
                 if (resultObj != null)
                     json = JsonConvert.SerializeObject(resultObj);
             }
@@ -49,10 +53,28 @@ namespace iocPubApi.Repositories
             }
             return json;            
         }
+
+        // private SampleDbSet GetSampleByDapper()
+        // {
+        //     var conn = db.Database.GetDbConnection();
+        //     var result = conn.Query<SampleDbSet>("UP_Ping", new { pa="andre" }, 
+        //         commandType: CommandType.StoredProcedure).SingleOrDefault();
+        //     return result;
+        // }
         
+        // private SampleDbSet GetSampleByEF()
+        // {
+        //     var list = db.Set<SampleDbSet>().FromSql("EXECUTE dbo.UP_Ping {0}", "andre");
+        //     _logger.LogInformation("sample list count is "+list.Count().ToString());
+        //     if (list != null) return list.FirstOrDefault(); 
+        //     else return null;
+        // }  
+
         private VehicleStatus GetByVehicleName(string vname)
         {
-            var statusList = db.Set<VehicleStatus>().FromSql("dbo.UP_HAMS_GetLatestVehicleStatusByVehicle @VehicleName = {0}", vname);
+            var conn = db.Database.GetDbConnection();
+            var statusList = conn.Query<VehicleStatus>("dbo.UP_HAMS_GetLatestVehicleStatusByVehicle", new { VehicleName="3470"},
+                commandType: CommandType.StoredProcedure);
             _logger.LogInformation("status list count is "+statusList.Count().ToString());
             if (statusList != null) return statusList.FirstOrDefault(); 
             else return null;
