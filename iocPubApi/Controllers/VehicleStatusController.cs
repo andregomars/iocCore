@@ -70,7 +70,7 @@ namespace iocPubApi.Controllers
         }
 
         // GET /api/VehicleStatus/GetWholeDayByVehicleName/{vehicleName}
-        [HttpGet("GetWholeDayByVehicleName/{vehicleName}")]
+        [HttpGet("GetWholeDayByVehicleName/{vehicleName}/{date}")]
         public IEnumerable<VehicleStatus> GetWholeDayByVehicleName(string vehicleName, DateTime date)
         {
             return _repository.GetWholeDayByVehicleName(vehicleName, date);
