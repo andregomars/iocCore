@@ -1,24 +1,15 @@
-
-use io_online
-go
-
-create  proc dbo.UP_HAMS_GetLatestVehicleStatusByFleet @FleetName nvarchar(100)
+CREATE  proc dbo.UP_HAMS_GetLatestVehicleStatusByVehicle 
+@VehicleName nvarchar(50)
 as
 
 ;with dataIdList as
 (
-	select b.dataid from
-        (select m.VehicleId,max(RealTime) as RealTime 
-        from HAMS_SMSData m
-        inner join IO_Vehicle v
-            on m.VehicleId = v.VehicleId
-        inner join IO_Fleet f
-            on v.FleetId = f.FleetID
-        where f.Name = @FleetName
-        group by m.VehicleId) a
-    inner join HAMS_SMSData b 
-    on a.VehicleId = b.VehicleId
-        and a.RealTime = b.RealTime
+	select top (1) m.DataId 
+    from HAMS_SMSData m
+    inner join IO_Vehicle v
+        on m.VehicleId = v.VehicleId
+    where v.BusNo = @VehicleName
+    order by m.RealTime desc
 ),
 snapshotList as
 (
@@ -60,7 +51,7 @@ group by vehicle.VehicleId,vehicle.BusNo,fleet.FleetID, fleet.Name
 		END
 	,AxisX,AxisY,AxisZ,detail.ItemCode, detail.ItemName, detail.Value, detail.Unit, RealTime
 )
-select vid, vname, fid, fname, lat, lng, axisx, axisy, axisz, realtime,
+select vid, vname, fid, fname, lat, lng, axisx, axisy, axisz,
 soc = ISNULL([2A], 0),
 status = CASE WHEN ISNULL([2M],0) = 2 and ISNULL([2N],0) = 2 THEN 1 ELSE 0 END,
 range = ISNULL([2L],0),
@@ -70,7 +61,8 @@ voltage = ISNULL([2F],0),
 temperaturehigh = ISNULL([2H],0),
 temperaturelow = ISNULL([2G],0),
 speed = ISNULL([2I],0),
-remainingenergy = ISNUll([2C],0) - ISNULL([2D],0)
+remainingenergy = ISNUll([2C],0) - ISNULL([2D],0),
+updated = realtime
 from 
 (SELECT vid,vname, fid, fname, lat, lng, axisx, axisy, axisz, realtime, ItemCode, Value   
     FROM snapshotList
@@ -81,3 +73,6 @@ AVG(Value)
 FOR ItemCode IN ([2A],[2B],[2C],[2D],[2E],[2F],[2G],[2H],[2I],[2J],[2K],[2L],[2M],[2N],[2T],[2U],[2Z])  
 ) AS pvt
 order by pvt.Vname
+
+
+
