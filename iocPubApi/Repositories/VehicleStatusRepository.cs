@@ -408,7 +408,7 @@ namespace iocPubApi.Repositories
         //    return GetAllByDataId(dataIdList);
             var conn = db.Database.GetDbConnection();
             var statusList = conn.Query<VehicleStatus>("dbo.UP_HAMS_GetWholeDayVehicleStatusByVehicle", 
-                new { VehicleName = vname, Date = date },
+                new { VehicleName = vname, Date = date.ToString("yyyy-MM-dd") },
                 commandType: CommandType.StoredProcedure);
             return statusList;
         }
