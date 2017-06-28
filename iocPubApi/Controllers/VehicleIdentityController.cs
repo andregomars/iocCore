@@ -42,7 +42,7 @@ namespace iocPubApi.Controllers
             {
                 cacheEntry = _repository.GetAllByUser(loginName);
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
 
                 _cache.Set(cacheKey, cacheEntry, cacheEntryOptions);
             }

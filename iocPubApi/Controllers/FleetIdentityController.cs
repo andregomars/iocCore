@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 using iocPubApi.Models;
 using iocPubApi.Repositories;
@@ -13,10 +14,14 @@ namespace iocPubApi.Controllers
     public class FleetIdentityController : Controller
     {
         private readonly IFleetIdentityRepository _repository;
+        private readonly IMemoryCache _cache;
+        private const string Key_FleetIdentityList = "FleetIdentity_";
 
-        public FleetIdentityController(IFleetIdentityRepository repository)
+        public FleetIdentityController(IFleetIdentityRepository repository,
+            IMemoryCache memCache)
         {
             _repository = repository;
+            _cache = memCache;
         }
 
         // GET api/fleetidentity
@@ -30,7 +35,18 @@ namespace iocPubApi.Controllers
         [HttpGet("LoginName/{loginName}")]
         public IEnumerable<FleetIdentity> GetAllByUser(string loginName)
         {
-            return _repository.GetAllFleetsByUser(loginName);
+            IEnumerable<FleetIdentity> cacheEntry;
+            string cacheKey = Key_FleetIdentityList + loginName;
+            if(!_cache.TryGetValue(cacheKey, out cacheEntry))
+            {
+                cacheEntry = _repository.GetAllFleetsByUser(loginName);
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+
+                _cache.Set(cacheKey, cacheEntry, cacheEntryOptions);
+            }
+
+            return cacheEntry;
         }                            
     }
 }

@@ -32,26 +32,19 @@ namespace iocPubApi.Controllers
         [HttpGet("GetByVehicleName/{vehicleName}")]
         public VehicleStatus GetByVehicleName(string vehicleName)
         {
-            VehicleStatus status = new VehicleStatus();
-            try {
-                status = _repository.GetByVehicleName(vehicleName);
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex.StackTrace);
-            }
-            return status;
+            return _repository.GetByVehicleName(vehicleName);
        }
 
         // GET /api/VehicleStatus/GetAllByFleetName/{fleetName}
         [HttpGet("GetAllByFleetName/{fleetName}")]
         public IEnumerable<VehicleStatus> GetAllByFleetName(string fleetName)
         {
-            _logger.LogInformation("call function getallbyfleetname...");
+            _logger.LogInformation("call function getallbyfleetname");
             IEnumerable<VehicleStatus> cacheEntry;
             string cacheKey = Key_FleetStatusList + fleetName;
             if(!_cache.TryGetValue(cacheKey, out cacheEntry))
             {
+                _logger.LogInformation("call function getallbyfleetname and fetch from database");
                 cacheEntry = _repository.GetAllByFleetName(fleetName);
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(1));

@@ -5,6 +5,8 @@ using iocPubApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using Dapper;
+using System.Data;
 
 namespace iocPubApi.Repositories
 {
@@ -46,7 +48,6 @@ namespace iocPubApi.Repositories
                             Fname = fleet.Name,
                             VehicleType = fleet.VehicleType.Trim(),
                             Icon = GetIconUrl(fleet.Icon, fleet.VehicleType)
-                        // }).Distinct();
                         }).GroupBy(r => new { r.Fname, r.VehicleType, r.Icon })
                             .Select(g => new FleetIdentity{
                                 Fname = g.Key.Fname,
@@ -71,53 +72,58 @@ namespace iocPubApi.Repositories
 
         public IEnumerable<FleetIdentity> GetAllFleetsByUser(string loginName) 
         {
-            /* equivalent T-SQL
-  		    select distinct
-                Fname = fleet.Name,
-                VehicleType = fleet.VehicleType,
-                Icon = 'http://52.35.12.17/online2017/hams/images/fleeticon/'+ 
-                    RTRIM(Icon) + '/' + RTRIM(VehicleType) + '.png'
-            from IO_Vehicle vehicle
-            inner join IO_Fleet fleet
-                on vehicle.FleetId = fleet.FleetID
-			inner join IO_Users users
-				on fleet.CompanyId = users.CompanyId
-			where users.LogName = 'iocontrol'
-             */
-            var db = this.db;
-            IEnumerable<FleetIdentity> fleets;
+            var conn = db.Database.GetDbConnection();
+            var fleetList = conn.Query<FleetIdentity>("dbo.UP_HAMS_GetFleetListByLoginName", 
+                new { LoginName = loginName },
+                commandType: CommandType.StoredProcedure);
+            return fleetList;
+            // /* equivalent T-SQL
+  		    // select distinct
+            //     Fname = fleet.Name,
+            //     VehicleType = fleet.VehicleType,
+            //     Icon = 'http://52.35.12.17/online2017/hams/images/fleeticon/'+ 
+            //         RTRIM(Icon) + '/' + RTRIM(VehicleType) + '.png'
+            // from IO_Vehicle vehicle
+            // inner join IO_Fleet fleet
+            //     on vehicle.FleetId = fleet.FleetID
+			// inner join IO_Users users
+			// 	on fleet.CompanyId = users.CompanyId
+			// where users.LogName = 'iocontrol'
+            //  */
+            // var db = this.db;
+            // IEnumerable<FleetIdentity> fleets;
 
-            int? userType = (from users in db.IoUsers
-                            where users.LogName == loginName
-                            select users.UserType).SingleOrDefault();
+            // int? userType = (from users in db.IoUsers
+            //                 where users.LogName == loginName
+            //                 select users.UserType).SingleOrDefault();
             
-            // return all fleets and vehicles when user is ioc user or admin 
-            if (userType == 4 || userType == 2) 
-                fleets = this.GetAllFleets(); 
-            // return all vehicles when user is manufacturer or consumer
-            else if (userType == 8 || userType == 16 || userType == 32 || userType == 64)
-                fleets = (from vehicle in db.IoVehicle
-                        join fleet in db.IoFleet
-                            on vehicle.FleetId equals fleet.FleetId
-                        join users in db.IoUsers
-                            on fleet.CompanyId equals users.CompanyId
-                        where users.LogName == loginName
-                        select new FleetIdentity 
-                        { 
-                            Fname = fleet.Name,
-                            VehicleType = fleet.VehicleType.Trim(),
-                            Icon = GetIconUrl(fleet.Icon, fleet.VehicleType)
-                        }).GroupBy(r => new { r.Fname, r.VehicleType, r.Icon })
-                            .Select(g => new FleetIdentity{
-                                Fname = g.Key.Fname,
-                                VehicleType = g.Key.VehicleType,
-                                Icon = g.Key.Icon
-                            });
-            else
-            // return nothing when user not found in ioc user list, or no user type is found
-                fleets = null;
+            // // return all fleets and vehicles when user is ioc user or admin 
+            // if (userType == 4 || userType == 2) 
+            //     fleets = this.GetAllFleets(); 
+            // // return all vehicles when user is manufacturer or consumer
+            // else if (userType == 8 || userType == 16 || userType == 32 || userType == 64)
+            //     fleets = (from vehicle in db.IoVehicle
+            //             join fleet in db.IoFleet
+            //                 on vehicle.FleetId equals fleet.FleetId
+            //             join users in db.IoUsers
+            //                 on fleet.CompanyId equals users.CompanyId
+            //             where users.LogName == loginName
+            //             select new FleetIdentity 
+            //             { 
+            //                 Fname = fleet.Name,
+            //                 VehicleType = fleet.VehicleType.Trim(),
+            //                 Icon = GetIconUrl(fleet.Icon, fleet.VehicleType)
+            //             }).GroupBy(r => new { r.Fname, r.VehicleType, r.Icon })
+            //                 .Select(g => new FleetIdentity{
+            //                     Fname = g.Key.Fname,
+            //                     VehicleType = g.Key.VehicleType,
+            //                     Icon = g.Key.Icon
+            //                 });
+            // else
+            // // return nothing when user not found in ioc user list, or no user type is found
+            //     fleets = null;
 
-            return fleets;
+            // return fleets;
         }
 
         // #region IDisposable Support
