@@ -23,6 +23,7 @@ namespace iocPubApi.Models
         public double temperaturelow { get; set; }
         public double speed { get; set; }
         public double remainingenergy { get; set; }
+        public double actualdistance { get; set; }
         public DateTime? updated { get; set; }
     }
 
