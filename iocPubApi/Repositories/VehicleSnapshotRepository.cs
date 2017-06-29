@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using iocPubApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Data;
+using Dapper;
 
 namespace iocPubApi.Repositories
 {
@@ -50,26 +52,31 @@ namespace iocPubApi.Repositories
 
         IEnumerable<VehicleSnapshot> IVehicleSnapshotRepository.GetByVehicleName(string vname)
         {
-            /* equivalent T-SQL of the LINQ above
-            use io_online
-            ;with dataIdList as
-            (
-                select top (1) m.DataId 
-                from HAMS_SMSData m
-                inner join IO_Vehicle v
-                    on m.VehicleId = v.VehicleId
-                where v.BusNo = '4003'
-                order by m.RealTime desc
-			)
-           */
-            var dataIdList = (from m in db.HamsSmsdata
-                        join v in db.IoVehicle
-                            on m.VehicleId equals v.VehicleId
-                        where v.BusNo == vname
-                        orderby m.RealTime descending 
-                        select m.DataId).Take(1);
+            var conn = db.Database.GetDbConnection();
+            var snapshotList = conn.Query<VehicleSnapshot>("dbo.UP_HAMS_GetLatestVehicleSnapshotByVehicle", 
+                new { VehicleName = vname},
+                commandType: CommandType.StoredProcedure);
+            return snapshotList;
+        //     /* equivalent T-SQL of the LINQ above
+        //     use io_online
+        //     ;with dataIdList as
+        //     (
+        //         select top (1) m.DataId 
+        //         from HAMS_SMSData m
+        //         inner join IO_Vehicle v
+        //             on m.VehicleId = v.VehicleId
+        //         where v.BusNo = '4003'
+        //         order by m.RealTime desc
+		// 	)
+        //    */
+        //     var dataIdList = (from m in db.HamsSmsdata
+        //                 join v in db.IoVehicle
+        //                     on m.VehicleId equals v.VehicleId
+        //                 where v.BusNo == vname
+        //                 orderby m.RealTime descending 
+        //                 select m.DataId).Take(1);
 
-            return GetAllByDataId(dataIdList);
+        //     return GetAllByDataId(dataIdList);
         }
 
                 
