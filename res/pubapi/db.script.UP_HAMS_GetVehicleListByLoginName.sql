@@ -30,7 +30,7 @@ begin
         Vname = vehicle.BusNo,
         Fid = fleet.FleetId,
         Fname = fleet.Name
-    from IO_Users users
+    from IO_Users users with(nolock)
     inner join IO_Vehicle vehicle with(nolock)
         on users.CompanyId = vehicle.CompanyId
     inner join IO_Fleet fleet with(nolock)

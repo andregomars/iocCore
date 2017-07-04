@@ -2,6 +2,13 @@ use io_online
 go
 
 --primary key
+alter table IO_Users
+add CONSTRAINT [IO_Users_PK] PRIMARY KEY CLUSTERED 
+(
+	[UserID] ASC
+)
+go
+
 alter table IO_Fleet
 add CONSTRAINT [IO_Fleet_PK] PRIMARY KEY CLUSTERED 
 (
@@ -32,6 +39,10 @@ go
 
 
 --index
+CREATE INDEX IDX_IO_Users_LogName
+ON IO_Users (LogName)
+go
+
 CREATE INDEX IDX_IO_Vehicle_BusNo
 ON IO_Vehicle (BusNo)
 go

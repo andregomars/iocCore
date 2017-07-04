@@ -6,8 +6,8 @@ as
 ;with dataIdList as
 (
     select m.DataId 
-    from HAMS_SMSData m
-    inner join IO_Vehicle v
+    from HAMS_SMSData m with(nolock)
+    inner join IO_Vehicle v with(nolock)
         on m.VehicleId = v.VehicleId
     where v.BusNo = @VehicleName
         and m.RealTime >= @Date
@@ -35,13 +35,13 @@ select Vid = vehicle.VehicleId,
     Unit = detail.Unit,
     RealTime = master.RealTime
 from [dataIdList] list
-inner join HAMS_SMSItem detail
+inner join HAMS_SMSItem detail with(nolock)
     on list.DataId = detail.DataId
-inner join HAMS_SMSData master
+inner join HAMS_SMSData master with(nolock)
     on detail.DataId = master.DataId
-inner join IO_Vehicle vehicle
+inner join IO_Vehicle vehicle with(nolock)
     on master.VehicleId = vehicle.VehicleId
-inner join IO_Fleet fleet
+inner join IO_Fleet fleet with(nolock)
     on vehicle.FleetId = fleet.FleetID
 group by vehicle.VehicleId,vehicle.BusNo,fleet.FleetID, fleet.Name
 	,CASE master.SN 

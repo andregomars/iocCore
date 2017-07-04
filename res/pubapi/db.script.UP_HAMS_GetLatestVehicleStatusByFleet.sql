@@ -5,14 +5,14 @@ as
 (
 	select b.dataid from
         (select m.VehicleId,max(RealTime) as RealTime 
-        from HAMS_SMSData m
-        inner join IO_Vehicle v
+        from HAMS_SMSData m with(nolock)
+        inner join IO_Vehicle v with(nolock)
             on m.VehicleId = v.VehicleId
-        inner join IO_Fleet f
+        inner join IO_Fleet f with(nolock)
             on v.FleetId = f.FleetID
         where f.Name = @FleetName
         group by m.VehicleId) a
-    inner join HAMS_SMSData b 
+    inner join HAMS_SMSData b with(nolock)
     on a.VehicleId = b.VehicleId
         and a.RealTime = b.RealTime
 ),
@@ -38,13 +38,13 @@ select Vid = vehicle.VehicleId,
     Unit = detail.Unit,
     RealTime = master.RealTime
 from [dataIdList] list
-inner join HAMS_SMSItem detail
+inner join HAMS_SMSItem detail with(nolock)
     on list.DataId = detail.DataId
-inner join HAMS_SMSData master
+inner join HAMS_SMSData master with(nolock)
     on detail.DataId = master.DataId
-inner join IO_Vehicle vehicle
+inner join IO_Vehicle vehicle with(nolock)
     on master.VehicleId = vehicle.VehicleId
-inner join IO_Fleet fleet
+inner join IO_Fleet fleet with(nolock)
     on vehicle.FleetId = fleet.FleetID
 group by vehicle.VehicleId,vehicle.BusNo,fleet.FleetID, fleet.Name
 	,CASE master.SN 
@@ -78,4 +78,3 @@ AVG(Value)
 FOR ItemCode IN ([2A],[2B],[2C],[2D],[2E],[2F],[2G],[2H],[2I],[2J],[2K],[2L],[2M],[2N],[2T],[2U],[2Z])  
 ) AS pvt
 order by pvt.Vname
-
