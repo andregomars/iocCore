@@ -72,4 +72,4 @@ PIVOT
 AVG(Value)  
 FOR ItemCode IN ([2A],[2B],[2C],[2D],[2E],[2F],[2G],[2H],[2I],[2J],[2K],[2L],[2M],[2N],[2T],[2U],[2Z])  
 ) AS pvt
-order by pvt.Vname
+order by updated desc
