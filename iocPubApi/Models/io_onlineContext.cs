@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -7,6 +6,7 @@ namespace iocPubApi.Models
 {
     public partial class io_onlineContext : DbContext
     {
+        public virtual DbSet<CoreSms> CoreSms { get; set; }
         public virtual DbSet<HamsAlertData> HamsAlertData { get; set; }
         public virtual DbSet<HamsAlertItem> HamsAlertItem { get; set; }
         public virtual DbSet<HamsCsv> HamsCsv { get; set; }
@@ -26,6 +26,13 @@ namespace iocPubApi.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CoreSms>(entity =>
+            {
+                entity.Property(e => e.Id).HasDefaultValueSql("newid()");
+
+                entity.Property(e => e.IsDone).HasDefaultValueSql("0");
+            });
+
             modelBuilder.Entity<HamsAlertData>(entity =>
             {
                 entity.HasKey(e => e.DataId)
@@ -114,7 +121,7 @@ namespace iocPubApi.Models
             modelBuilder.Entity<HamsSmsdata>(entity =>
             {
                 entity.HasKey(e => e.DataId)
-                    .HasName("HAMS_HAMS_SMSData_PK");
+                    .HasName("IDX_HAMS_SMSData_VehicleId");
 
                 entity.Property(e => e.DataId).ValueGeneratedNever();
 
@@ -132,6 +139,9 @@ namespace iocPubApi.Models
                 entity.HasKey(e => new { e.DataId, e.ItemCode })
                     .HasName("HAMS_SMSItem_PK");
 
+                entity.HasIndex(e => e.DataId)
+                    .HasName("IDX_HAMS_SMSItem_DataId");
+
                 entity.Property(e => e.Data).HasDefaultValueSql("0");
 
                 entity.Property(e => e.IsCondition).HasDefaultValueSql("0");
@@ -147,6 +157,9 @@ namespace iocPubApi.Models
             {
                 entity.HasKey(e => e.FleetId)
                     .HasName("IO_Fleet_PK");
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("IDX_IO_Fleet_Name");
 
                 entity.Property(e => e.DayTotal).HasDefaultValueSql("'N'");
 
@@ -170,6 +183,9 @@ namespace iocPubApi.Models
                 entity.HasKey(e => e.UserId)
                     .HasName("IO_Users_PK");
 
+                entity.HasIndex(e => e.LogName)
+                    .HasName("IDX_IO_Users_LogName");
+
                 entity.Property(e => e.CreateTime).HasDefaultValueSql("[dbo].[IO_LocalNow_To_UTC]()");
             });
 
@@ -177,6 +193,9 @@ namespace iocPubApi.Models
             {
                 entity.HasKey(e => e.VehicleId)
                     .HasName("IO_Vehicle_PK");
+
+                entity.HasIndex(e => e.BusNo)
+                    .HasName("IDX_IO_Vehicle_BusNo");
 
                 entity.Property(e => e.Online).HasDefaultValueSql("0");
 

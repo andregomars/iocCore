@@ -30,7 +30,8 @@
               -t dbo.HAMS_SMSAlertItem \
               -t dbo.HAMS_DayTotal \
               -t dbo.HAMS_CSV \
-              -t dbo.IO_Users
+              -t dbo.IO_Users \
+              -t dbo.Core_SMS
 
     -->
     <!-- ### db context constructor

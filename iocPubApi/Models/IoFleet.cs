@@ -34,6 +34,8 @@ namespace iocPubApi.Models
         public short IsUtc { get; set; }
         [Column("ICON", TypeName = "varchar(50)")]
         public string Icon { get; set; }
+        [Column("CSVFile")]
+        public short? Csvfile { get; set; }
         [Required]
         [Column(TypeName = "char(1)")]
         public string DayTotal { get; set; }

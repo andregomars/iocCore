@@ -51,6 +51,7 @@ namespace iocPubApi
 
             // Insert repositories
             services.AddScoped<IPingRepository, PingRepository>();
+            services.AddScoped<ICoreSmsRepository, CoreSmsRepository>();
             services.AddScoped<IFleetIdentityRepository, FleetIdentityRepository>();
             services.AddScoped<IVehicleIdentityRepository, VehicleIdentityRepository>();
             services.AddScoped<IVehicleStatusRepository, VehicleStatusRepository>();
