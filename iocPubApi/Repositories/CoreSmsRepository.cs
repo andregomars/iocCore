@@ -2,6 +2,8 @@ using iocPubApi.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Dapper;
+using System.Data;
 
 namespace iocPubApi.Repositories
 {
@@ -14,10 +16,12 @@ namespace iocPubApi.Repositories
             db = context;
         }
 
-        public void Add(CoreSms sms)
+        public void Add(string vname)
         {
-            db.CoreSms.Add(sms);
-            db.SaveChanges();
+            var conn = db.Database.GetDbConnection();
+            var statusList = conn.Execute("dbo.UP_HAMS_AddSMSReceivingRequestByVehicle", 
+                new { VehicleName = vname},
+                commandType: CommandType.StoredProcedure);
             
         }
     }

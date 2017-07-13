@@ -2,6 +2,15 @@ CREATE  proc dbo.UP_HAMS_GetLatestVehicleStatusByVehicle
 @VehicleName nvarchar(50)
 as
 
+declare @MileageLastDay float
+set @MileageLastDay = 0
+
+--select top (1) @MileageLastDay = Value from HAMS_SMSItem with(nolock)
+--where dataid = (select top (1) DataId from HAMS_SMSData with(nolock)
+--where realTime < '2017-07-12'
+--order by RealTime desc)
+--and ItemCode = '2K'
+
 ;with dataIdList as
 (
 	select top (1) m.DataId 
@@ -61,7 +70,9 @@ voltage = ISNULL([2F],0),
 temperaturehigh = ISNULL([2H],0),
 temperaturelow = ISNULL([2G],0),
 speed = ISNULL([2I],0),
-remainingenergy = ISNUll([2C],0) - ISNULL([2D],0),
+remainingenergy = ISNUll([2B],0),
+highvoltagestatus = ISNUll([2U],0),
+actualdistance = ISNULL([2K],0) - ISNULL(@MileageLastDay,0),
 updated = realtime
 from 
 (SELECT vid,vname, fid, fname, lat, lng, axisx, axisy, axisz, realtime, ItemCode, Value   

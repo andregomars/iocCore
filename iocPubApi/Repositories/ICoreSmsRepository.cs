@@ -5,6 +5,6 @@ namespace iocPubApi.Repositories
 {
     public interface ICoreSmsRepository
     {
-        void Add(CoreSms sms);
+        void Add(string vname);
     }
 }

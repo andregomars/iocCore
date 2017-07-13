@@ -8,7 +8,7 @@ using iocPubApi.Repositories;
 
 namespace iocPubApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class CoreSmsController : Controller
     {
         private readonly ICoreSmsRepository _repository;
@@ -19,13 +19,20 @@ namespace iocPubApi.Controllers
         }
         
         [HttpPost]
-        public IActionResult Add([FromBody]CoreSms sms) 
-        // public IActionResult Add([FromBody]string sms) 
+        public IActionResult Add([FromBody]string vehicleName) 
         {
-            if (sms == null) return BadRequest();
+            if (String.IsNullOrEmpty(vehicleName)) 
+                return BadRequest();
 
-            _repository.Add(sms);
+            _repository.Add(vehicleName);
             return Ok();
         }
+   }
+
+   public class DemoEntity
+   {
+       public Guid? Id {get; set;}
+       public string Name {get; set;}
+       public int Age {get; set;}
    }
 }
