@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using iocPubApi.Models;
 using iocPubApi.Repositories;
+using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace iocPubApi.Controllers
 {
@@ -12,15 +14,19 @@ namespace iocPubApi.Controllers
     public class CoreSmsController : Controller
     {
         private readonly ICoreSmsRepository _repository;
+        private ILogger<CoreSmsController> _logger;
 
-        public CoreSmsController(ICoreSmsRepository repository)
+        public CoreSmsController(ICoreSmsRepository repository,
+            ILogger<CoreSmsController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
         
         [HttpPost]
         public IActionResult Add([FromBody]string vehicleName) 
         {
+            _logger.LogInformation("call function to add CoreSMS");
             if (String.IsNullOrEmpty(vehicleName)) 
                 return BadRequest();
 
