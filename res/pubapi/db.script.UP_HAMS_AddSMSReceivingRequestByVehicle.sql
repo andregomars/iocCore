@@ -14,6 +14,6 @@ If @Phone is null
 	Return
 
 Insert into Core_SMS
-(MessageID, SubMessageID, SMSType, SenderCode, ReceiverCode, Status, CreateTime, SendTime, Message, IsDone)
+(ID, MessageID, SubMessageID, SMSType, SenderCode, ReceiverCode, Status, CreateTime, SendTime, Message, IsDone)
 Values
-(null, null, null, null, @Phone, '0', GETDATE(), null, 'IOC:R', 0)
+(NEWID(),null, null, null, null, @Phone, '0', GETDATE(), null, 'IOC:R', 0)
