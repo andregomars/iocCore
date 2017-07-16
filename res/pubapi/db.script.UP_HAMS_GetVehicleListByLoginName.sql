@@ -21,11 +21,29 @@ begin
     from IO_Vehicle vehicle with(nolock)
     inner join IO_Fleet fleet with(nolock)
         on vehicle.FleetId = fleet.FleetID
-	order by fleet.Name, vehicle.BusNo
+    order by fleet.Name, vehicle.BusNo
 end
-else if @usertype in (8,16,32,64)
+else if @usertype in (32,64)
 begin
-	select distinct
+    select distinct
+        Vid = v.VehicleId, 
+        Vname = v.BusNo,
+        Fid = f.FleetId,
+        Fname = f.Name
+    from io_users u with(nolock)
+        inner join io_company c with(nolock)
+            on u.CompanyId = c.CompanyId
+        inner join io_companyfleet cf with(nolock)
+            on c.CompanyId = cf.CompanyId
+        inner join IO_Fleet f with(nolock)
+            on cf.FleetId = f.FleetID
+        inner join IO_Vehicle v with(nolock)
+            on cf.FleetId = v.FleetId
+    where u.LogName = @LoginName
+end
+else --(@usertype is 8 or 16, or others)
+begin
+    select distinct
         Vid = vehicle.VehicleId, 
         Vname = vehicle.BusNo,
         Fid = fleet.FleetId,
@@ -36,5 +54,5 @@ begin
     inner join IO_Fleet fleet with(nolock)
         on vehicle.FleetId = fleet.FleetID
     where users.LogName = @LoginName
-	order by fleet.Name, vehicle.BusNo
+    order by fleet.Name, vehicle.BusNo
 end
