@@ -26,6 +26,7 @@ select Vid = vehicle.VehicleId,
     Vname = vehicle.BusNo,
     Fid = fleet.FleetId,
     Fname = fleet.Name,
+    Vtype = fleet.VehicleType,
     Lat = CASE master.SN 
         WHEN 'N' THEN (CASE ISNUMERIC(master.Lat) WHEN 1 THEN master.Lat ELSE 0 END) 
         ELSE (CASE ISNUMERIC(master.Lat) WHEN 1 THEN master.Lat ELSE 0 END) * -1 
@@ -50,7 +51,7 @@ inner join IO_Vehicle vehicle with(nolock)
     on master.VehicleId = vehicle.VehicleId
 inner join IO_Fleet fleet with(nolock)
     on vehicle.FleetId = fleet.FleetID
-group by vehicle.VehicleId,vehicle.BusNo,fleet.FleetID, fleet.Name
+group by vehicle.VehicleId,vehicle.BusNo,fleet.FleetID, fleet.Name, fleet.VehicleType
     ,CASE master.SN 
         WHEN 'N' THEN (CASE ISNUMERIC(master.Lat) WHEN 1 THEN master.Lat ELSE 0 END) 
         ELSE (CASE ISNUMERIC(master.Lat) WHEN 1 THEN master.Lat ELSE 0 END) * -1 
@@ -60,7 +61,7 @@ group by vehicle.VehicleId,vehicle.BusNo,fleet.FleetID, fleet.Name
         END
     ,AxisX,AxisY,AxisZ,detail.ItemCode, detail.ItemName, detail.Value, detail.Unit, RealTime
 )
-select vid, vname, fid, fname, lat, lng, axisx, axisy, axisz,
+select vid, vname, fid, fname, vtype, lat, lng, axisx, axisy, axisz,
 soc = ISNULL([2A], 0),
 status = CASE WHEN ISNULL([2M],0) = 2 and ISNULL([2N],0) = 2 THEN 1 ELSE 0 END,
 range = ISNULL([2L],0),
@@ -75,7 +76,7 @@ highvoltagestatus = ISNUll([2U],0),
 actualdistance = ISNULL([2K],0) - ISNULL(@MileageLastDay,0),
 updated = realtime
 from 
-(SELECT vid,vname, fid, fname, lat, lng, axisx, axisy, axisz, realtime, ItemCode, Value   
+(SELECT vid,vname, fid, fname, UPPER(vtype) as vtype, lat, lng, axisx, axisy, axisz, realtime, ItemCode, Value   
     FROM snapshotList
 ) AS src  
 PIVOT  

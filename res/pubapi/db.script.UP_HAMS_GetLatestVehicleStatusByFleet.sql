@@ -72,7 +72,7 @@ highvoltagestatus = ISNUll([2U],0),
 actualdistance = ISNULL([2K],0),
 updated = realtime
 from 
-(SELECT vid,vname, fid, fname, vtype, lat, lng, axisx, axisy, axisz, realtime, ItemCode, Value   
+(SELECT vid,vname, fid, fname, UPPER(vtype) as vtype, lat, lng, axisx, axisy, axisz, realtime, ItemCode, Value   
     FROM snapshotList
 ) AS src  
 PIVOT  
