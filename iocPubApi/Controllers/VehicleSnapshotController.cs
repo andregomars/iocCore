@@ -41,6 +41,26 @@ namespace iocPubApi.Controllers
 
             return cacheEntry;
         }
+ 
+        // GET /api/VehicleSnapshot/GetByDataId/{dataId}
+        [HttpGet("GetByDataId/{dataId}")]
+        public IEnumerable<VehicleSnapshot> GetByDataId(Guid dataId)
+        {
+            IEnumerable<VehicleSnapshot> cacheEntry = new List<VehicleSnapshot>();
+            if (dataId == null || dataId == Guid.Empty) return cacheEntry;
+
+            string cacheKey = Key_VehicleSnapshot + dataId.ToString();
+            if(!_cache.TryGetValue(cacheKey, out cacheEntry))
+            {
+                cacheEntry = _repository.GetByDataId(dataId);
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                _cache.Set(cacheKey, cacheEntry, cacheEntryOptions);
+            }
+
+            return cacheEntry;
+        }
         
         // GET /api/VehicleSnapshot/GetWholeDayByVehicleName/{vehicleName}/{date}
         [HttpGet("GetWholeDayByVehicleName/{vehicleName}/{date}")]

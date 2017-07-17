@@ -1,18 +1,17 @@
 use IO_Online
 go
 
-CREATE  proc dbo.UP_HAMS_GetLatestVehicleSnapshotByVehicle 
-@VehicleName nvarchar(50)
+CREATE  proc dbo.UP_HAMS_GetVehicleSnapshotByDataId
+@DataId uniqueidentifier
 as
 
 ;with dataIdList as
 (
-select top (1) m.DataId, m.RealTime, m.AxisX, m.AxisY, m.AxisZ
+select m.DataId, m.RealTime, m.AxisX, m.AxisY, m.AxisZ
 from HAMS_SMSData m with(nolock)
 inner join IO_Vehicle v with(nolock)
     on m.VehicleId = v.VehicleId
-where v.BusNo = @VehicleName
-order by m.RealTime desc
+where m.DataId = @DataId
 )
 select code = detail.ItemCode, 
         name = detail.ItemName, 
