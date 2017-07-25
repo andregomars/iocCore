@@ -1,14 +1,19 @@
+use IO_Online
+go
+
 CREATE  proc dbo.UP_HAMS_GetWholeDayVehicleStatusByVehicle 
 @VehicleName nvarchar(50),
 @Date DateTime
 as
 
 declare @MileageLastDay float
-set @MileageLastDay = 0
+set @MileageLastDay = 0.0
 
-select top (1) @MileageLastDay = Value from HAMS_SMSItem with(nolock)
-where dataid = (select top (1) DataId from HAMS_SMSData with(nolock)
-where realTime < @Date
+select top (1) @MileageLastDay = ISNUll(Value,0.0) from HAMS_SMSItem with(nolock)
+where dataid = (select top (1) m.DataId from HAMS_SMSData m with(nolock)
+inner join IO_Vehicle v with(nolock)
+    on m.VehicleId = v.VehicleId
+where v.BusNo = @VehicleName and m.realTime < @Date
 order by RealTime desc)
 and ItemCode = '2K'
 

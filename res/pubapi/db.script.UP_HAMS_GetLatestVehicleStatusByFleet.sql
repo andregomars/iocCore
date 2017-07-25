@@ -1,3 +1,6 @@
+use IO_Online
+go
+
 create  proc dbo.UP_HAMS_GetLatestVehicleStatusByFleet @FleetName nvarchar(100)
 as
 

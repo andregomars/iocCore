@@ -1,3 +1,6 @@
+use IO_Online
+go
+
 CREATE  proc dbo.UP_HAMS_GetLatestVehicleStatusByVehicle 
 @VehicleName nvarchar(50)
 as
