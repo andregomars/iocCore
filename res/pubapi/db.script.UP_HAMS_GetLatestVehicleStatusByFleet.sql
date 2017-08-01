@@ -1,7 +1,7 @@
 use IO_Online
 go
 
-create  proc dbo.UP_HAMS_GetLatestVehicleStatusByFleet @FleetName nvarchar(100)
+create proc dbo.UP_HAMS_GetLatestVehicleStatusByFleet @FleetName nvarchar(100)
 as
 
 ;with dataIdList as
@@ -59,7 +59,9 @@ group by vehicle.VehicleId,vehicle.BusNo,fleet.FleetID, fleet.Name, fleet.Vehicl
         ELSE (CASE ISNUMERIC(master.Lng) WHEN 1 THEN master.Lng ELSE 0 END) * -1 
         END
     ,AxisX,AxisY,AxisZ,detail.ItemCode, detail.ItemName, detail.Value, detail.Unit, RealTime
-)
+),
+statusList as
+(
 select vid, vname, fid, fname, vtype, lat, lng, axisx, axisy, axisz,
 soc = ISNULL([2A], 0),
 status = CASE WHEN ISNULL([2M],0) = 2 and ISNULL([2N],0) = 2 THEN 1 ELSE 0 END,
@@ -83,4 +85,17 @@ PIVOT
 AVG(Value)  
 FOR ItemCode IN ([2A],[2B],[2C],[2D],[2E],[2F],[2G],[2H],[2I],[2J],[2K],[2L],[2M],[2N],[2T],[2U],[2Z])  
 ) AS pvt
-order by pvt.Vname
+)
+select v.VehicleId as vid,v.BusNo as vname, f.FleetID as fid, f.Name as fname, f.VehicleType as vtype
+	,ISNULL(lat, 0) as lat, ISNULL(lng, 0) as lng, ISNULL(axisx, 0) as axisx, ISNULL(axisy, 0) as axisy, ISNULL(axisz, 0) as axisz
+	,ISNULL(soc, 0) as soc, ISNULL(s.status, 0) as status, ISNULL(range, 0) as range, ISNULL(mileage, 0) as mileage, ISNULL(voltage, 0) as voltage
+	,ISNULL([current], 0) as [current], ISNULL(temperaturehigh, 0) as temperaturehigh, ISNULL(temperaturelow, 0) as temperaturelow
+	,ISNULL(speed, 0) as speed,ISNULL(s.remainingenergy, 0) as remainingenergy, ISNULL(s.highvoltagestatus, 0) as highvoltagestatus
+	,ISNULL(s.actualdistance, 0) as actualdistance, ISNULL(s.updated, '1900-01-01') as updated
+from IO_Vehicle v with(nolock)
+inner join IO_Fleet f with(nolock)
+    on v.FleetId = f.FleetID
+left join statusList s with(nolock)
+    on v.VehicleId = s.Vid
+where f.Name = @FleetName
+order by vname
