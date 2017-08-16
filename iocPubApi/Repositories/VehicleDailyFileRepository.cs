@@ -60,7 +60,7 @@ namespace iocPubApi.Repositories
                     join names in vnames
                         on vehicle.BusNo.Trim() equals names
                     where csv.StartTime >= beginDate
-                        && csv.EndTime <= endDate
+                        && csv.EndTime < endDate.AddDays(1)
                     orderby fleet.Name, csv.DailyDate
                     select new VehicleDailyFile
                     {
@@ -91,28 +91,6 @@ namespace iocPubApi.Repositories
                         select $"{csv.FilePath.Trim()}\\{csv.FileName.Trim()}";
             return path.SingleOrDefault();
         }
-
-        // #region IDisposable Support
-        // private bool disposedValue = false; 
-
-        // protected virtual void Dispose(bool disposing)
-        // {
-        //     if (!disposedValue)
-        //     {
-        //         if (disposing)
-        //         {
-        //             db.Dispose();
-        //         }
-        //         disposedValue = true;
-        //     }
-        // }
-
-        // public void Dispose()
-        // {
-        //     Dispose(true);
-        //     GC.SuppressFinalize(this);
-        // }
-        // #endregion
 
     }
 }
