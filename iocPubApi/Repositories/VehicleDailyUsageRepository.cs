@@ -185,7 +185,7 @@ namespace iocPubApi.Repositories
             IEnumerable<VehicleDailyUsage> usageListDaysSummaryWithTotalRow = new VehicleDailyUsage[] { usageTotalRow };
             usageListDaysSummaryWithTotalRow = usageListDaysSummaryWithTotalRow.Concat(usageListDaysSummary);
 
-            return usageListDaysSummaryWithTotalRow;
+            return usageListDaysSummaryWithTotalRow.OrderBy(x => x.vname);
         }
 
         // #region IDisposable Support
