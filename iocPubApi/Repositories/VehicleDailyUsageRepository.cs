@@ -160,6 +160,11 @@ namespace iocPubApi.Repositories
                     mile_energy = group.Sum(r => r.mileage) / (group.Sum(r => r.energyused) == 0 ? 1 : group.Sum(r => r.energyused)),
                 });
             
+            if (usageListDaysSummary.Count() == 0)
+            {
+                return new List<VehicleDailyUsage>();
+            }
+
             //attach total row
             VehicleDailyUsage usageTotalRow = usageListDaysSummary
                 .GroupBy(item => new { item.fid, item.fname })
