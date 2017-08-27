@@ -122,15 +122,15 @@ namespace iocPubApi.Repositories
                         ,fid = f.FleetId
                         ,fname = f.Name
                         ,date = m.RealTime?? Convert.ToDateTime("1900-01-01") 
-                        ,mileage = Math.Round(m.Mileage?? 0, 1)
-                        ,soccharged = Math.Round(m.SocCharged?? 0, 1)
-                        ,socused = Math.Round(m.SocUsed?? 0, 1)
-                        ,energycharged = Math.Round(m.KWhCharged?? 0, 1)
-                        ,energyused = Math.Round(m.KWhUsed?? 0, 1)
-                        ,soc_mile = Math.Round((m.SocUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1), 1)
-                        ,mile_soc = Math.Round((m.Mileage?? 0) / ((m.SocUsed?? 1) == 0 ? 1 : m.SocUsed?? 1), 1)
-                        ,energy_mile = Math.Round((m.KWhUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1), 1)
-                        ,mile_energy = Math.Round((m.Mileage?? 0) / ((m.KWhUsed?? 1) == 0 ? 1 : m.KWhUsed?? 1), 1)
+                        ,mileage = m.Mileage?? 0
+                        ,soccharged = m.SocCharged?? 0 
+                        ,socused = m.SocUsed?? 0
+                        ,energycharged = m.KWhCharged?? 0
+                        ,energyused = m.KWhUsed?? 0
+                        ,soc_mile = (m.SocUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1)
+                        ,mile_soc = (m.Mileage?? 0) / ((m.SocUsed?? 1) == 0 ? 1 : m.SocUsed?? 1)
+                        ,energy_mile = (m.KWhUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1)
+                        ,mile_energy = (m.Mileage?? 0) / ((m.KWhUsed?? 1) == 0 ? 1 : m.KWhUsed?? 1)
                     };
 
             return usageList;
@@ -149,15 +149,15 @@ namespace iocPubApi.Repositories
                     fid = group.Key.fid,
                     fname = group.Key.fname,
                     date = beginDate,
-                    mileage = group.Sum(r => r.mileage),
-                    soccharged = group.Sum(r => r.soccharged),
-                    socused = group.Sum(r => r.socused),
-                    energycharged = group.Sum(r => r.energycharged),
-                    energyused = group.Sum(r => r.energyused),
-                    soc_mile = group.Sum(r => r.socused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
-                    mile_soc = group.Sum(r => r.mileage) / (group.Sum(r => r.socused) == 0 ? 1 : group.Sum(r => r.socused)),
-                    energy_mile = group.Sum(r => r.energyused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
-                    mile_energy = group.Sum(r => r.mileage) / (group.Sum(r => r.energyused) == 0 ? 1 : group.Sum(r => r.energyused)),
+                    mileage = Math.Round(group.Sum(r => r.mileage), 1),
+                    soccharged = Math.Round(group.Sum(r => r.soccharged), 1),
+                    socused = Math.Round(group.Sum(r => r.socused), 1),
+                    energycharged = Math.Round(group.Sum(r => r.energycharged), 1),
+                    energyused = Math.Round(group.Sum(r => r.energyused), 1),
+                    soc_mile = Math.Round(group.Sum(r => r.socused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)), 1),
+                    mile_soc = Math.Round(group.Sum(r => r.mileage) / (group.Sum(r => r.socused) == 0 ? 1 : group.Sum(r => r.socused)), 1),
+                    energy_mile = Math.Round(group.Sum(r => r.energyused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)), 1),
+                    mile_energy = Math.Round(group.Sum(r => r.mileage) / (group.Sum(r => r.energyused) == 0 ? 1 : group.Sum(r => r.energyused)), 1)
                 });
             
             if (usageListDaysSummary.Count() == 0)
@@ -175,15 +175,15 @@ namespace iocPubApi.Repositories
                     fid = group.Key.fid,
                     fname = group.Key.fname,
                     date = beginDate,
-                    mileage = group.Sum(r => r.mileage),
-                    soccharged = group.Sum(r => r.soccharged),
-                    socused = group.Sum(r => r.socused),
-                    energycharged = group.Sum(r => r.energycharged),
-                    energyused = group.Sum(r => r.energyused),
-                    soc_mile = group.Sum(r => r.socused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
-                    mile_soc = group.Sum(r => r.mileage) / (group.Sum(r => r.socused) == 0 ? 1 : group.Sum(r => r.socused)),
-                    energy_mile = group.Sum(r => r.energyused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)),
-                    mile_energy = group.Sum(r => r.mileage) / (group.Sum(r => r.energyused) == 0 ? 1 : group.Sum(r => r.energyused)),
+                    mileage = Math.Round(group.Sum(r => r.mileage), 1),
+                    soccharged = Math.Round(group.Sum(r => r.soccharged), 1),
+                    socused = Math.Round(group.Sum(r => r.socused), 1),
+                    energycharged = Math.Round(group.Sum(r => r.energycharged), 1),
+                    energyused = Math.Round(group.Sum(r => r.energyused), 1),
+                    soc_mile = Math.Round(group.Sum(r => r.socused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)), 1),
+                    mile_soc = Math.Round(group.Sum(r => r.mileage) / (group.Sum(r => r.socused) == 0 ? 1 : group.Sum(r => r.socused)), 1),
+                    energy_mile = Math.Round(group.Sum(r => r.energyused) / (group.Sum(r => r.mileage) == 0 ? 1 : group.Sum(r => r.mileage)), 1),
+                    mile_energy = Math.Round(group.Sum(r => r.mileage) / (group.Sum(r => r.energyused) == 0 ? 1 : group.Sum(r => r.energyused)), 1)
                 }).SingleOrDefault();
 
             //concat and put total row in first line
