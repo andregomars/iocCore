@@ -122,15 +122,15 @@ namespace iocPubApi.Repositories
                         ,fid = f.FleetId
                         ,fname = f.Name
                         ,date = m.RealTime?? Convert.ToDateTime("1900-01-01") 
-                        ,mileage = m.Mileage?? 0
-                        ,soccharged = m.SocCharged?? 0
-                        ,socused = m.SocUsed?? 0
-                        ,energycharged = m.KWhCharged?? 0
-                        ,energyused = m.KWhUsed?? 0
-                        ,soc_mile = (m.SocUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1)
-                        ,mile_soc = (m.Mileage?? 0) / ((m.SocUsed?? 1) == 0 ? 1 : m.SocUsed?? 1)
-                        ,energy_mile = (m.KWhUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1)
-                        ,mile_energy = (m.Mileage?? 0) / ((m.KWhUsed?? 1) == 0 ? 1 : m.KWhUsed?? 1)
+                        ,mileage = Math.Round(m.Mileage?? 0, 1)
+                        ,soccharged = Math.Round(m.SocCharged?? 0, 1)
+                        ,socused = Math.Round(m.SocUsed?? 0, 1)
+                        ,energycharged = Math.Round(m.KWhCharged?? 0, 1)
+                        ,energyused = Math.Round(m.KWhUsed?? 0, 1)
+                        ,soc_mile = Math.Round((m.SocUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1), 1)
+                        ,mile_soc = Math.Round((m.Mileage?? 0) / ((m.SocUsed?? 1) == 0 ? 1 : m.SocUsed?? 1), 1)
+                        ,energy_mile = Math.Round((m.KWhUsed?? 0) / ((m.Mileage?? 1) == 0 ? 1 : m.Mileage?? 1), 1)
+                        ,mile_energy = Math.Round((m.Mileage?? 0) / ((m.KWhUsed?? 1) == 0 ? 1 : m.KWhUsed?? 1), 1)
                     };
 
             return usageList;
@@ -193,26 +193,5 @@ namespace iocPubApi.Repositories
             return usageListDaysSummaryWithTotalRow.OrderBy(x => x.vname);
         }
 
-        // #region IDisposable Support
-        // private bool disposedValue = false; 
-
-        // protected virtual void Dispose(bool disposing)
-        // {
-        //     if (!disposedValue)
-        //     {
-        //         if (disposing)
-        //         {
-        //             db.Dispose();
-        //         }
-        //         disposedValue = true;
-        //     }
-        // }
-
-        // public void Dispose()
-        // {
-        //     Dispose(true);
-        //     GC.SuppressFinalize(this);
-        // }
-        // #endregion
     }
 }
