@@ -1,6 +1,7 @@
 using System;
 using Xunit;
 using iocPubApi.Controllers;
+using Moq;
 
 namespace iocPubApiUnitTest
 {
@@ -19,5 +20,6 @@ namespace iocPubApiUnitTest
             var result = _repository.PingDB();
             Assert.Equal(result, "Pong");
         }
+
     }
 }
