@@ -64,7 +64,7 @@ statusList as
 (
 select vid, vname, fid, fname, vtype, lat, lng, axisx, axisy, axisz,
 soc = ISNULL([2A], 0),
-status = CASE WHEN ISNULL([2M],0) = 2 and ISNULL([2N],0) = 2 THEN 1 ELSE 0 END,
+status = CASE WHEN ISNULL([2M],0) = 2 OR ISNULL([2N],0) = 2 THEN 1 ELSE 0 END,
 range = ISNULL([2L],0),
 mileage = ISNULL([2K],0),
 voltage = ISNULL([2F],0),
