@@ -1,7 +1,6 @@
 using System;
 using Xunit;
 using iocPubApi.Controllers;
-using Moq;
 
 namespace iocPubApiUnitTest
 {
