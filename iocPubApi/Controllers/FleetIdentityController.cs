@@ -31,6 +31,13 @@ namespace iocPubApi.Controllers
             return _repository.GetAllFleets();
         }
 
+        // GET api/fleetidentity/getfleetbyname/{fleetname}
+        [HttpGet("FleetName/{fleetName}")]
+        public FleetIdentity GetFleetByName(string fleetName)
+        {
+            return _repository.GetFleetByName(fleetName);
+        }
+
         // GET api/fleetidentity/loginname/{loginname}
         [HttpGet("LoginName/{loginName}")]
         public IEnumerable<FleetIdentity> GetAllByUser(string loginName)

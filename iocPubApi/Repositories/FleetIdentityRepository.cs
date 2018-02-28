@@ -60,6 +60,43 @@ namespace iocPubApi.Repositories
             return fleets;
         }
 
+        public IEnumerable<FleetIdentity> GetAllFleetsByUser(string loginName) 
+        {
+            var conn = db.Database.GetDbConnection();
+            var fleetList = conn.Query<FleetIdentity>("dbo.UP_HAMS_GetFleetListByLoginName", 
+                new { LoginName = loginName },
+                commandType: CommandType.StoredProcedure);
+            return fleetList;
+
+        }
+
+        public FleetIdentity GetFleetByName(string fname) 
+        {
+            /* equivalent T-SQL
+            select distinct
+                Fname = fleet.Name,
+                Remark = fleet.Remark,
+                VehicleType = fleet.VehicleType,
+                Icon = 'http://52.35.12.17/online2017/hams/images/fleeticon/'+ 
+                    RTRIM(Icon) + '/' + RTRIM(VehicleType) + '.png'
+            from IO_Fleet fleet
+                where fleet.Name = @fname 
+             */
+            var db = this.db;
+            var fleets = from fleet in db.IoFleet
+                            where fleet.Name == fname
+                        select new FleetIdentity 
+                        { 
+                            Fname = fleet.Name,
+                            Remark = fleet.Remark.Trim(),
+                            VehicleType = fleet.VehicleType.Trim(),
+                            Icon = GetIconUrl(fleet.Icon, fleet.VehicleType)
+                        };
+            
+            return fleets.SingleOrDefault();
+        }
+
+        // help methods
         private string GetIconUrl(string icon, string vehicleType) {
             string defaultUrl = "http://52.35.12.17/online2017/hams/images/fleeticon/";
             string defaultIcon = "default";
@@ -70,16 +107,6 @@ namespace iocPubApi.Repositories
             string pathVehicleType = String.IsNullOrEmpty(vehicleType) || String.IsNullOrWhiteSpace(vehicleType) ? defaultVehicleType : vehicleType.Trim();
 
             return $"{baseUrl}/{pathIcon}/{pathVehicleType}.png";
-        }
-
-        public IEnumerable<FleetIdentity> GetAllFleetsByUser(string loginName) 
-        {
-            var conn = db.Database.GetDbConnection();
-            var fleetList = conn.Query<FleetIdentity>("dbo.UP_HAMS_GetFleetListByLoginName", 
-                new { LoginName = loginName },
-                commandType: CommandType.StoredProcedure);
-            return fleetList;
-
         }
 
     }

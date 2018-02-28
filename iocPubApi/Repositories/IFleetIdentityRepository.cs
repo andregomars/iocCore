@@ -7,5 +7,6 @@ namespace iocPubApi.Repositories
     {
         IEnumerable<FleetIdentity> GetAllFleets();
         IEnumerable<FleetIdentity> GetAllFleetsByUser(string userID);
+        FleetIdentity GetFleetByName(string fname);
     }
 }
