@@ -46,11 +46,13 @@ namespace iocPubApi.Repositories
                         select new FleetIdentity 
                         { 
                             Fname = fleet.Name,
+                            Remark = fleet.Remark.Trim(),
                             VehicleType = fleet.VehicleType.Trim(),
                             Icon = GetIconUrl(fleet.Icon, fleet.VehicleType)
-                        }).GroupBy(r => new { r.Fname, r.VehicleType, r.Icon })
+                        }).GroupBy(r => new { r.Fname, r.Remark, r.VehicleType, r.Icon })
                             .Select(g => new FleetIdentity{
                                 Fname = g.Key.Fname,
+                                Remark = g.Key.Remark,
                                 VehicleType = g.Key.VehicleType,
                                 Icon = g.Key.Icon
                             });
